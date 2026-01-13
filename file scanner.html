@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Note Scanner</title>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--card);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border: 1px solid #334155;
+        }
+
+        h1 { margin-bottom: 1.5rem; text-align: center; font-weight: 300; letter-spacing: 1px; }
+        h1 span { font-weight: 700; color: var(--primary); }
+
+        .upload-area {
+            border: 2px dashed #334155;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-area:hover { border-color: var(--primary); background: #1e293b; }
+        
+        input[type="file"] { display: none; }
+
+        #image-preview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            display: none;
+            margin: 0 auto;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .controls { margin-top: 20px; display: flex; gap: 10px; }
+
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        #scan-btn { background: var(--primary); color: white; opacity: 0.5; pointer-events: none; }
+        #scan-btn.active { opacity: 1; pointer-events: auto; }
+        #scan-btn:hover { background: #4f46e5; }
+        
+        #copy-btn { background: #334155; color: white; display: none; }
+        #copy-btn:hover { background: #475569; }
+
+        .status-bar {
+            height: 4px;
+            background: #334155;
+            margin-top: 20px;
+            border-radius: 2px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .progress {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .status-text {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+            min-height: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: var(--text);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            resize: none;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        
+        textarea:focus { outline: 1px solid var(--primary); }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Smart <span>ScanNote</span></h1>
+
+        <div class="upload-area" onclick="document.getElementById('file-input').click()">
+            <input type="file" id="file-input" accept="image/*">
+            <p id="upload-text" style="color: #94a3b8;">Klik untuk upload atau ambil foto</p>
+            <img id="image-preview" alt="Preview">
+        </div>
+
+        <div class="controls">
+            <button id="scan-btn">🔍 Mulai Scan Gambar</button>
+            <button id="copy-btn">📋 Copy Teks</button>
+        </div>
+
+        <div class="status-bar" id="status-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        <div class="status-text" id="status-text"></div>
+
+        <textarea id="result-text" placeholder="Hasil teks akan muncul di sini..."></textarea>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('file-input');
+        const preview = document.getElementById('image-preview');
+        const uploadText = document.getElementById('upload-text');
+        const scanBtn = document.getElementById('scan-btn');
+        const resultText = document.getElementById('result-text');
+        const statusText = document.getElementById('status-text');
+        const progressBar = document.getElementById('status-bar');
+        const progressFill = document.getElementById('progress');
+        const copyBtn = document.getElementById('copy-btn');
+
+        let selectedFile = null;
+
+        // 1. Handle File Upload / Camera
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                selectedFile = file;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    uploadText.style.display = 'none';
+                    scanBtn.classList.add('active'); // Aktifkan tombol scan
+                    resultText.value = ''; // Reset hasil sebelumnya
+                    copyBtn.style.display = 'none';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // 2. Logic Scanning (OCR)
+        scanBtn.addEventListener('click', () => {
+            if (!selectedFile) return;
+
+            // UI Updates saat loading
+            scanBtn.disabled = true;
+            scanBtn.textContent = 'Sedang Memproses...';
+            progressBar.style.display = 'block';
+            statusText.style.display = 'block';
+
+            // Menjalankan Tesseract
+            Tesseract.recognize(
+                selectedFile,
+                'ind+eng', // Mendukung Bahasa Indonesia & Inggris
+                {
+                    logger: m => {
+                        // Update Progress Bar
+                        if (m.status === 'recognizing text') {
+                            const percent = Math.round(m.progress * 100);
+                            progressFill.style.width = percent + '%';
+                            statusText.innerText = `Membaca Teks: ${percent}%`;
+                        } else {
+                            statusText.innerText = m.status;
+                        }
+                    }
+                }
+            ).then(({ data: { text } }) => {
+                // Saat Selesai
+                resultText.value = text;
+                scanBtn.disabled = false;
+                scanBtn.textContent = '🔍 Mulai Scan Gambar';
+                statusText.innerText = 'Selesai!';
+                copyBtn.style.display = 'block';
+                
+                // Animasi kecil pada textarea
+                resultText.style.borderColor = '#4ade80'; // Hijau sukses
+                setTimeout(() => resultText.style.borderColor = '#334155', 1000);
+            }).catch(err => {
+                console.error(err);
+                statusText.innerText = 'Gagal memindai gambar.';
+                scanBtn.disabled = false;
+            });
+        });
+
+        // 3. Fitur Copy to Clipboard
+        copyBtn.addEventListener('click', () => {
+            resultText.select();
+            document.execCommand('copy');
+            copyBtn.textContent = 'Tersalin!';
+            setTimeout(() => copyBtn.textContent = '📋 Copy Teks', 2000);
+        });
+    </script>
+</body>
+</html>
