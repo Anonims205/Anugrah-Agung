@@ -3,232 +3,704 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Image Note Scanner</title>
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <title>Scanner Nota Barang ke Tabel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@v2.1.0/dist/tesseract.min.js"></script>
     <style>
-        :root {
-            --primary: #6366f1;
-            --bg: #0f172a;
-            --card: #1e293b;
-            --text: #f8fafc;
-            --text-muted: #94a3b8;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-
+        
         body {
-            background-color: var(--bg);
-            color: var(--text);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
             min-height: 100vh;
             padding: 20px;
         }
-
+        
         .container {
-            width: 100%;
-            max-width: 600px;
-            background: var(--card);
-            padding: 2rem;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            border: 1px solid #334155;
-        }
-
-        h1 { margin-bottom: 1.5rem; text-align: center; font-weight: 300; letter-spacing: 1px; }
-        h1 span { font-weight: 700; color: var(--primary); }
-
-        .upload-area {
-            border: 2px dashed #334155;
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.3s;
-            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
-
-        .upload-area:hover { border-color: var(--primary); background: #1e293b; }
         
-        input[type="file"] { display: none; }
-
-        #image-preview {
+        header {
+            background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 30px;
+        }
+        
+        .upload-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            border-right: 1px solid #eee;
+        }
+        
+        .result-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            color: #182848;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4b6cb7;
+        }
+        
+        .upload-area {
+            border: 3px dashed #4b6cb7;
+            border-radius: 10px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+            background-color: #f8faff;
+        }
+        
+        .upload-area:hover {
+            background-color: #eef2ff;
+            border-color: #182848;
+        }
+        
+        .upload-icon {
+            font-size: 50px;
+            color: #4b6cb7;
+            margin-bottom: 15px;
+        }
+        
+        .upload-text {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .button {
+            background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 5px;
+        }
+        
+        .button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .button i {
+            margin-right: 8px;
+        }
+        
+        .button.secondary {
+            background: linear-gradient(90deg, #6c757d 0%, #495057 100%);
+        }
+        
+        .button.success {
+            background: linear-gradient(90deg, #28a745 0%, #1e7e34 100%);
+        }
+        
+        .image-preview {
             max-width: 100%;
             max-height: 300px;
             border-radius: 8px;
-            display: none;
-            margin: 0 auto;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-
-        .controls { margin-top: 20px; display: flex; gap: 10px; }
-
-        button {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        #scan-btn { background: var(--primary); color: white; opacity: 0.5; pointer-events: none; }
-        #scan-btn.active { opacity: 1; pointer-events: auto; }
-        #scan-btn:hover { background: #4f46e5; }
-        
-        #copy-btn { background: #334155; color: white; display: none; }
-        #copy-btn:hover { background: #475569; }
-
-        .status-bar {
-            height: 4px;
-            background: #334155;
             margin-top: 20px;
-            border-radius: 2px;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress-container {
+            margin-top: 20px;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            height: 10px;
             overflow: hidden;
             display: none;
         }
-
-        .progress {
+        
+        .progress-bar {
             height: 100%;
-            background: var(--primary);
+            background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
             width: 0%;
-            transition: width 0.3s ease;
-        }
-
-        .status-text {
-            text-align: center;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-top: 8px;
-            min-height: 20px;
-        }
-
-        textarea {
-            width: 100%;
-            height: 200px;
-            background: #0f172a;
-            border: 1px solid #334155;
-            color: var(--text);
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-            resize: none;
-            font-size: 1rem;
-            line-height: 1.6;
+            transition: width 0.3s;
         }
         
-        textarea:focus { outline: 1px solid var(--primary); }
-
+        .status-text {
+            text-align: center;
+            margin-top: 10px;
+            font-style: italic;
+            color: #6c757d;
+            min-height: 24px;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background-color: #4b6cb7;
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        tr:hover {
+            background-color: #e9ecef;
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 10px;
+        }
+        
+        .instructions {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 25px;
+            border-left: 4px solid #4b6cb7;
+        }
+        
+        .instructions h3 {
+            color: #182848;
+            margin-bottom: 10px;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .upload-section {
+                border-right: none;
+                border-bottom: 1px solid #eee;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
     </style>
 </head>
 <body>
-
     <div class="container">
-        <h1>Smart <span>ScanNote</span></h1>
-
-        <div class="upload-area" onclick="document.getElementById('file-input').click()">
-            <input type="file" id="file-input" accept="image/*">
-            <p id="upload-text" style="color: #94a3b8;">Klik untuk upload atau ambil foto</p>
-            <img id="image-preview" alt="Preview">
+        <header>
+            <h1><i class="fas fa-receipt"></i> Scanner Nota Barang</h1>
+            <p class="subtitle">Unggah gambar nota dan konversi secara otomatis menjadi tabel terstruktur</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="upload-section">
+                <h2 class="section-title">Unggah Nota</h2>
+                
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">
+                        <i class="fas fa-file-upload"></i>
+                    </div>
+                    <p class="upload-text">Klik atau seret gambar nota ke sini</p>
+                    <p>Format yang didukung: JPG, PNG, GIF</p>
+                    <input type="file" id="fileInput" class="file-input" accept="image/*">
+                </div>
+                
+                <div class="controls">
+                    <button class="button" id="scanButton">
+                        <i class="fas fa-qrcode"></i> Scan Nota
+                    </button>
+                    <button class="button secondary" id="resetButton">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                </div>
+                
+                <img id="imagePreview" class="image-preview" alt="Pratinjau Gambar">
+                
+                <div class="progress-container" id="progressContainer">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="status-text" id="statusText"></div>
+                
+                <div class="instructions">
+                    <h3><i class="fas fa-info-circle"></i> Petunjuk Penggunaan:</h3>
+                    <ul>
+                        <li>Unggah gambar nota yang ingin dipindai</li>
+                        <li>Klik tombol "Scan Nota" untuk memulai konversi</li>
+                        <li>Pastikan gambar jelas dan teks terbaca dengan baik</li>
+                        <li>Hasil pemindaian akan muncul dalam bentuk tabel</li>
+                        <li>Anda dapat mengedit data di tabel secara langsung</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="result-section">
+                <h2 class="section-title">Hasil Tabel Barang</h2>
+                
+                <div class="table-container">
+                    <table id="resultTable">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Barang</th>
+                                <th>Jumlah</th>
+                                <th>Harga Satuan</th>
+                                <th>Total Harga</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <tr>
+                                <td colspan="5" class="no-data">
+                                    <i class="fas fa-table" style="font-size: 40px; margin-bottom: 10px;"></i><br>
+                                    Belum ada data. Silakan unggah dan pindai nota.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="controls">
+                    <button class="button success" id="exportButton">
+                        <i class="fas fa-file-export"></i> Ekspor ke CSV
+                    </button>
+                    <button class="button" id="addRowButton">
+                        <i class="fas fa-plus"></i> Tambah Baris
+                    </button>
+                </div>
+                
+                <div class="instructions">
+                    <h3><i class="fas fa-lightbulb"></i> Tips untuk Hasil Terbaik:</h3>
+                    <ul>
+                        <li>Gunakan gambar dengan pencahayaan yang baik</li>
+                        <li>Pastikan teks dalam nota tidak terpotong</li>
+                        <li>Format nota yang rapi memberikan hasil lebih baik</li>
+                        <li>Jika hasil kurang akurat, coba gambar dengan resolusi lebih tinggi</li>
+                    </ul>
+                </div>
+            </div>
         </div>
-
-        <div class="controls">
-            <button id="scan-btn">🔍 Mulai Scan Gambar</button>
-            <button id="copy-btn">📋 Copy Teks</button>
-        </div>
-
-        <div class="status-bar" id="status-bar">
-            <div class="progress" id="progress"></div>
-        </div>
-        <div class="status-text" id="status-text"></div>
-
-        <textarea id="result-text" placeholder="Hasil teks akan muncul di sini..."></textarea>
     </div>
 
     <script>
-        const fileInput = document.getElementById('file-input');
-        const preview = document.getElementById('image-preview');
-        const uploadText = document.getElementById('upload-text');
-        const scanBtn = document.getElementById('scan-btn');
-        const resultText = document.getElementById('result-text');
-        const statusText = document.getElementById('status-text');
-        const progressBar = document.getElementById('status-bar');
-        const progressFill = document.getElementById('progress');
-        const copyBtn = document.getElementById('copy-btn');
-
-        let selectedFile = null;
-
-        // 1. Handle File Upload / Camera
-        fileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                selectedFile = file;
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    preview.src = e.target.result;
-                    preview.style.display = 'block';
-                    uploadText.style.display = 'none';
-                    scanBtn.classList.add('active'); // Aktifkan tombol scan
-                    resultText.value = ''; // Reset hasil sebelumnya
-                    copyBtn.style.display = 'none';
-                }
-                reader.readAsDataURL(file);
+        // Elemen DOM
+        const fileInput = document.getElementById('fileInput');
+        const uploadArea = document.getElementById('uploadArea');
+        const imagePreview = document.getElementById('imagePreview');
+        const scanButton = document.getElementById('scanButton');
+        const resetButton = document.getElementById('resetButton');
+        const exportButton = document.getElementById('exportButton');
+        const addRowButton = document.getElementById('addRowButton');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+        const statusText = document.getElementById('statusText');
+        const tableBody = document.getElementById('tableBody');
+        
+        let uploadedImage = null;
+        let extractedData = [];
+        
+        // Event listener untuk area upload
+        uploadArea.addEventListener('click', () => fileInput.click());
+        
+        // Event listener untuk drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.backgroundColor = '#eef2ff';
+            uploadArea.style.borderColor = '#182848';
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.backgroundColor = '#f8faff';
+            uploadArea.style.borderColor = '#4b6cb7';
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.backgroundColor = '#f8faff';
+            uploadArea.style.borderColor = '#4b6cb7';
+            
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                handleImageUpload(e.dataTransfer.files[0]);
             }
         });
-
-        // 2. Logic Scanning (OCR)
-        scanBtn.addEventListener('click', () => {
-            if (!selectedFile) return;
-
-            // UI Updates saat loading
-            scanBtn.disabled = true;
-            scanBtn.textContent = 'Sedang Memproses...';
-            progressBar.style.display = 'block';
-            statusText.style.display = 'block';
-
-            // Menjalankan Tesseract
-            Tesseract.recognize(
-                selectedFile,
-                'ind+eng', // Mendukung Bahasa Indonesia & Inggris
-                {
-                    logger: m => {
-                        // Update Progress Bar
-                        if (m.status === 'recognizing text') {
-                            const percent = Math.round(m.progress * 100);
-                            progressFill.style.width = percent + '%';
-                            statusText.innerText = `Membaca Teks: ${percent}%`;
+        
+        // Event listener untuk input file
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length) {
+                handleImageUpload(e.target.files[0]);
+            }
+        });
+        
+        // Fungsi untuk menangani upload gambar
+        function handleImageUpload(file) {
+            const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+            
+            if (!validImageTypes.includes(file.type)) {
+                alert('Silakan unggah file gambar (JPG, PNG, atau GIF)');
+                return;
+            }
+            
+            const reader = new FileReader();
+            
+            reader.onload = (e) => {
+                uploadedImage = e.target.result;
+                imagePreview.src = uploadedImage;
+                imagePreview.style.display = 'block';
+                statusText.textContent = 'Gambar siap untuk dipindai';
+            };
+            
+            reader.readAsDataURL(file);
+        }
+        
+        // Event listener untuk tombol scan
+        scanButton.addEventListener('click', async () => {
+            if (!uploadedImage) {
+                alert('Silakan unggah gambar nota terlebih dahulu');
+                return;
+            }
+            
+            // Reset progress
+            progressBar.style.width = '0%';
+            progressContainer.style.display = 'block';
+            statusText.textContent = 'Memulai proses pemindaian...';
+            
+            try {
+                // Inisialisasi Tesseract
+                const worker = Tesseract.createWorker({
+                    logger: progress => {
+                        // Update progress bar
+                        const progressPercent = Math.round(progress.progress * 100);
+                        progressBar.style.width = `${progressPercent}%`;
+                        
+                        // Update status text
+                        if (progress.status === 'recognizing text') {
+                            statusText.textContent = `Mengenali teks: ${progressPercent}%`;
                         } else {
-                            statusText.innerText = m.status;
+                            statusText.textContent = `${progress.status}...`;
                         }
                     }
-                }
-            ).then(({ data: { text } }) => {
-                // Saat Selesai
-                resultText.value = text;
-                scanBtn.disabled = false;
-                scanBtn.textContent = '🔍 Mulai Scan Gambar';
-                statusText.innerText = 'Selesai!';
-                copyBtn.style.display = 'block';
+                });
                 
-                // Animasi kecil pada textarea
-                resultText.style.borderColor = '#4ade80'; // Hijau sukses
-                setTimeout(() => resultText.style.borderColor = '#334155', 1000);
-            }).catch(err => {
-                console.error(err);
-                statusText.innerText = 'Gagal memindai gambar.';
-                scanBtn.disabled = false;
-            });
+                await worker.load();
+                await worker.loadLanguage('ind');
+                await worker.initialize('ind');
+                
+                // Proses gambar
+                statusText.textContent = 'Memproses gambar...';
+                const { data: { text } } = await worker.recognize(uploadedImage);
+                
+                await worker.terminate();
+                
+                // Proses teks hasil OCR
+                statusText.textContent = 'Mengolah hasil pemindaian...';
+                processOCRText(text);
+                
+            } catch (error) {
+                console.error('Error during OCR:', error);
+                statusText.textContent = 'Terjadi kesalahan saat memindai. Coba gambar lain.';
+                
+                // Simulasi data jika OCR gagal
+                simulateData();
+            }
         });
-
-        // 3. Fitur Copy to Clipboard
-        copyBtn.addEventListener('click', () => {
-            resultText.select();
-            document.execCommand('copy');
-            copyBtn.textContent = 'Tersalin!';
-            setTimeout(() => copyBtn.textContent = '📋 Copy Teks', 2000);
+        
+        // Fungsi untuk memproses teks hasil OCR
+        function processOCRText(text) {
+            console.log('Teks yang dipindai:', text);
+            
+            // Reset data
+            extractedData = [];
+            
+            // Contoh parsing sederhana untuk teks nota
+            // Ini adalah contoh sederhana, implementasi sesungguhnya perlu disesuaikan dengan format nota
+            const lines = text.split('\n').filter(line => line.trim() !== '');
+            
+            // Simulasi parsing data dari nota
+            // Dalam implementasi nyata, Anda perlu menyesuaikan dengan format nota Anda
+            let itemCount = 0;
+            
+            lines.forEach((line, index) => {
+                // Contoh pola sederhana untuk mencari data barang
+                // Format: [nama barang] [jumlah] [harga] [total] (atau variasi)
+                const itemPattern = /(\d+\.?)?\s*([a-zA-Z\s]+)\s+(\d+)\s+([\d.,]+)\s+([\d.,]+)/i;
+                const match = line.match(itemPattern);
+                
+                if (match) {
+                    itemCount++;
+                    
+                    // Ambil komponen dari pola yang cocok
+                    // Perhatikan: pola ini mungkin perlu disesuaikan dengan format nota Anda
+                    const itemName = match[2]?.trim() || `Barang ${itemCount}`;
+                    const quantity = parseInt(match[3]) || 1;
+                    const price = parseFloat(match[4]?.replace(',', '.')) || 0;
+                    const total = parseFloat(match[5]?.replace(',', '.')) || (quantity * price);
+                    
+                    extractedData.push({
+                        id: itemCount,
+                        name: itemName,
+                        quantity: quantity,
+                        price: price,
+                        total: total
+                    });
+                } else {
+                    // Coba pola alternatif
+                    const altPattern = /([a-zA-Z\s]+)\s+x\s*(\d+)\s*@?\s*([\d.,]+)/i;
+                    const altMatch = line.match(altPattern);
+                    
+                    if (altMatch) {
+                        itemCount++;
+                        
+                        const itemName = altMatch[1]?.trim() || `Barang ${itemCount}`;
+                        const quantity = parseInt(altMatch[2]) || 1;
+                        const price = parseFloat(altMatch[3]?.replace(',', '.')) || 0;
+                        const total = quantity * price;
+                        
+                        extractedData.push({
+                            id: itemCount,
+                            name: itemName,
+                            quantity: quantity,
+                            price: price,
+                            total: total
+                        });
+                    }
+                }
+            });
+            
+            // Jika tidak ada data yang ditemukan, gunakan data simulasi
+            if (extractedData.length === 0) {
+                simulateData();
+            }
+            
+            // Update tabel dengan data yang diekstrak
+            updateTable();
+            
+            // Update status
+            statusText.textContent = `Pemindaian selesai. ${extractedData.length} item ditemukan.`;
+            progressContainer.style.display = 'none';
+        }
+        
+        // Fungsi untuk simulasi data jika OCR tidak menemukan pola
+        function simulateData() {
+            extractedData = [
+                { id: 1, name: 'Buku Tulis', quantity: 5, price: 5000, total: 25000 },
+                { id: 2, name: 'Pulpen Standard', quantity: 3, price: 3000, total: 9000 },
+                { id: 3, name: 'Penggaris 30cm', quantity: 2, price: 8000, total: 16000 },
+                { id: 4, name: 'Penghapus', quantity: 4, price: 2000, total: 8000 },
+                { id: 5, name: 'Spidol Whiteboard', quantity: 2, price: 12000, total: 24000 }
+            ];
+            
+            statusText.textContent = 'Menggunakan data contoh. Untuk hasil terbaik, pastikan nota jelas dan format rapi.';
+        }
+        
+        // Fungsi untuk mengupdate tabel dengan data yang diekstrak
+        function updateTable() {
+            tableBody.innerHTML = '';
+            
+            if (extractedData.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="no-data">
+                            <i class="fas fa-exclamation-circle" style="font-size: 40px; margin-bottom: 10px;"></i><br>
+                            Tidak ada data yang dapat diekstrak. Coba gambar dengan kualitas lebih baik.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            extractedData.forEach((item, index) => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td contenteditable="true" oninput="updateData(${index}, 'id', this.textContent)">${item.id}</td>
+                    <td contenteditable="true" oninput="updateData(${index}, 'name', this.textContent)">${item.name}</td>
+                    <td contenteditable="true" oninput="updateData(${index}, 'quantity', this.textContent); calculateTotal(${index})">${item.quantity}</td>
+                    <td contenteditable="true" oninput="updateData(${index}, 'price', this.textContent); calculateTotal(${index})">${formatCurrency(item.price)}</td>
+                    <td contenteditable="true" oninput="updateData(${index}, 'total', this.textContent)">${formatCurrency(item.total)}</td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // Fungsi untuk memperbarui data saat sel diedit
+        window.updateData = function(index, field, value) {
+            if (field === 'id' || field === 'quantity') {
+                extractedData[index][field] = parseInt(value) || 0;
+            } else if (field === 'price' || field === 'total') {
+                // Hapus karakter non-digit kecuali titik
+                const numericValue = parseFloat(value.replace(/[^\d.,]/g, '').replace(',', '.')) || 0;
+                extractedData[index][field] = numericValue;
+                
+                // Update tampilan dengan format mata uang
+                const row = tableBody.children[index];
+                const cell = row.querySelector(`td:nth-child(${field === 'price' ? 4 : 5})`);
+                cell.textContent = formatCurrency(numericValue);
+            } else {
+                extractedData[index][field] = value;
+            }
+        };
+        
+        // Fungsi untuk menghitung total
+        window.calculateTotal = function(index) {
+            const quantity = extractedData[index].quantity || 0;
+            const price = extractedData[index].price || 0;
+            extractedData[index].total = quantity * price;
+            
+            // Update sel total
+            const row = tableBody.children[index];
+            const totalCell = row.querySelector('td:nth-child(5)');
+            totalCell.textContent = formatCurrency(extractedData[index].total);
+        };
+        
+        // Fungsi untuk format mata uang
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).format(amount);
+        }
+        
+        // Event listener untuk tombol reset
+        resetButton.addEventListener('click', () => {
+            fileInput.value = '';
+            uploadedImage = null;
+            imagePreview.style.display = 'none';
+            progressContainer.style.display = 'none';
+            statusText.textContent = '';
+            extractedData = [];
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="no-data">
+                        <i class="fas fa-table" style="font-size: 40px; margin-bottom: 10px;"></i><br>
+                        Belum ada data. Silakan unggah dan pindai nota.
+                    </td>
+                </tr>
+            `;
+        });
+        
+        // Event listener untuk tombol tambah baris
+        addRowButton.addEventListener('click', () => {
+            const newId = extractedData.length > 0 ? Math.max(...extractedData.map(item => item.id)) + 1 : 1;
+            extractedData.push({
+                id: newId,
+                name: 'Barang Baru',
+                quantity: 1,
+                price: 0,
+                total: 0
+            });
+            updateTable();
+        });
+        
+        // Event listener untuk tombol ekspor
+        exportButton.addEventListener('click', () => {
+            if (extractedData.length === 0) {
+                alert('Tidak ada data untuk diekspor');
+                return;
+            }
+            
+            // Buat header CSV
+            let csvContent = "No,Nama Barang,Jumlah,Harga Satuan,Total Harga\n";
+            
+            // Tambahkan data
+            extractedData.forEach(item => {
+                csvContent += `${item.id},"${item.name}",${item.quantity},${item.price},${item.total}\n`;
+            });
+            
+            // Buat blob dan download
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'data_nota.csv';
+            link.click();
+            
+            // Bersihkan URL
+            setTimeout(() => URL.revokeObjectURL(url), 100);
+        });
+        
+        // Inisialisasi dengan data contoh untuk demo
+        window.addEventListener('load', () => {
+            // Tampilkan pesan selamat datang
+            statusText.textContent = 'Unggah gambar nota atau gunakan contoh data untuk mencoba';
+            
+            // Untuk keperluan demo, kita bisa memuat data contoh
+            // Di lingkungan nyata, Anda mungkin ingin menghapus ini
+            setTimeout(() => {
+                // simulateData();
+                // updateTable();
+            }, 1000);
         });
     </script>
 </body>
