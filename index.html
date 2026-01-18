@@ -3,705 +3,1519 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scanner Nota Barang ke Tabel</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@v2.1.0/dist/tesseract.min.js"></script>
+    <title>Smart Stock Analyzer - Manajemen Inventori Cerdas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --success-color: #4cc9f0;
+            --warning-color: #f72585;
+            --light-bg: #f8f9fa;
+            --dark-bg: #212529;
         }
         
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fb;
             color: #333;
+        }
+        
+        .sidebar {
             min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background-color: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-        
-        header {
-            background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
+            background: linear-gradient(180deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
-            padding: 25px 30px;
-            text-align: center;
-        }
-        
-        h1 {
-            font-size: 2.2rem;
-            margin-bottom: 10px;
-        }
-        
-        .subtitle {
-            font-size: 1rem;
-            opacity: 0.9;
-            font-weight: 300;
+            padding: 0;
+            position: fixed;
+            width: 250px;
+            z-index: 1000;
         }
         
         .main-content {
-            display: flex;
-            flex-wrap: wrap;
-            padding: 30px;
-        }
-        
-        .upload-section {
-            flex: 1;
-            min-width: 300px;
+            margin-left: 250px;
             padding: 20px;
-            border-right: 1px solid #eee;
-        }
-        
-        .result-section {
-            flex: 1;
-            min-width: 300px;
-            padding: 20px;
-        }
-        
-        .section-title {
-            font-size: 1.5rem;
-            color: #182848;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #4b6cb7;
-        }
-        
-        .upload-area {
-            border: 3px dashed #4b6cb7;
-            border-radius: 10px;
-            padding: 40px 20px;
-            text-align: center;
-            cursor: pointer;
             transition: all 0.3s;
-            margin-bottom: 20px;
-            background-color: #f8faff;
         }
         
-        .upload-area:hover {
-            background-color: #eef2ff;
-            border-color: #182848;
+        .nav-link {
+            color: rgba(255,255,255,0.8);
+            padding: 12px 20px;
+            margin: 5px 10px;
+            border-radius: 8px;
+            transition: all 0.3s;
         }
         
-        .upload-icon {
-            font-size: 50px;
-            color: #4b6cb7;
-            margin-bottom: 15px;
-        }
-        
-        .upload-text {
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-        }
-        
-        .file-input {
-            display: none;
-        }
-        
-        .button {
-            background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(255,255,255,0.1);
             color: white;
+        }
+        
+        .card {
             border: none;
-            padding: 12px 25px;
-            border-radius: 6px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin: 5px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+            margin-bottom: 20px;
         }
         
-        .button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        .card:hover {
+            transform: translateY(-5px);
         }
         
-        .button i {
-            margin-right: 8px;
+        .kpi-card {
+            border-left: 5px solid var(--primary-color);
         }
         
-        .button.secondary {
-            background: linear-gradient(90deg, #6c757d 0%, #495057 100%);
+        .alert-card {
+            border-left: 5px solid var(--warning-color);
         }
         
-        .button.success {
-            background: linear-gradient(90deg, #28a745 0%, #1e7e34 100%);
-        }
-        
-        .image-preview {
-            max-width: 100%;
-            max-height: 300px;
-            border-radius: 8px;
-            margin-top: 20px;
-            display: none;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .progress-container {
-            margin-top: 20px;
-            background-color: #e9ecef;
-            border-radius: 10px;
-            height: 10px;
-            overflow: hidden;
-            display: none;
-        }
-        
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
-            width: 0%;
-            transition: width 0.3s;
-        }
-        
-        .status-text {
-            text-align: center;
-            margin-top: 10px;
-            font-style: italic;
-            color: #6c757d;
-            min-height: 24px;
-        }
-        
-        .table-container {
-            overflow-x: auto;
-            margin-top: 20px;
-            border-radius: 8px;
-            border: 1px solid #dee2e6;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        th {
-            background-color: #4b6cb7;
-            color: white;
-            padding: 12px 15px;
-            text-align: left;
-        }
-        
-        td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #dee2e6;
-        }
-        
-        tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-        
-        tr:hover {
-            background-color: #e9ecef;
-        }
-        
-        .no-data {
-            text-align: center;
-            padding: 40px;
-            color: #6c757d;
-        }
-        
-        .controls {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 20px;
-            gap: 10px;
-        }
-        
-        .instructions {
-            background-color: #f8f9fa;
-            border-radius: 8px;
+        .dashboard-header {
+            background: white;
             padding: 20px;
-            margin-top: 25px;
-            border-left: 4px solid #4b6cb7;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
         
-        .instructions h3 {
-            color: #182848;
-            margin-bottom: 10px;
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
         }
         
-        .instructions ul {
-            padding-left: 20px;
+        .badge-critical {
+            background-color: #ff4757;
+            color: white;
         }
         
-        .instructions li {
-            margin-bottom: 8px;
-            line-height: 1.5;
+        .badge-warning {
+            background-color: #ffa502;
+            color: white;
         }
         
-        @media (max-width: 768px) {
+        .badge-success {
+            background-color: #2ed573;
+            color: white;
+        }
+        
+        .product-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
+        .form-section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .tab-content {
+            padding-top: 20px;
+        }
+        
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 70px;
+            }
+            
+            .sidebar .nav-text {
+                display: none;
+            }
+            
             .main-content {
-                flex-direction: column;
+                margin-left: 70px;
             }
-            
-            .upload-section {
-                border-right: none;
-                border-bottom: 1px solid #eee;
-            }
-            
-            h1 {
-                font-size: 1.8rem;
-            }
+        }
+        
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 40px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .heatmap-cell {
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            display: inline-block;
+            margin: 2px;
+            text-align: center;
+            line-height: 30px;
+            font-size: 12px;
+            color: white;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1><i class="fas fa-receipt"></i> Scanner Nota Barang</h1>
-            <p class="subtitle">Unggah gambar nota dan konversi secara otomatis menjadi tabel terstruktur</p>
-        </header>
-        
-        <div class="main-content">
-            <div class="upload-section">
-                <h2 class="section-title">Unggah Nota</h2>
-                
-                <div class="upload-area" id="uploadArea">
-                    <div class="upload-icon">
-                        <i class="fas fa-file-upload"></i>
+    <!-- Login Screen (Awal) -->
+    <div id="loginScreen" class="container">
+        <div class="login-container">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold" style="color: var(--primary-color);">
+                    <i class="bi bi-graph-up-arrow me-2"></i>Smart Stock Analyzer
+                </h2>
+                <p class="text-muted">Manajemen Inventori Cerdas untuk Bisnis Anda</p>
+            </div>
+            
+            <div class="mb-4">
+                <label class="form-label">Email / Username</label>
+                <input type="text" id="loginEmail" class="form-control" placeholder="admin@smartstock.com">
+            </div>
+            
+            <div class="mb-4">
+                <label class="form-label">Password</label>
+                <input type="password" id="loginPassword" class="form-control" placeholder="••••••••">
+            </div>
+            
+            <div class="mb-4">
+                <select id="loginRole" class="form-select">
+                    <option value="admin">Administrator</option>
+                    <option value="purchasing">Staff Purchasing</option>
+                    <option value="warehouse">Staff Gudang</option>
+                    <option value="viewer">Viewer Only</option>
+                </select>
+            </div>
+            
+            <button class="btn btn-primary w-100 mb-3" onclick="login()">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Login ke Dashboard
+            </button>
+            
+            <div class="text-center">
+                <p class="text-muted small">Demo Account: admin@smartstock.com / password123</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application (Tersembunyi Awal) -->
+    <div id="appContainer" style="display: none;">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="p-4">
+                <h4 class="fw-bold">
+                    <i class="bi bi-graph-up-arrow me-2"></i>
+                    <span class="nav-text">Smart Stock</span>
+                </h4>
+                <p class="small text-white-50 mb-0 nav-text">Manajemen Inventori Cerdas</p>
+            </div>
+            
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#" onclick="showSection('dashboard')">
+                        <i class="bi bi-speedometer2 me-3"></i>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showSection('products')">
+                        <i class="bi bi-box-seam me-3"></i>
+                        <span class="nav-text">Produk & Stok</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showSection('transactions')">
+                        <i class="bi bi-arrow-left-right me-3"></i>
+                        <span class="nav-text">Transaksi</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showSection('analytics')">
+                        <i class="bi bi-bar-chart-line me-3"></i>
+                        <span class="nav-text">Analitik</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showSection('suppliers')">
+                        <i class="bi bi-truck me-3"></i>
+                        <span class="nav-text">Supplier</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showSection('alerts')">
+                        <i class="bi bi-bell me-3"></i>
+                        <span class="nav-text">Notifikasi</span>
+                        <span class="badge bg-danger float-end nav-text" id="alertCount">3</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showSection('reports')">
+                        <i class="bi bi-file-text me-3"></i>
+                        <span class="nav-text">Laporan</span>
+                    </a>
+                </li>
+                <li class="nav-item mt-4">
+                    <a class="nav-link" href="#" onclick="showSection('settings')">
+                        <i class="bi bi-gear me-3"></i>
+                        <span class="nav-text">Pengaturan</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="position-absolute bottom-0 w-100 p-3">
+                <div class="d-flex align-items-center">
+                    <div class="bg-white rounded-circle p-2 me-3">
+                        <i class="bi bi-person-circle text-primary"></i>
                     </div>
-                    <p class="upload-text">Klik atau seret gambar nota ke sini</p>
-                    <p>Format yang didukung: JPG, PNG, GIF</p>
-                    <input type="file" id="fileInput" class="file-input" accept="image/*">
-                </div>
-                
-                <div class="controls">
-                    <button class="button" id="scanButton">
-                        <i class="fas fa-qrcode"></i> Scan Nota
-                    </button>
-                    <button class="button secondary" id="resetButton">
-                        <i class="fas fa-redo"></i> Reset
+                    <div class="nav-text">
+                        <p class="mb-0 small fw-bold" id="userName">Administrator</p>
+                        <p class="mb-0 small text-white-50" id="userRole">Admin</p>
+                    </div>
+                    <button class="btn btn-sm btn-outline-light ms-auto" onclick="logout()">
+                        <i class="bi bi-box-arrow-right"></i>
                     </button>
                 </div>
-                
-                <img id="imagePreview" class="image-preview" alt="Pratinjau Gambar">
-                
-                <div class="progress-container" id="progressContainer">
-                    <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Dashboard Section -->
+            <div id="dashboardSection">
+                <div class="dashboard-header">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h2 class="fw-bold">Dashboard Inventori</h2>
+                            <p class="text-muted mb-0">Ringkasan kinerja stok dan analisis real-time</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <span class="badge bg-light text-dark me-2" id="currentDate">Hari ini: 18 Jan 2026</span>
+                            <button class="btn btn-primary">
+                                <i class="bi bi-plus-circle me-2"></i>Tambah Produk
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div class="status-text" id="statusText"></div>
                 
-                <div class="instructions">
-                    <h3><i class="fas fa-info-circle"></i> Petunjuk Penggunaan:</h3>
-                    <ul>
-                        <li>Unggah gambar nota yang ingin dipindai</li>
-                        <li>Klik tombol "Scan Nota" untuk memulai konversi</li>
-                        <li>Pastikan gambar jelas dan teks terbaca dengan baik</li>
-                        <li>Hasil pemindaian akan muncul dalam bentuk tabel</li>
-                        <li>Anda dapat mengedit data di tabel secara langsung</li>
-                    </ul>
+                <!-- KPI Cards -->
+                <div class="row">
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card kpi-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <p class="text-muted mb-1">Total Produk</p>
+                                        <h3 class="stat-number" id="totalProducts">156</h3>
+                                    </div>
+                                    <div class="align-self-center">
+                                        <i class="bi bi-box-seam text-primary" style="font-size: 2rem;"></i>
+                                    </div>
+                                </div>
+                                <p class="mb-0 text-success small">
+                                    <i class="bi bi-arrow-up me-1"></i>12% dari bulan lalu
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card kpi-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <p class="text-muted mb-1">Nilai Inventori</p>
+                                        <h3 class="stat-number" id="inventoryValue">Rp 245.8Jt</h3>
+                                    </div>
+                                    <div class="align-self-center">
+                                        <i class="bi bi-currency-dollar text-success" style="font-size: 2rem;"></i>
+                                    </div>
+                                </div>
+                                <p class="mb-0 text-success small">
+                                    <i class="bi bi-arrow-up me-1"></i>8.5% dari bulan lalu
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card kpi-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <p class="text-muted mb-1">Stok Kritis</p>
+                                        <h3 class="stat-number text-warning" id="criticalStock">18</h3>
+                                    </div>
+                                    <div class="align-self-center">
+                                        <i class="bi bi-exclamation-triangle text-warning" style="font-size: 2rem;"></i>
+                                    </div>
+                                </div>
+                                <p class="mb-0 text-warning small">
+                                    <i class="bi bi-arrow-up me-1"></i>5 produk baru kritis
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card kpi-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <p class="text-muted mb-1">Turnover Ratio</p>
+                                        <h3 class="stat-number" id="turnoverRatio">4.2x</h3>
+                                    </div>
+                                    <div class="align-self-center">
+                                        <i class="bi bi-arrow-repeat text-info" style="font-size: 2rem;"></i>
+                                    </div>
+                                </div>
+                                <p class="mb-0 text-success small">
+                                    <i class="bi bi-arrow-up me-1"></i>Efisiensi baik
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Charts and Tables -->
+                <div class="row mt-4">
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-0">Tren Penjualan & Stok 30 Hari Terakhir</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="salesStockChart" height="250"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4">
+                        <div class="card alert-card">
+                            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Stok Kritis</h5>
+                                <span class="badge bg-warning">Prioritas</span>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="list-group list-group-flush">
+                                    <div class="list-group-item d-flex align-items-center">
+                                        <div class="bg-danger rounded-circle p-2 me-3">
+                                            <i class="bi bi-exclamation-lg text-white"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-0">Laptop Dell XPS 13</h6>
+                                            <small class="text-muted">Stok: 3 (Min: 10)</small>
+                                        </div>
+                                        <button class="btn btn-sm btn-outline-primary">Reorder</button>
+                                    </div>
+                                    
+                                    <div class="list-group-item d-flex align-items-center">
+                                        <div class="bg-warning rounded-circle p-2 me-3">
+                                            <i class="bi bi-exclamation-lg text-white"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-0">Mouse Gaming Logitech</h6>
+                                            <small class="text-muted">Stok: 12 (Min: 15)</small>
+                                        </div>
+                                        <button class="btn btn-sm btn-outline-primary">Reorder</button>
+                                    </div>
+                                    
+                                    <div class="list-group-item d-flex align-items-center">
+                                        <div class="bg-warning rounded-circle p-2 me-3">
+                                            <i class="bi bi-exclamation-lg text-white"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-0">Monitor Samsung 24"</h6>
+                                            <small class="text-muted">Stok: 5 (Min: 8)</small>
+                                        </div>
+                                        <button class="btn btn-sm btn-outline-primary">Reorder</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product Performance Table -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Kinerja Produk Teratas (ABC Analysis)</h5>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                        Kategori A
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#">Kategori A (High Value)</a></li>
+                                        <li><a class="dropdown-item" href="#">Kategori B (Medium Value)</a></li>
+                                        <li><a class="dropdown-item" href="#">Kategori C (Low Value)</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Produk</th>
+                                                <th>SKU</th>
+                                                <th>Kategori</th>
+                                                <th>Stok</th>
+                                                <th>Nilai Inventori</th>
+                                                <th>Turnover</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="productPerformanceTable">
+                                            <!-- Data akan diisi JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             
-            <div class="result-section">
-                <h2 class="section-title">Hasil Tabel Barang</h2>
-                
-                <div class="table-container">
-                    <table id="resultTable">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Nama Barang</th>
-                                <th>Jumlah</th>
-                                <th>Harga Satuan</th>
-                                <th>Total Harga</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tableBody">
-                            <tr>
-                                <td colspan="5" class="no-data">
-                                    <i class="fas fa-table" style="font-size: 40px; margin-bottom: 10px;"></i><br>
-                                    Belum ada data. Silakan unggah dan pindai nota.
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <!-- Products Section -->
+            <div id="productsSection" style="display: none;">
+                <div class="dashboard-header">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h2 class="fw-bold">Manajemen Produk & Stok</h2>
+                            <p class="text-muted mb-0">Kelola semua produk, stok, dan kategori inventori</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <button class="btn btn-primary" onclick="showAddProductModal()">
+                                <i class="bi bi-plus-circle me-2"></i>Tambah Produk Baru
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="controls">
-                    <button class="button success" id="exportButton">
-                        <i class="fas fa-file-export"></i> Ekspor ke CSV
-                    </button>
-                    <button class="button" id="addRowButton">
-                        <i class="fas fa-plus"></i> Tambah Baris
-                    </button>
+                <!-- Product Filter and Search -->
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Cari produk berdasarkan nama, SKU, atau kategori...">
+                            <button class="btn btn-outline-secondary" type="button">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-select">
+                            <option>Semua Kategori</option>
+                            <option>Elektronik</option>
+                            <option>Pakaian</option>
+                            <option>Makanan & Minuman</option>
+                            <option>Perlengkapan Kantor</option>
+                        </select>
+                    </div>
                 </div>
                 
-                <div class="instructions">
-                    <h3><i class="fas fa-lightbulb"></i> Tips untuk Hasil Terbaik:</h3>
-                    <ul>
-                        <li>Gunakan gambar dengan pencahayaan yang baik</li>
-                        <li>Pastikan teks dalam nota tidak terpotong</li>
-                        <li>Format nota yang rapi memberikan hasil lebih baik</li>
-                        <li>Jika hasil kurang akurat, coba gambar dengan resolusi lebih tinggi</li>
-                    </ul>
+                <!-- Products Grid -->
+                <div class="row" id="productsGrid">
+                    <!-- Produk akan diisi JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Analytics Section -->
+            <div id="analyticsSection" style="display: none;">
+                <div class="dashboard-header">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h2 class="fw-bold">Analitik & Forecasting</h2>
+                            <p class="text-muted mb-0">Analisis mendalam dan prediksi kebutuhan stok</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="btn-group">
+                                <button class="btn btn-outline-primary active">30 Hari</button>
+                                <button class="btn btn-outline-primary">90 Hari</button>
+                                <button class="btn btn-outline-primary">1 Tahun</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Forecasting Charts -->
+                <div class="row mt-4">
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-0">Forecasting Demand AI</h5>
+                                <p class="text-muted small mb-0">Prediksi kebutuhan stok 30 hari ke depan</p>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="forecastChart" height="250"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-0">Heatmap Penjualan Produk</h5>
+                                <p class="text-muted small mb-0">Intensitas penjualan per produk per hari</p>
+                            </div>
+                            <div class="card-body">
+                                <div id="heatmapContainer" class="text-center">
+                                    <!-- Heatmap akan dibuat JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Reorder Recommendations -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Rekomendasi Pembelian (AI-Powered)</h5>
+                                <span class="badge bg-primary">Powered by ML</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Produk</th>
+                                                <th>Stok Saat Ini</th>
+                                                <th>Prediksi Kebutuhan (30h)</th>
+                                                <th>Rekomendasi Beli</th>
+                                                <th>Supplier Terbaik</th>
+                                                <th>Waktu Pengiriman</th>
+                                                <th>Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Laptop Dell XPS 13</td>
+                                                <td><span class="badge bg-danger">3 unit</span></td>
+                                                <td>18 unit</td>
+                                                <td><strong>20 unit</strong></td>
+                                                <td>Dell Indonesia (Rating: 4.8)</td>
+                                                <td>5-7 hari</td>
+                                                <td><button class="btn btn-sm btn-success">Buat PO</button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Mouse Gaming Logitech</td>
+                                                <td><span class="badge bg-warning">12 unit</span></td>
+                                                <td>25 unit</td>
+                                                <td><strong>15 unit</strong></td>
+                                                <td>Logitech Official (Rating: 4.5)</td>
+                                                <td>3-5 hari</td>
+                                                <td><button class="btn btn-sm btn-success">Buat PO</button></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Alerts Section -->
+            <div id="alertsSection" style="display: none;">
+                <div class="dashboard-header">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h2 class="fw-bold">Notifikasi & Alert System</h2>
+                            <p class="text-muted mb-0">Monitor kondisi stok kritis, kedaluwarsa, dan pengingat</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <button class="btn btn-outline-danger" onclick="markAllAsRead()">
+                                <i class="bi bi-check-all me-2"></i>Tandai Semua Dibaca
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Alert Categories -->
+                <div class="row mt-4">
+                    <div class="col-md-3">
+                        <div class="card text-center p-4">
+                            <div class="bg-danger rounded-circle p-3 mx-auto mb-3" style="width: 70px; height: 70px;">
+                                <i class="bi bi-exclamation-triangle text-white" style="font-size: 2rem;"></i>
+                            </div>
+                            <h4 class="text-danger">12</h4>
+                            <p class="text-muted mb-0">Stok Kritis</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="card text-center p-4">
+                            <div class="bg-warning rounded-circle p-3 mx-auto mb-3" style="width: 70px; height: 70px;">
+                                <i class="bi bi-clock text-white" style="font-size: 2rem;"></i>
+                            </div>
+                            <h4 class="text-warning">5</h4>
+                            <p class="text-muted mb-0">Akan Kadaluarsa</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="card text-center p-4">
+                            <div class="bg-info rounded-circle p-3 mx-auto mb-3" style="width: 70px; height: 70px;">
+                                <i class="bi bi-truck text-white" style="font-size: 2rem;"></i>
+                            </div>
+                            <h4 class="text-info">3</h4>
+                            <p class="text-muted mb-0">Pengiriman Tertunda</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="card text-center p-4">
+                            <div class="bg-success rounded-circle p-3 mx-auto mb-3" style="width: 70px; height: 70px;">
+                                <i class="bi bi-check-circle text-white" style="font-size: 2rem;"></i>
+                            </div>
+                            <h4 class="text-success">24</h4>
+                            <p class="text-muted mb-0">Selesai Bulan Ini</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Alert List -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-0">Notifikasi Terbaru</h5>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="list-group list-group-flush">
+                                    <div class="list-group-item list-group-item-action">
+                                        <div class="d-flex align-items-center">
+                                            <div class="flex-shrink-0">
+                                                <div class="bg-danger rounded-circle p-2">
+                                                    <i class="bi bi-exclamation-lg text-white"></i>
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1 ms-3">
+                                                <div class="d-flex justify-content-between">
+                                                    <h6 class="mb-1">Stok Kritis: Laptop Dell XPS 13</h6>
+                                                    <small class="text-muted">2 jam lalu</small>
+                                                </div>
+                                                <p class="mb-1">Stok saat ini 3 unit, di bawah minimum 10 unit. Segera lakukan pembelian.</p>
+                                                <button class="btn btn-sm btn-outline-primary">Buat Purchase Order</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="list-group-item list-group-item-action">
+                                        <div class="d-flex align-items-center">
+                                            <div class="flex-shrink-0">
+                                                <div class="bg-warning rounded-circle p-2">
+                                                    <i class="bi bi-clock text-white"></i>
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1 ms-3">
+                                                <div class="d-flex justify-content-between">
+                                                    <h6 class="mb-1">Produk Mendekati Kedaluwarsa</h6>
+                                                    <small class="text-muted">5 jam lalu</small>
+                                                </div>
+                                                <p class="mb-1">Snack Coklat "ChocoDelight" akan kadaluarsa dalam 14 hari (Stok: 45 unit).</p>
+                                                <button class="btn btn-sm btn-outline-warning">Lihat Detail</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="list-group-item list-group-item-action">
+                                        <div class="d-flex align-items-center">
+                                            <div class="flex-shrink-0">
+                                                <div class="bg-info rounded-circle p-2">
+                                                    <i class="bi bi-truck text-white"></i>
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1 ms-3">
+                                                <div class="d-flex justify-content-between">
+                                                    <h6 class="mb-1">Pengiriman Supplier Tertunda</h6>
+                                                    <small class="text-muted">1 hari lalu</small>
+                                                </div>
+                                                <p class="mb-1">PO #INV-2026-00123 dari PT. Elektronik Makmur terlambat 2 hari dari ETA.</p>
+                                                <button class="btn btn-sm btn-outline-info">Hubungi Supplier</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Reports Section -->
+            <div id="reportsSection" style="display: none;">
+                <div class="dashboard-header">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h2 class="fw-bold">Laporan & Ekspor Data</h2>
+                            <p class="text-muted mb-0">Generate laporan periodik dan analisis inventori</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <button class="btn btn-success" onclick="exportReport()">
+                                <i class="bi bi-file-earmark-excel me-2"></i>Ekspor ke Excel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Report Generator -->
+                <div class="row mt-4">
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-0">Generate Laporan</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label class="form-label">Jenis Laporan</label>
+                                    <select class="form-select" id="reportType">
+                                        <option value="stock">Laporan Stok</option>
+                                        <option value="transaction">Laporan Transaksi</option>
+                                        <option value="sales">Laporan Penjualan</option>
+                                        <option value="purchase">Laporan Pembelian</option>
+                                        <option value="profit">Laporan Profitabilitas</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Periode</label>
+                                    <select class="form-select" id="reportPeriod">
+                                        <option value="today">Hari Ini</option>
+                                        <option value="week">Minggu Ini</option>
+                                        <option value="month" selected>Bulan Ini</option>
+                                        <option value="quarter">Kuartal Ini</option>
+                                        <option value="year">Tahun Ini</option>
+                                        <option value="custom">Kustom</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-3" id="customDateRange" style="display: none;">
+                                    <label class="form-label">Rentang Tanggal</label>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <input type="date" class="form-control mb-2" id="startDate">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input type="date" class="form-control" id="endDate">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Format Ekspor</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="exportFormat" id="pdfFormat" value="pdf">
+                                            <label class="form-check-label" for="pdfFormat">PDF</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="exportFormat" id="excelFormat" value="excel" checked>
+                                            <label class="form-check-label" for="excelFormat">Excel</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="exportFormat" id="csvFormat" value="csv">
+                                            <label class="form-check-label" for="csvFormat">CSV</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <button class="btn btn-primary w-100" onclick="generateReport()">
+                                    <i class="bi bi-gear me-2"></i>Generate Laporan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-0">Priview Laporan Stok (Contoh)</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Kategori</th>
+                                                <th>Jumlah Produk</th>
+                                                <th>Total Stok</th>
+                                                <th>Nilai Inventori</th>
+                                                <th>% dari Total</th>
+                                                <th>Turnover (30h)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Elektronik</td>
+                                                <td>45</td>
+                                                <td>1,245</td>
+                                                <td>Rp 185,450,000</td>
+                                                <td>65.2%</td>
+                                                <td>4.8x</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Pakaian</td>
+                                                <td>38</td>
+                                                <td>2,890</td>
+                                                <td>Rp 42,300,000</td>
+                                                <td>14.9%</td>
+                                                <td>3.2x</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Makanan & Minuman</td>
+                                                <td>52</td>
+                                                <td>3,456</td>
+                                                <td>Rp 38,750,000</td>
+                                                <td>13.6%</td>
+                                                <td>5.1x</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Perlengkapan Kantor</td>
+                                                <td>21</td>
+                                                <td>890</td>
+                                                <td>Rp 18,200,000</td>
+                                                <td>6.3%</td>
+                                                <td>2.4x</td>
+                                            </tr>
+                                            <tr class="table-primary fw-bold">
+                                                <td>TOTAL</td>
+                                                <td>156</td>
+                                                <td>8,481</td>
+                                                <td>Rp 284,700,000</td>
+                                                <td>100%</td>
+                                                <td>4.2x</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Other sections (transactions, suppliers, settings) can be added similarly -->
+            
+        </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div class="modal fade" id="addProductModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tambah Produk Baru</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addProductForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nama Produk *</label>
+                                <input type="text" class="form-control" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">SKU *</label>
+                                <input type="text" class="form-control" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Kategori</label>
+                                <select class="form-select">
+                                    <option>Elektronik</option>
+                                    <option>Pakaian</option>
+                                    <option>Makanan & Minuman</option>
+                                    <option>Perlengkapan Kantor</option>
+                                    <option>Lainnya</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Satuan</label>
+                                <select class="form-select">
+                                    <option>Unit</option>
+                                    <option>Pcs</option>
+                                    <option>Box</option>
+                                    <option>Pack</option>
+                                    <option>Kg</option>
+                                    <option>Liter</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Harga Beli *</label>
+                                <input type="number" class="form-control" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Harga Jual *</label>
+                                <input type="number" class="form-control" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Stok Awal</label>
+                                <input type="number" class="form-control" value="0">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Stok Minimum</label>
+                                <input type="number" class="form-control" value="10">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Stok Maksimum</label>
+                                <input type="number" class="form-control" value="100">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Lokasi Gudang</label>
+                                <select class="form-select">
+                                    <option>Gudang Utama</option>
+                                    <option>Gudang Cabang 1</option>
+                                    <option>Showroom</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Deskripsi Produk</label>
+                            <textarea class="form-control" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" onclick="saveProduct()">Simpan Produk</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
     <script>
-        // Elemen DOM
-        const fileInput = document.getElementById('fileInput');
-        const uploadArea = document.getElementById('uploadArea');
-        const imagePreview = document.getElementById('imagePreview');
-        const scanButton = document.getElementById('scanButton');
-        const resetButton = document.getElementById('resetButton');
-        const exportButton = document.getElementById('exportButton');
-        const addRowButton = document.getElementById('addRowButton');
-        const progressContainer = document.getElementById('progressContainer');
-        const progressBar = document.getElementById('progressBar');
-        const statusText = document.getElementById('statusText');
-        const tableBody = document.getElementById('tableBody');
+        // Inisialisasi data dan state aplikasi
+        let currentUser = null;
+        let currentSection = 'dashboard';
         
-        let uploadedImage = null;
-        let extractedData = [];
+        // Data contoh produk
+        const sampleProducts = [
+            { id: 1, name: "Laptop Dell XPS 13", sku: "DL-XPS13-001", category: "Elektronik", stock: 3, minStock: 10, value: 18500000, turnover: 4.5, status: "critical" },
+            { id: 2, name: "Mouse Gaming Logitech", sku: "LG-MG502", category: "Elektronik", stock: 12, minStock: 15, value: 450000, turnover: 6.2, status: "warning" },
+            { id: 3, name: "Monitor Samsung 24\"", sku: "SS-M24FHD", category: "Elektronik", stock: 5, minStock: 8, value: 2500000, turnover: 3.8, status: "warning" },
+            { id: 4, name: "Kemeja Flanel Pria", sku: "APP-FLANEL-M", category: "Pakaian", stock: 45, minStock: 20, value: 250000, turnover: 4.2, status: "good" },
+            { id: 5, name: "Snack Coklat ChocoDelight", sku: "FDD-CHOCO-50", category: "Makanan", stock: 120, minStock: 50, value: 15000, turnover: 8.5, status: "good" },
+            { id: 6, name: "Kertas A4 80gsm", sku: "OFF-A4-80-500", category: "Kantor", stock: 28, minStock: 30, value: 55000, turnover: 2.1, status: "warning" },
+            { id: 7, name: "Smartphone iPhone 15", sku: "APL-IP15-128", category: "Elektronik", stock: 15, minStock: 5, value: 16500000, turnover: 5.8, status: "good" },
+            { id: 8, name: "Headphone Sony WH-1000XM4", sku: "SNY-WH1000XM4", category: "Elektronik", stock: 8, minStock: 10, value: 3500000, turnover: 4.9, status: "warning" }
+        ];
         
-        // Event listener untuk area upload
-        uploadArea.addEventListener('click', () => fileInput.click());
-        
-        // Event listener untuk drag and drop
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.style.backgroundColor = '#eef2ff';
-            uploadArea.style.borderColor = '#182848';
-        });
-        
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.style.backgroundColor = '#f8faff';
-            uploadArea.style.borderColor = '#4b6cb7';
-        });
-        
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.style.backgroundColor = '#f8faff';
-            uploadArea.style.borderColor = '#4b6cb7';
+        // Fungsi login
+        function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const role = document.getElementById('loginRole').value;
             
-            if (e.dataTransfer.files.length) {
-                fileInput.files = e.dataTransfer.files;
-                handleImageUpload(e.dataTransfer.files[0]);
-            }
-        });
-        
-        // Event listener untuk input file
-        fileInput.addEventListener('change', (e) => {
-            if (e.target.files.length) {
-                handleImageUpload(e.target.files[0]);
-            }
-        });
-        
-        // Fungsi untuk menangani upload gambar
-        function handleImageUpload(file) {
-            const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
-            
-            if (!validImageTypes.includes(file.type)) {
-                alert('Silakan unggah file gambar (JPG, PNG, atau GIF)');
+            if (!email || !password) {
+                alert('Harap isi email dan password');
                 return;
             }
             
-            const reader = new FileReader();
-            
-            reader.onload = (e) => {
-                uploadedImage = e.target.result;
-                imagePreview.src = uploadedImage;
-                imagePreview.style.display = 'block';
-                statusText.textContent = 'Gambar siap untuk dipindai';
+            // Simulasi login berhasil
+            currentUser = {
+                email: email,
+                role: role,
+                name: role === 'admin' ? 'Administrator' : 
+                      role === 'purchasing' ? 'Staff Purchasing' :
+                      role === 'warehouse' ? 'Staff Gudang' : 'Viewer'
             };
             
-            reader.readAsDataURL(file);
+            // Tampilkan aplikasi utama
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('appContainer').style.display = 'block';
+            
+            // Update UI dengan data user
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userRole').textContent = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
+            
+            // Update tanggal
+            const now = new Date();
+            document.getElementById('currentDate').textContent = `Hari ini: ${now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
+            
+            // Inisialisasi dashboard
+            initializeDashboard();
+            loadProducts();
         }
         
-        // Event listener untuk tombol scan
-        scanButton.addEventListener('click', async () => {
-            if (!uploadedImage) {
-                alert('Silakan unggah gambar nota terlebih dahulu');
-                return;
+        // Fungsi logout
+        function logout() {
+            if (confirm('Apakah Anda yakin ingin logout?')) {
+                currentUser = null;
+                document.getElementById('appContainer').style.display = 'none';
+                document.getElementById('loginScreen').style.display = 'block';
+                
+                // Reset form login
+                document.getElementById('loginEmail').value = '';
+                document.getElementById('loginPassword').value = '';
+                document.getElementById('loginRole').value = 'admin';
             }
-            
-            // Reset progress
-            progressBar.style.width = '0%';
-            progressContainer.style.display = 'block';
-            statusText.textContent = 'Memulai proses pemindaian...';
-            
-            try {
-                // Inisialisasi Tesseract
-                const worker = Tesseract.createWorker({
-                    logger: progress => {
-                        // Update progress bar
-                        const progressPercent = Math.round(progress.progress * 100);
-                        progressBar.style.width = `${progressPercent}%`;
-                        
-                        // Update status text
-                        if (progress.status === 'recognizing text') {
-                            statusText.textContent = `Mengenali teks: ${progressPercent}%`;
-                        } else {
-                            statusText.textContent = `${progress.status}...`;
-                        }
-                    }
-                });
-                
-                await worker.load();
-                await worker.loadLanguage('ind');
-                await worker.initialize('ind');
-                
-                // Proses gambar
-                statusText.textContent = 'Memproses gambar...';
-                const { data: { text } } = await worker.recognize(uploadedImage);
-                
-                await worker.terminate();
-                
-                // Proses teks hasil OCR
-                statusText.textContent = 'Mengolah hasil pemindaian...';
-                processOCRText(text);
-                
-            } catch (error) {
-                console.error('Error during OCR:', error);
-                statusText.textContent = 'Terjadi kesalahan saat memindai. Coba gambar lain.';
-                
-                // Simulasi data jika OCR gagal
-                simulateData();
-            }
-        });
+        }
         
-        // Fungsi untuk memproses teks hasil OCR
-        function processOCRText(text) {
-            console.log('Teks yang dipindai:', text);
+        // Fungsi untuk menampilkan section berbeda
+        function showSection(sectionName) {
+            // Sembunyikan semua section
+            const sections = ['dashboardSection', 'productsSection', 'analyticsSection', 'alertsSection', 'reportsSection'];
+            sections.forEach(section => {
+                document.getElementById(section).style.display = 'none';
+            });
             
-            // Reset data
-            extractedData = [];
+            // Tampilkan section yang dipilih
+            document.getElementById(sectionName + 'Section').style.display = 'block';
+            currentSection = sectionName;
             
-            // Contoh parsing sederhana untuk teks nota
-            // Ini adalah contoh sederhana, implementasi sesungguhnya perlu disesuaikan dengan format nota
-            const lines = text.split('\n').filter(line => line.trim() !== '');
+            // Update active menu
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
             
-            // Simulasi parsing data dari nota
-            // Dalam implementasi nyata, Anda perlu menyesuaikan dengan format nota Anda
-            let itemCount = 0;
+            // Inisialisasi section tertentu
+            if (sectionName === 'analytics') {
+                initializeAnalytics();
+            }
+        }
+        
+        // Inisialisasi dashboard
+        function initializeDashboard() {
+            // Update KPI
+            document.getElementById('totalProducts').textContent = sampleProducts.length;
             
-            lines.forEach((line, index) => {
-                // Contoh pola sederhana untuk mencari data barang
-                // Format: [nama barang] [jumlah] [harga] [total] (atau variasi)
-                const itemPattern = /(\d+\.?)?\s*([a-zA-Z\s]+)\s+(\d+)\s+([\d.,]+)\s+([\d.,]+)/i;
-                const match = line.match(itemPattern);
-                
-                if (match) {
-                    itemCount++;
-                    
-                    // Ambil komponen dari pola yang cocok
-                    // Perhatikan: pola ini mungkin perlu disesuaikan dengan format nota Anda
-                    const itemName = match[2]?.trim() || `Barang ${itemCount}`;
-                    const quantity = parseInt(match[3]) || 1;
-                    const price = parseFloat(match[4]?.replace(',', '.')) || 0;
-                    const total = parseFloat(match[5]?.replace(',', '.')) || (quantity * price);
-                    
-                    extractedData.push({
-                        id: itemCount,
-                        name: itemName,
-                        quantity: quantity,
-                        price: price,
-                        total: total
-                    });
+            // Hitung nilai inventori
+            const totalValue = sampleProducts.reduce((sum, product) => sum + product.value, 0);
+            document.getElementById('inventoryValue').textContent = formatCurrency(totalValue);
+            
+            // Hitung stok kritis
+            const criticalCount = sampleProducts.filter(p => p.status === 'critical').length;
+            document.getElementById('criticalStock').textContent = criticalCount;
+            
+            // Update tabel performa produk
+            updateProductPerformanceTable();
+            
+            // Buat chart
+            createSalesStockChart();
+        }
+        
+        // Format mata uang
+        function formatCurrency(value) {
+            if (value >= 1000000000) {
+                return `Rp ${(value/1000000000).toFixed(1)}M`;
+            } else if (value >= 1000000) {
+                return `Rp ${(value/1000000).toFixed(1)}Jt`;
+            } else {
+                return `Rp ${value.toLocaleString('id-ID')}`;
+            }
+        }
+        
+        // Update tabel performa produk
+        function updateProductPerformanceTable() {
+            const tableBody = document.getElementById('productPerformanceTable');
+            tableBody.innerHTML = '';
+            
+            sampleProducts.forEach(product => {
+                let statusBadge = '';
+                if (product.status === 'critical') {
+                    statusBadge = '<span class="badge bg-danger">Kritis</span>';
+                } else if (product.status === 'warning') {
+                    statusBadge = '<span class="badge bg-warning">Perhatian</span>';
                 } else {
-                    // Coba pola alternatif
-                    const altPattern = /([a-zA-Z\s]+)\s+x\s*(\d+)\s*@?\s*([\d.,]+)/i;
-                    const altMatch = line.match(altPattern);
-                    
-                    if (altMatch) {
-                        itemCount++;
-                        
-                        const itemName = altMatch[1]?.trim() || `Barang ${itemCount}`;
-                        const quantity = parseInt(altMatch[2]) || 1;
-                        const price = parseFloat(altMatch[3]?.replace(',', '.')) || 0;
-                        const total = quantity * price;
-                        
-                        extractedData.push({
-                            id: itemCount,
-                            name: itemName,
-                            quantity: quantity,
-                            price: price,
-                            total: total
-                        });
+                    statusBadge = '<span class="badge bg-success">Aman</span>';
+                }
+                
+                const row = `
+                    <tr>
+                        <td>${product.name}</td>
+                        <td><code>${product.sku}</code></td>
+                        <td>${product.category}</td>
+                        <td>
+                            ${product.stock} unit
+                            ${product.stock < product.minStock ? `<br><small class="text-danger">Min: ${product.minStock}</small>` : ''}
+                        </td>
+                        <td>${formatCurrency(product.value)}</td>
+                        <td>${product.turnover}x</td>
+                        <td>${statusBadge}</td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+        }
+        
+        // Buat chart penjualan & stok
+        function createSalesStockChart() {
+            const ctx = document.getElementById('salesStockChart').getContext('2d');
+            
+            // Data contoh untuk 30 hari terakhir
+            const days = Array.from({length: 30}, (_, i) => `Hari ${i+1}`);
+            const salesData = Array.from({length: 30}, () => Math.floor(Math.random() * 100) + 20);
+            const stockData = Array.from({length: 30}, () => Math.floor(Math.random() * 200) + 50);
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: days,
+                    datasets: [
+                        {
+                            label: 'Penjualan (unit)',
+                            data: salesData,
+                            borderColor: '#4361ee',
+                            backgroundColor: 'rgba(67, 97, 238, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Stok Rata-rata (unit)',
+                            data: stockData,
+                            borderColor: '#4cc9f0',
+                            backgroundColor: 'rgba(76, 201, 240, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Hari'
+                            }
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Jumlah (unit)'
+                            }
+                        }
                     }
                 }
             });
-            
-            // Jika tidak ada data yang ditemukan, gunakan data simulasi
-            if (extractedData.length === 0) {
-                simulateData();
-            }
-            
-            // Update tabel dengan data yang diekstrak
-            updateTable();
-            
-            // Update status
-            statusText.textContent = `Pemindaian selesai. ${extractedData.length} item ditemukan.`;
-            progressContainer.style.display = 'none';
         }
         
-        // Fungsi untuk simulasi data jika OCR tidak menemukan pola
-        function simulateData() {
-            extractedData = [
-                { id: 1, name: 'Buku Tulis', quantity: 5, price: 5000, total: 25000 },
-                { id: 2, name: 'Pulpen Standard', quantity: 3, price: 3000, total: 9000 },
-                { id: 3, name: 'Penggaris 30cm', quantity: 2, price: 8000, total: 16000 },
-                { id: 4, name: 'Penghapus', quantity: 4, price: 2000, total: 8000 },
-                { id: 5, name: 'Spidol Whiteboard', quantity: 2, price: 12000, total: 24000 }
-            ];
+        // Load produk ke grid
+        function loadProducts() {
+            const productsGrid = document.getElementById('productsGrid');
+            productsGrid.innerHTML = '';
             
-            statusText.textContent = 'Menggunakan data contoh. Untuk hasil terbaik, pastikan nota jelas dan format rapi.';
-        }
-        
-        // Fungsi untuk mengupdate tabel dengan data yang diekstrak
-        function updateTable() {
-            tableBody.innerHTML = '';
-            
-            if (extractedData.length === 0) {
-                tableBody.innerHTML = `
-                    <tr>
-                        <td colspan="5" class="no-data">
-                            <i class="fas fa-exclamation-circle" style="font-size: 40px; margin-bottom: 10px;"></i><br>
-                            Tidak ada data yang dapat diekstrak. Coba gambar dengan kualitas lebih baik.
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-            
-            extractedData.forEach((item, index) => {
-                const row = document.createElement('tr');
+            sampleProducts.forEach(product => {
+                let stockClass = '';
+                let stockText = '';
                 
-                row.innerHTML = `
-                    <td contenteditable="true" oninput="updateData(${index}, 'id', this.textContent)">${item.id}</td>
-                    <td contenteditable="true" oninput="updateData(${index}, 'name', this.textContent)">${item.name}</td>
-                    <td contenteditable="true" oninput="updateData(${index}, 'quantity', this.textContent); calculateTotal(${index})">${item.quantity}</td>
-                    <td contenteditable="true" oninput="updateData(${index}, 'price', this.textContent); calculateTotal(${index})">${formatCurrency(item.price)}</td>
-                    <td contenteditable="true" oninput="updateData(${index}, 'total', this.textContent)">${formatCurrency(item.total)}</td>
+                if (product.stock < product.minStock * 0.3) {
+                    stockClass = 'bg-danger text-white';
+                    stockText = 'Kritis';
+                } else if (product.stock < product.minStock) {
+                    stockClass = 'bg-warning text-dark';
+                    stockText = 'Rendah';
+                } else {
+                    stockClass = 'bg-success text-white';
+                    stockText = 'Aman';
+                }
+                
+                const productCard = `
+                    <div class="col-md-6 col-lg-4 col-xl-3 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div>
+                                        <h6 class="card-title mb-1">${product.name}</h6>
+                                        <p class="text-muted small mb-0">${product.sku}</p>
+                                    </div>
+                                    <span class="badge ${stockClass}">${stockText}</span>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <small class="text-muted">${product.category}</small>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <p class="small text-muted mb-1">Stok</p>
+                                        <p class="mb-0 fw-bold">${product.stock} unit</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p class="small text-muted mb-1">Min. Stok</p>
+                                        <p class="mb-0">${product.minStock} unit</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <p class="small text-muted mb-1">Nilai Inventori</p>
+                                    <p class="mb-0 fw-bold">${formatCurrency(product.value)}</p>
+                                </div>
+                                
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-sm btn-outline-primary">Edit</button>
+                                    <button class="btn btn-sm btn-outline-secondary">Lihat Riwayat</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 `;
                 
-                tableBody.appendChild(row);
+                productsGrid.innerHTML += productCard;
             });
         }
         
-        // Fungsi untuk memperbarui data saat sel diedit
-        window.updateData = function(index, field, value) {
-            if (field === 'id' || field === 'quantity') {
-                extractedData[index][field] = parseInt(value) || 0;
-            } else if (field === 'price' || field === 'total') {
-                // Hapus karakter non-digit kecuali titik
-                const numericValue = parseFloat(value.replace(/[^\d.,]/g, '').replace(',', '.')) || 0;
-                extractedData[index][field] = numericValue;
+        // Tampilkan modal tambah produk
+        function showAddProductModal() {
+            const modal = new bootstrap.Modal(document.getElementById('addProductModal'));
+            modal.show();
+        }
+        
+        // Simpan produk baru
+        function saveProduct() {
+            alert('Produk berhasil disimpan!');
+            const modal = bootstrap.Modal.getInstance(document.getElementById('addProductModal'));
+            modal.hide();
+            
+            // Refresh daftar produk
+            loadProducts();
+        }
+        
+        // Inisialisasi analytics section
+        function initializeAnalytics() {
+            createForecastChart();
+            createHeatmap();
+        }
+        
+        // Buat forecast chart
+        function createForecastChart() {
+            const ctx = document.getElementById('forecastChart').getContext('2d');
+            
+            // Data contoh: actual vs forecast untuk 30 hari ke depan
+            const days = Array.from({length: 30}, (_, i) => `Hari ${i+1}`);
+            const actualData = Array.from({length: 30}, () => Math.floor(Math.random() * 80) + 20);
+            const forecastData = actualData.map(val => val + Math.floor(Math.random() * 20) - 10);
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: days,
+                    datasets: [
+                        {
+                            label: 'Aktual (30 hari lalu)',
+                            data: actualData.slice(0, 15),
+                            borderColor: '#4cc9f0',
+                            backgroundColor: 'transparent',
+                            borderDash: [5, 5],
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Forecast AI (15 hari ke depan)',
+                            data: [...actualData.slice(13, 15), ...forecastData.slice(15)],
+                            borderColor: '#f72585',
+                            backgroundColor: 'rgba(247, 37, 133, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Hari'
+                            }
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Permintaan (unit)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Buat heatmap
+        function createHeatmap() {
+            const container = document.getElementById('heatmapContainer');
+            container.innerHTML = '';
+            
+            // Data contoh: 5 produk x 7 hari
+            const products = ['Laptop', 'Mouse', 'Monitor', 'Keyboard', 'Headphone'];
+            const days = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
+            
+            let html = '<table class="table table-borderless">';
+            html += '<thead><tr><th>Produk</th>';
+            
+            // Header hari
+            days.forEach(day => {
+                html += `<th class="text-center">${day}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+            
+            // Baris data
+            products.forEach(product => {
+                html += `<tr><td class="fw-bold">${product}</td>`;
                 
-                // Update tampilan dengan format mata uang
-                const row = tableBody.children[index];
-                const cell = row.querySelector(`td:nth-child(${field === 'price' ? 4 : 5})`);
-                cell.textContent = formatCurrency(numericValue);
+                days.forEach(() => {
+                    const sales = Math.floor(Math.random() * 100);
+                    let color = '';
+                    
+                    if (sales > 70) color = '#2ed573';
+                    else if (sales > 40) color = '#ffa502';
+                    else if (sales > 20) color = '#ff7f50';
+                    else color = '#ff4757';
+                    
+                    html += `<td class="text-center">
+                        <div class="heatmap-cell mx-auto" style="background-color: ${color}">
+                            ${sales}
+                        </div>
+                    </td>`;
+                });
+                
+                html += '</tr>';
+            });
+            
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+        
+        // Mark semua notifikasi sebagai dibaca
+        function markAllAsRead() {
+            document.getElementById('alertCount').textContent = '0';
+            alert('Semua notifikasi telah ditandai sebagai dibaca.');
+        }
+        
+        // Generate laporan
+        function generateReport() {
+            const reportType = document.getElementById('reportType').value;
+            const period = document.getElementById('reportPeriod').value;
+            const format = document.querySelector('input[name="exportFormat"]:checked').value;
+            
+            alert(`Laporan ${reportType} untuk periode ${period} dalam format ${format.toUpperCase()} sedang diproses.`);
+        }
+        
+        // Ekspor laporan
+        function exportReport() {
+            alert('Laporan berhasil diekspor ke format Excel.');
+        }
+        
+        // Handle custom date range
+        document.getElementById('reportPeriod').addEventListener('change', function() {
+            const customRange = document.getElementById('customDateRange');
+            if (this.value === 'custom') {
+                customRange.style.display = 'block';
             } else {
-                extractedData[index][field] = value;
+                customRange.style.display = 'none';
             }
-        };
-        
-        // Fungsi untuk menghitung total
-        window.calculateTotal = function(index) {
-            const quantity = extractedData[index].quantity || 0;
-            const price = extractedData[index].price || 0;
-            extractedData[index].total = quantity * price;
-            
-            // Update sel total
-            const row = tableBody.children[index];
-            const totalCell = row.querySelector('td:nth-child(5)');
-            totalCell.textContent = formatCurrency(extractedData[index].total);
-        };
-        
-        // Fungsi untuk format mata uang
-        function formatCurrency(amount) {
-            return new Intl.NumberFormat('id-ID', {
-                style: 'currency',
-                currency: 'IDR',
-                minimumFractionDigits: 0
-            }).format(amount);
-        }
-        
-        // Event listener untuk tombol reset
-        resetButton.addEventListener('click', () => {
-            fileInput.value = '';
-            uploadedImage = null;
-            imagePreview.style.display = 'none';
-            progressContainer.style.display = 'none';
-            statusText.textContent = '';
-            extractedData = [];
-            tableBody.innerHTML = `
-                <tr>
-                    <td colspan="5" class="no-data">
-                        <i class="fas fa-table" style="font-size: 40px; margin-bottom: 10px;"></i><br>
-                        Belum ada data. Silakan unggah dan pindai nota.
-                    </td>
-                </tr>
-            `;
         });
         
-        // Event listener untuk tombol tambah baris
-        addRowButton.addEventListener('click', () => {
-            const newId = extractedData.length > 0 ? Math.max(...extractedData.map(item => item.id)) + 1 : 1;
-            extractedData.push({
-                id: newId,
-                name: 'Barang Baru',
-                quantity: 1,
-                price: 0,
-                total: 0
-            });
-            updateTable();
-        });
-        
-        // Event listener untuk tombol ekspor
-        exportButton.addEventListener('click', () => {
-            if (extractedData.length === 0) {
-                alert('Tidak ada data untuk diekspor');
-                return;
-            }
+        // Inisialisasi saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set tanggal default untuk laporan
+            const today = new Date();
+            const oneMonthAgo = new Date();
+            oneMonthAgo.setMonth(today.getMonth() - 1);
             
-            // Buat header CSV
-            let csvContent = "No,Nama Barang,Jumlah,Harga Satuan,Total Harga\n";
+            document.getElementById('startDate').valueAsDate = oneMonthAgo;
+            document.getElementById('endDate').valueAsDate = today;
             
-            // Tambahkan data
-            extractedData.forEach(item => {
-                csvContent += `${item.id},"${item.name}",${item.quantity},${item.price},${item.total}\n`;
-            });
-            
-            // Buat blob dan download
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'data_nota.csv';
-            link.click();
-            
-            // Bersihkan URL
-            setTimeout(() => URL.revokeObjectURL(url), 100);
-        });
-        
-        // Inisialisasi dengan data contoh untuk demo
-        window.addEventListener('load', () => {
-            // Tampilkan pesan selamat datang
-            statusText.textContent = 'Unggah gambar nota atau gunakan contoh data untuk mencoba';
-            
-            // Untuk keperluan demo, kita bisa memuat data contoh
-            // Di lingkungan nyata, Anda mungkin ingin menghapus ini
-            setTimeout(() => {
-                // simulateData();
-                // updateTable();
-            }, 1000);
+            // Tampilkan informasi stack teknologi
+            console.log("=== Smart Stock Analyzer ===");
+            console.log("Stack Teknologi MVP:");
+            console.log("- Frontend: Bootstrap 5, Chart.js");
+            console.log("- Backend: Node.js + Express");
+            console.log("- Database: PostgreSQL / MySQL");
+            console.log("- Auth: JWT Tokens");
+            console.log("\nStack Teknologi Enterprise:");
+            console.log("- Frontend: React.js / Vue.js + TypeScript");
+            console.log("- Backend: Node.js + NestJS / Go");
+            console.log("- Database: PostgreSQL + Redis (cache)");
+            console.log("- Queue: RabbitMQ / Apache Kafka");
+            console.log("- AI/ML: Python + TensorFlow / scikit-learn");
+            console.log("- Deployment: Docker + Kubernetes");
         });
     </script>
+    
+    <div class="container mt-5" id="conceptInfo" style="display: none;">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Konsep Lengkap Smart Stock Analyzer</h4>
+                
+                <h5>Ringkasan Konsep:</h5>
+                <p>Smart Stock Analyzer adalah aplikasi web SaaS untuk manajemen dan analisis stok yang mengintegrasikan operasi inventaris dengan kecerdasan bisnis. Dirancang untuk UKM hingga perusahaan menengah dalam mengoptimalkan perputaran stok, memprediksi permintaan, dan meminimalkan biaya penyimpanan.</p>
+                
+                <h5>Fitur Utama (15+):</h5>
+                <ul>
+                    <li>Dashboard Real-time dengan KPI</li>
+                    <li>Manajemen Produk Multi-Kategori</li>
+                    <li>Tracking Stok Otomatis</li>
+                    <li>Multi-Gudang/Lokasi</li>
+                    <li>Pembelian & PO Management</li>
+                    <li>Penjualan & Fulfillment</li>
+                    <li>Analisis ABC & Turnover Ratio</li>
+                    <li>Forecasting Demand</li>
+                    <li>Alert & Notifikasi Otomatis</li>
+                    <li>Integrasi Barcode/QR</li>
+                    <li>Laporan Periodik</li>
+                    <li>Multi-User dengan RBAC</li>
+                </ul>
+                
+                <h5>Struktur Database Inti:</h5>
+                <ul>
+                    <li><strong>Tabel Products:</strong> id, sku, name, category_id, current_stock, min_stock, max_stock</li>
+                    <li><strong>Tabel Stock_ins:</strong> id, product_id, supplier_id, quantity, transaction_date</li>
+                    <li><strong>Tabel Stock_outs:</strong> id, product_id, customer_id, quantity, transaction_type</li>
+                    <li><strong>Tabel Suppliers/Customers:</strong> id, name, contact, address, rating</li>
+                </ul>
+                
+                <h5>Stack Teknologi:</h5>
+                <p><strong>MVP:</strong> Bootstrap 5, Node.js, Express, PostgreSQL, Chart.js</p>
+                <p><strong>Enterprise:</strong> React.js, NestJS, PostgreSQL, Redis, RabbitMQ, Docker, Kubernetes</p>
+                
+                <h5>Use Case Nyata:</h5>
+                <ul>
+                    <li><strong>Retail Fisik:</strong> Kelola stok toko dengan reorder otomatis</li>
+                    <li><strong>Toko Online Multi-Marketplace:</strong> Sinkronisasi stok across platform</li>
+                    <li><strong>Gudang & Distributor:</strong> Multi-lokasi dengan transfer antar gudang</li>
+                </ul>
+                
+                <h5>Manfaat Bisnis:</h5>
+                <ul>
+                    <li>Efisiensi waktu & modal kerja 30-40%</li>
+                    <li>Minimasi dead stock hingga 60%</li>
+                    <li>Optimasi profit dengan analisis ABC</li>
+                    <li>Reduksi stockout hingga 80% dengan forecasting AI</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
