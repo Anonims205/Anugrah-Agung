@@ -1,82 +1,686 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StockFlow - Sistem Analisis Stok Barang</title>
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/styles.css">
-</head>
-<body>
-    <!-- Sidebar Toggle Button -->
-    <div class="toggle-sidebar" id="sidebarToggle">
-        <i class="fas fa-bars"></i>
-    </div>
-    
-    <!-- Sidebar -->
-    <div id="sidebar-container"></div>
-    
-    <!-- Main Content -->
-    <div class="main-content" id="mainContent">
-        <!-- Top Navigation -->
-        <nav id="navbar-container"></nav>
-        
-        <!-- Page Content -->
-        <div class="container-fluid p-4" id="pageContent">
-            <div id="loadingSpinner" class="text-center py-5">
-                <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-                <p class="mt-3">Memuat sistem StockFlow...</p>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Modals Container -->
-    <div id="modals-container"></div>
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { 
+  AlertTriangle, 
+  Bell, 
+  CheckCircle, 
+  HelpCircle, 
+  Loader, 
+  Package, 
+  TrendingUp 
+} from "lucide-react";
+import { 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer,
+  Cell
+} from "recharts";
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Custom JS -->
-    <script src="js/data.js"></script>
-    <script src="js/charts.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/dashboard.js"></script>
-    <script src="js/products.js"></script>
-    <script src="js/inventory.js"></script>
-    <script src="js/analysis.js"></script>
-    <script src="js/transactions.js"></script>
-    <script src="js/reports.js"></script>
-    
-    <!-- Initialize app -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // App is initialized in main.js
-            console.log('StockFlow System Loaded');
+// Mock data generators
+const generateHeatmapData = () => {
+  const data = [];
+  const now = new Date();
+  for (let i = 0; i < 30; i++) {
+    const date = new Date(now);
+    date.setDate(now.getDate() - (29 - i));
+    data.push({
+      date: date.toISOString().split('T')[0],
+      value: Math.floor(Math.random() * 100)
+    });
+  }
+  return data;
+};
+
+const generateABCData = () => [
+  { name: 'Category A (Top 20%)', value: 75, color: '#ef4444' },
+  { name: 'Category B (Mid 30%)', value: 20, color: '#f59e0b' },
+  { name: 'Category C (Bottom 50%)', value: 5, color: '#10b981' }
+];
+
+const generateAlerts = () => [
+  { id: 1, type: 'critical', message: 'Warehouse 3 stock below safety threshold for 15 items', timestamp: '2m ago' },
+  { id: 2, type: 'warning', message: 'Shopee sync delayed by 45 minutes', timestamp: '15m ago' },
+  { id: 3, type: 'info', message: 'AI restock recommendation ready for review', timestamp: '1h ago' },
+  { id: 4, type: 'success', message: 'Monthly inventory audit completed successfully', timestamp: '3h ago' }
+];
+
+const generateCalendarData = () => {
+  const data = {};
+  const now = new Date();
+  for (let i = 0; i < 30; i++) {
+    const date = new Date(now);
+    date.setDate(now.getDate() + i);
+    const day = date.toISOString().split('T')[0];
+    data[day] = Math.floor(Math.random() * 5) > 3 ? 
+      { supplier: 'PT. Maju Bersama', days: 3 + Math.floor(Math.random() * 5) } : null;
+  }
+  return data;
+};
+
+export default function App() {
+  const [alerts] = useState(generateAlerts());
+  const [heatmapData] = useState(generateHeatmapData());
+  const [abcData] = useState(generateABCData());
+  const [calendarData] = useState(generateCalendarData());
+  const [activeDate, setActiveDate] = useState(new Date().toISOString().split('T')[0]);
+  const [showTooltip, setShowTooltip] = useState(null);
+  
+  // Animation variants
+  const alertVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: (i) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: i * 0.1 }
+    })
+  };
+
+  const tooltipVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: { 
+      opacity: 1, 
+      scale: 1,
+      transition: { type: "spring", damping: 15 }
+    }
+  };
+
+  // Handle calendar date selection
+  const handleDateClick = (date) => {
+    setActiveDate(date);
+    if (calendarData[date]) {
+      setShowTooltip({
+        content: `${calendarData[date].supplier} delivery in ${calendarData[date].days} days`,
+        position: { x: Math.random() * 80 + 10, y: 60 }
+      });
+    } else {
+      setShowTooltip(null);
+    }
+  };
+
+  // Close tooltip on escape
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setShowTooltip(null);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-indigo-50">
+      {/* Header */}
+      <motion.header 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white shadow-sm border-b border-gray-200"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="bg-indigo-600 p-2 rounded-lg">
+              <Package className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-gray-900">Smart Stock Analyzer X</h1>
+              <p className="text-xs text-indigo-600 font-medium">Command Center</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center space-x-4">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="relative p-2 text-gray-400 hover:text-indigo-600 rounded-full"
+              onClick={() => setShowTooltip({
+                content: "System is operating normally. Last sync: 2m ago",
+                position: { x: 85, y: 15 }
+              })}
+            >
+              <Bell className="h-5 w-5" />
+              <span className="absolute top-1 right-1 block h-2 w-2 bg-green-400 rounded-full border-2 border-white"></span>
+            </motion.button>
             
-            // Optional: Show loading status
-            const loadingSpinner = document.getElementById('loadingSpinner');
-            if (loadingSpinner) {
-                setTimeout(() => {
-                    loadingSpinner.style.display = 'none';
-                    // Load dashboard by default
-                    if (typeof loadDashboard === 'function') {
-                        loadDashboard();
-                    }
-                }, 1000);
-            }
-        });
-    </script>
-</body>
-</html>
+            <div className="bg-indigo-50 border border-indigo-200 rounded-full px-3 py-1 flex items-center">
+              <div className="h-2 w-2 bg-green-400 rounded-full mr-2"></div>
+              <span className="text-xs font-medium text-indigo-800">All systems operational</span>
+            </div>
+          </div>
+        </div>
+      </motion.header>
+
+      {/* Alert Banner */}
+      <motion.section 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="bg-gradient-to-r from-amber-50 to-amber-100 border-b border-amber-200 py-3"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <div className="flex items-center">
+              <AlertTriangle className="h-5 w-5 text-amber-500 mr-2 flex-shrink-0" />
+              <p className="text-sm font-medium text-amber-800">
+                3 pending alerts require attention • 
+                <button className="ml-1 text-amber-900 font-semibold hover:underline">
+                  View details
+                </button>
+              </p>
+            </div>
+            <motion.button
+              whileHover={{ backgroundColor: '#f59e0b' }}
+              whileTap={{ scale: 0.98 }}
+              className="px-3 py-1 bg-amber-500 text-white text-xs font-medium rounded-md shadow-sm hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500"
+            >
+              Resolve All
+            </motion.button>
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {/* Dashboard Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left Column - Alerts & Heatmap */}
+          <div className="space-y-6">
+            {/* Smart Alerts */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden"
+            >
+              <div className="px-5 py-4 border-b border-gray-200 flex justify-between items-center">
+                <div className="flex items-center">
+                  <div className="bg-red-100 p-2 rounded-lg mr-3">
+                    <AlertTriangle className="h-5 w-5 text-red-600" />
+                  </div>
+                  <h2 className="text-lg font-bold text-gray-900">Smart Alerts</h2>
+                </div>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="p-1 text-gray-400 hover:text-indigo-600 rounded-full"
+                  onClick={() => setShowTooltip({
+                    content: "Alerts are prioritized by business impact. Critical alerts trigger SMS notifications.",
+                    position: { x: 85, y: 15 }
+                  })}
+                >
+                  <HelpCircle className="h-4 w-4" />
+                </motion.button>
+              </div>
+              
+              <div className="divide-y divide-gray-100 max-h-96 overflow-y-auto">
+                {alerts.map((alert, index) => {
+                  const alertColors = {
+                    critical: 'bg-red-50 border-l-4 border-red-500',
+                    warning: 'bg-amber-50 border-l-4 border-amber-400',
+                    info: 'bg-blue-50 border-l-4 border-blue-500',
+                    success: 'bg-green-50 border-l-4 border-green-500'
+                  };
+                  
+                  const iconMap = {
+                    critical: <AlertTriangle className="h-5 w-5 text-red-500" />,
+                    warning: <Bell className="h-5 w-5 text-amber-500" />,
+                    info: <TrendingUp className="h-5 w-5 text-blue-500" />,
+                    success: <CheckCircle className="h-5 w-5 text-green-500" />
+                  };
+
+                  return (
+                    <motion.div 
+                      key={alert.id}
+                      custom={index}
+                      variants={alertVariants}
+                      initial="hidden"
+                      animate="visible"
+                      className={`${alertColors[alert.type]} px-5 py-4 hover:bg-gray-50 transition-colors`}
+                    >
+                      <div className="flex items-start">
+                        <div className="flex-shrink-0 mt-0.5 mr-3">
+                          {iconMap[alert.type]}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between">
+                            <p className="text-sm font-medium text-gray-900 truncate">
+                              {alert.message}
+                            </p>
+                            <span className={`ml-2 px-2 py-0.5 text-xs font-medium rounded-full ${
+                              alert.type === 'critical' ? 'bg-red-100 text-red-800' :
+                              alert.type === 'warning' ? 'bg-amber-100 text-amber-800' :
+                              alert.type === 'info' ? 'bg-blue-100 text-blue-800' :
+                              'bg-green-100 text-green-800'
+                            }`}>
+                              {alert.type.charAt(0).toUpperCase() + alert.type.slice(1)}
+                            </span>
+                          </div>
+                          <p className="mt-1 text-xs text-gray-500">
+                            {alert.timestamp}
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </motion.div>
+
+            {/* Demand Heatmap */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+              className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden"
+            >
+              <div className="px-5 py-4 border-b border-gray-200 flex justify-between items-center">
+                <h2 className="text-lg font-bold text-gray-900">Demand Heatmap</h2>
+                <div className="flex items-center space-x-2">
+                  <span className="text-xs bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded">
+                    Last 30 days
+                  </span>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="p-1 text-gray-400 hover:text-indigo-600 rounded-full"
+                    onClick={() => setShowTooltip({
+                      content: "Red indicates peak demand periods. Use this to optimize staffing and inventory allocation.",
+                      position: { x: 85, y: 15 }
+                    })}
+                  >
+                    <HelpCircle className="h-4 w-4" />
+                  </motion.button>
+                </div>
+              </div>
+              
+              <div className="p-4">
+                <div className="grid grid-cols-7 gap-1 mb-4 text-center text-xs font-medium text-gray-500">
+                  {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                    <div key={day}>{day}</div>
+                  ))}
+                </div>
+                
+                <div className="grid grid-cols-7 gap-1">
+                  {heatmapData.map((item, index) => {
+                    const intensity = Math.min(100, Math.max(10, item.value));
+                    const colorClass = intensity > 70 ? 'bg-red-400' : 
+                                      intensity > 40 ? 'bg-amber-300' : 'bg-green-300';
+                    
+                    return (
+                      <motion.div
+                        key={item.date}
+                        whileHover={{ scale: 1.1, zIndex: 10 }}
+                        className={`aspect-square rounded ${colorClass} cursor-pointer`}
+                        title={`${item.date}: ${item.value} units`}
+                        onClick={() => setShowTooltip({
+                          content: `${item.value} units sold on ${new Date(item.date).toLocaleDateString()}`,
+                          position: { x: (index % 7) * 14 + 7, y: Math.floor(index/7) * 12 + 30 }
+                        })}
+                      />
+                    );
+                  })}
+                </div>
+                
+                <div className="flex justify-between mt-3 px-1 text-xs text-gray-500">
+                  <span>Low demand</span>
+                  <span>High demand</span>
+                </div>
+                <div className="flex mt-1">
+                  <div className="flex-1 h-2 bg-green-300 rounded-l"></div>
+                  <div className="flex-1 h-2 bg-amber-300"></div>
+                  <div className="flex-1 h-2 bg-red-400 rounded-r"></div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Center Column - Calendar & Status */}
+          <div className="space-y-6">
+            {/* Lead Time Calendar */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden"
+            >
+              <div className="px-5 py-4 border-b border-gray-200 flex justify-between items-center">
+                <h2 className="text-lg font-bold text-gray-900">Lead Time Calendar</h2>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="p-1 text-gray-400 hover:text-indigo-600 rounded-full"
+                  onClick={() => setShowTooltip({
+                    content: "Blue markers indicate expected supplier deliveries. Click dates for details.",
+                    position: { x: 85, y: 15 }
+                  })}
+                >
+                  <HelpCircle className="h-4 w-4" />
+                </motion.button>
+              </div>
+              
+              <div className="p-4">
+                <div className="grid grid-cols-7 gap-1 text-center text-xs font-medium text-gray-500 mb-2">
+                  {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(day => (
+                    <div key={day}>{day}</div>
+                  ))}
+                </div>
+                
+                <div className="grid grid-cols-7 gap-1">
+                  {Array.from({ length: 30 }, (_, i) => {
+                    const date = new Date();
+                    date.setDate(date.getDate() + i);
+                    const dateString = date.toISOString().split('T')[0];
+                    const isSelected = dateString === activeDate;
+                    const hasDelivery = calendarData[dateString];
+                    const isToday = i === 0;
+                    
+                    return (
+                      <motion.button
+                        key={dateString}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => handleDateClick(dateString)}
+                        className={`aspect-square rounded-lg text-xs font-medium transition-all ${
+                          isSelected 
+                            ? 'bg-indigo-100 text-indigo-800 border-2 border-indigo-500' 
+                            : hasDelivery
+                            ? 'bg-blue-50 text-blue-800 hover:bg-blue-100' 
+                            : isToday
+                            ? 'bg-green-50 text-green-800 font-bold' 
+                            : 'hover:bg-gray-100'
+                        }`}
+                        title={hasDelivery ? `Delivery: ${hasDelivery.supplier}` : date.toLocaleDateString()}
+                      >
+                        {date.getDate()}
+                        {hasDelivery && (
+                          <div className={`absolute bottom-0 left-0 right-0 h-1 ${
+                            isSelected ? 'bg-indigo-600' : 'bg-blue-500'
+                          } rounded-t`} />
+                        )}
+                      </motion.button>
+                    );
+                  })}
+                </div>
+                
+                <div className="mt-4 flex items-center justify-center space-x-3 text-xs">
+                  <div className="flex items-center">
+                    <div className="w-3 h-3 bg-blue-500 rounded-full mr-1"></div>
+                    <span>Supplier delivery</span>
+                  </div>
+                  <div className="flex items-center">
+                    <div className="w-3 h-3 bg-green-500 rounded-full mr-1"></div>
+                    <span>Today</span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* System Status */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+              className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden"
+            >
+              <div className="px-5 py-4 border-b border-gray-200">
+                <h2 className="text-lg font-bold text-gray-900">System Status</h2>
+              </div>
+              
+              <div className="p-5">
+                <div className="space-y-4">
+                  {[
+                    { name: 'Inventory Sync', status: 'operational', value: 99.98 },
+                    { name: 'AI Forecast Engine', status: 'operational', value: 99.92 },
+                    { name: 'Marketplace APIs', status: 'degraded', value: 95.2 },
+                    { name: 'Automated Workflows', status: 'operational', value: 99.87 }
+                  ].map((item) => (
+                    <div key={item.name}>
+                      <div className="flex justify-between mb-1">
+                        <span className="text-sm font-medium text-gray-700">{item.name}</span>
+                        <span className={`text-xs font-medium ${
+                          item.status === 'operational' ? 'text-green-600' : 'text-amber-600'
+                        }`}>
+                          {item.status === 'operational' ? 'Operational' : 'Performance issues'}
+                        </span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${item.value}%` }}
+                          className={`h-2 rounded-full ${
+                            item.status === 'operational' ? 'bg-green-500' : 'bg-amber-400'
+                          }`}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                <div className="mt-6 pt-4 border-t border-gray-100 text-center">
+                  <p className="text-sm text-gray-500">
+                    Last full system check: <span className="font-medium text-gray-700">2 minutes ago</span>
+                  </p>
+                  <motion.button
+                    whileHover={{ backgroundColor: '#4f46e5' }}
+                    whileTap={{ scale: 0.98 }}
+                    className="mt-2 px-3 py-1 bg-indigo-600 text-white text-xs font-medium rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >
+                    Run Diagnostics
+                  </motion.button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Right Column - ABC Analysis & Actions */}
+          <div className="space-y-6">
+            {/* ABC Analysis */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.7 }}
+              className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden"
+            >
+              <div className="px-5 py-4 border-b border-gray-200 flex justify-between items-center">
+                <h2 className="text-lg font-bold text-gray-900">ABC Analysis</h2>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="p-1 text-gray-400 hover:text-indigo-600 rounded-full"
+                  onClick={() => setShowTooltip({
+                    content: "Category A items (top 20%) generate 80% of revenue. Prioritize these for stock optimization.",
+                    position: { x: 85, y: 15 }
+                  })}
+                >
+                  <HelpCircle className="h-4 w-4" />
+                </motion.button>
+              </div>
+              
+              <div className="p-4 h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={abcData} layout="vertical" margin={{ left: -20 }}>
+                    <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#e2e8f0" />
+                    <XAxis type="number" hide />
+                    <YAxis 
+                      dataKey="name" 
+                      type="category" 
+                      width={120}
+                      tick={{ fontSize: 12, fontWeight: 500 }}
+                      axisLine={false}
+                      tickLine={false}
+                    />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)', 
+                        border: '1px solid #e2e8f0',
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                      }}
+                      formatter={(value) => [`${value}%`, 'Revenue Share']}
+                    />
+                    <Bar dataKey="value" barSize={32} radius={[4, 4, 4, 4]}>
+                      {abcData.map((entry, index) => (
+                        <Cell 
+                          key={`cell-${index}`} 
+                          fill={entry.color}
+                          stroke={entry.color}
+                        />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+              
+              <div className="px-4 pb-4 grid grid-cols-3 gap-2 text-center">
+                {abcData.map((item) => (
+                  <div key={item.name} className="text-xs">
+                    <div 
+                      className="w-3 h-3 rounded-full mx-auto mb-1" 
+                      style={{ backgroundColor: item.color }}
+                    />
+                    <span className="font-medium">{item.name.split(' ')[1]}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Quick Actions */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8 }}
+              className="bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-xl shadow-md overflow-hidden text-white"
+            >
+              <div className="px-5 py-4">
+                <h2 className="text-lg font-bold flex items-center">
+                  <TrendingUp className="h-5 w-5 mr-2" />
+                  Quick Actions
+                </h2>
+                <p className="mt-1 text-indigo-100 text-sm">
+                  Recommended actions based on current inventory status
+                </p>
+              </div>
+              
+              <div className="divide-y divide-indigo-700">
+                {[
+                  { title: 'Generate Restock Order', desc: 'AI-recommended order for 24 items', icon: Package },
+                  { title: 'Review Slow Movers', desc: '15 items haven\'t sold in 90 days', icon: Loader },
+                  { title: 'Adjust Safety Stock', desc: 'Update thresholds for 8 high-demand items', icon: Bell }
+                ].map((action, index) => {
+                  const Icon = action.icon;
+                  return (
+                    <motion.button
+                      key={index}
+                      whileHover={{ backgroundColor: 'rgba(255,255,255,0.1)' }}
+                      whileTap={{ scale: 0.99 }}
+                      className="w-full px-5 py-4 text-left flex items-center space-x-4"
+                    >
+                      <div className="bg-indigo-500 p-2 rounded-lg">
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <h3 className="font-medium">{action.title}</h3>
+                        <p className="text-indigo-100 text-sm mt-0.5">{action.desc}</p>
+                      </div>
+                    </motion.button>
+                  );
+                })}
+              </div>
+              
+              <div className="px-5 py-4 bg-indigo-900/30 border-t border-indigo-700">
+                <motion.button
+                  whileHover={{ backgroundColor: 'rgba(255,255,255,0.2)' }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full py-2 bg-white text-indigo-700 font-medium rounded-lg shadow-md hover:bg-indigo-50 transition-colors"
+                >
+                  View All Recommendations
+                </motion.button>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </main>
+
+      {/* Onboarding Tooltip */}
+      {showTooltip && (
+        <motion.div
+          variants={tooltipVariants}
+          initial="hidden"
+          animate="visible"
+          exit="hidden"
+          className="fixed p-4 bg-white rounded-xl shadow-xl border border-gray-200 max-w-xs z-50"
+          style={{ 
+            left: `${showTooltip.position.x}%`, 
+            top: `${showTooltip.position.y}%`,
+            transform: 'translate(-50%, -50%)'
+          }}
+        >
+          <div className="flex justify-between items-start mb-2">
+            <h3 className="font-bold text-gray-900">Help</h3>
+            <button 
+              onClick={() => setShowTooltip(null)}
+              className="text-gray-400 hover:text-gray-600"
+            >
+              ✕
+            </button>
+          </div>
+          <p className="text-sm text-gray-600">{showTooltip.content}</p>
+          <div className="mt-3 flex justify-end">
+            <button 
+              onClick={() => setShowTooltip(null)}
+              className="text-xs font-medium text-indigo-600 hover:text-indigo-800"
+            >
+              Got it
+            </button>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Onboarding Wizard (first-time user simulation) */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-40 p-4"
+        style={{ display: 'none' }}
+      >
+        <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl">
+          <div className="flex justify-between items-start mb-4">
+            <h2 className="text-xl font-bold text-gray-900">Welcome to your Command Center</h2>
+            <button className="text-gray-400 hover:text-gray-600">✕</button>
+          </div>
+          
+          <div className="space-y-4 mb-6">
+            <p className="text-gray-600">
+              This is your single pane of truth for inventory management. Let's get you oriented:
+            </p>
+            
+            <div className="grid grid-cols-3 gap-3">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="bg-indigo-50 rounded-xl p-3 text-center">
+                  <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <span className="font-bold text-indigo-700">{i}</span>
+                  </div>
+                  <p className="text-xs font-medium text-gray-700">Step {i}</p>
+                </div>
+              ))}
+            </div>
+            
+            <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+              <div className="h-full bg-indigo-600 w-1/3"></div>
+            </div>
+          </div>
+          
+          <div className="flex justify-between">
+            <button className="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium">
+              Back
+            </button>
+            <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors">
+              Next: Configure Alerts
+            </button>
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
