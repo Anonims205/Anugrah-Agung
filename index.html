@@ -1,686 +1,1089 @@
-import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { 
-  AlertTriangle, 
-  Bell, 
-  CheckCircle, 
-  HelpCircle, 
-  Loader, 
-  Package, 
-  TrendingUp 
-} from "lucide-react";
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer,
-  Cell
-} from "recharts";
-
-// Mock data generators
-const generateHeatmapData = () => {
-  const data = [];
-  const now = new Date();
-  for (let i = 0; i < 30; i++) {
-    const date = new Date(now);
-    date.setDate(now.getDate() - (29 - i));
-    data.push({
-      date: date.toISOString().split('T')[0],
-      value: Math.floor(Math.random() * 100)
-    });
-  }
-  return data;
-};
-
-const generateABCData = () => [
-  { name: 'Category A (Top 20%)', value: 75, color: '#ef4444' },
-  { name: 'Category B (Mid 30%)', value: 20, color: '#f59e0b' },
-  { name: 'Category C (Bottom 50%)', value: 5, color: '#10b981' }
-];
-
-const generateAlerts = () => [
-  { id: 1, type: 'critical', message: 'Warehouse 3 stock below safety threshold for 15 items', timestamp: '2m ago' },
-  { id: 2, type: 'warning', message: 'Shopee sync delayed by 45 minutes', timestamp: '15m ago' },
-  { id: 3, type: 'info', message: 'AI restock recommendation ready for review', timestamp: '1h ago' },
-  { id: 4, type: 'success', message: 'Monthly inventory audit completed successfully', timestamp: '3h ago' }
-];
-
-const generateCalendarData = () => {
-  const data = {};
-  const now = new Date();
-  for (let i = 0; i < 30; i++) {
-    const date = new Date(now);
-    date.setDate(now.getDate() + i);
-    const day = date.toISOString().split('T')[0];
-    data[day] = Math.floor(Math.random() * 5) > 3 ? 
-      { supplier: 'PT. Maju Bersama', days: 3 + Math.floor(Math.random() * 5) } : null;
-  }
-  return data;
-};
-
-export default function App() {
-  const [alerts] = useState(generateAlerts());
-  const [heatmapData] = useState(generateHeatmapData());
-  const [abcData] = useState(generateABCData());
-  const [calendarData] = useState(generateCalendarData());
-  const [activeDate, setActiveDate] = useState(new Date().toISOString().split('T')[0]);
-  const [showTooltip, setShowTooltip] = useState(null);
-  
-  // Animation variants
-  const alertVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: (i) => ({
-      opacity: 1,
-      y: 0,
-      transition: { delay: i * 0.1 }
-    })
-  };
-
-  const tooltipVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: { 
-      opacity: 1, 
-      scale: 1,
-      transition: { type: "spring", damping: 15 }
-    }
-  };
-
-  // Handle calendar date selection
-  const handleDateClick = (date) => {
-    setActiveDate(date);
-    if (calendarData[date]) {
-      setShowTooltip({
-        content: `${calendarData[date].supplier} delivery in ${calendarData[date].days} days`,
-        position: { x: Math.random() * 80 + 10, y: 60 }
-      });
-    } else {
-      setShowTooltip(null);
-    }
-  };
-
-  // Close tooltip on escape
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') setShowTooltip(null);
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-indigo-50">
-      {/* Header */}
-      <motion.header 
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-white shadow-sm border-b border-gray-200"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="bg-indigo-600 p-2 rounded-lg">
-              <Package className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-gray-900">Smart Stock Analyzer X</h1>
-              <p className="text-xs text-indigo-600 font-medium">Command Center</p>
-            </div>
-          </div>
-          
-          <div className="flex items-center space-x-4">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="relative p-2 text-gray-400 hover:text-indigo-600 rounded-full"
-              onClick={() => setShowTooltip({
-                content: "System is operating normally. Last sync: 2m ago",
-                position: { x: 85, y: 15 }
-              })}
-            >
-              <Bell className="h-5 w-5" />
-              <span className="absolute top-1 right-1 block h-2 w-2 bg-green-400 rounded-full border-2 border-white"></span>
-            </motion.button>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Life Operating System (PLOS) | Platform Hidup Digital Terintegrasi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --dark: #1f2937;
+            --light: #f9fafb;
+            --gray: #6b7280;
+            --border: #e5e7eb;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .logo i {
+            font-size: 2rem;
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+        
+        .nav-menu a:hover {
+            opacity: 0.9;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: white;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        /* Dashboard Layout */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+        }
+        
+        .sidebar h3 {
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+            font-size: 1.2rem;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .sidebar-menu li {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background-color 0.2s;
+        }
+        
+        .sidebar-menu li:hover {
+            background-color: #f3f4f6;
+        }
+        
+        .sidebar-menu li.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .system-status {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+        
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+        }
+        
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        
+        .status-online {
+            background-color: var(--secondary);
+        }
+        
+        .status-syncing {
+            background-color: var(--warning);
+        }
+        
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .welcome-banner {
+            background: linear-gradient(to right, var(--primary), #8b5cf6);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .welcome-text h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .ai-insight {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            max-width: 500px;
+        }
+        
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .dashboard-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header h3 {
+            font-size: 1.2rem;
+            color: var(--dark);
+        }
+        
+        /* Chart Containers */
+        .chart-container {
+            height: 250px;
+            position: relative;
+        }
+        
+        /* Metrics */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .metric-card {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .metric-card.warning {
+            border-left-color: var(--warning);
+        }
+        
+        .metric-card.success {
+            border-left-color: var(--secondary);
+        }
+        
+        .metric-card.danger {
+            border-left-color: var(--danger);
+        }
+        
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+        }
+        
+        .metric-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        /* Task List */
+        .task-list {
+            list-style: none;
+        }
+        
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .task-item:last-child {
+            border-bottom: none;
+        }
+        
+        .task-checkbox {
+            margin-right: 12px;
+        }
+        
+        .task-content {
+            flex: 1;
+        }
+        
+        .task-title {
+            font-weight: 500;
+        }
+        
+        .task-meta {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-top: 2px;
+        }
+        
+        /* Life Wheel */
+        .life-wheel-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 300px;
+        }
+        
+        .life-wheel {
+            width: 280px;
+            height: 280px;
+            position: relative;
+        }
+        
+        .wheel-segment {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            clip-path: polygon(50% 50%, 50% 0%, 100% 0%, 100% 100%, 50% 50%);
+            border-radius: 50%;
+            transform-origin: center;
+        }
+        
+        .wheel-center {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+        
+        /* Module Tabs */
+        .module-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .module-tab {
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        .module-tab:hover {
+            background: #e5e7eb;
+        }
+        
+        .module-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-links a {
+            color: #d1d5db;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
             
-            <div className="bg-indigo-50 border border-indigo-200 rounded-full px-3 py-1 flex items-center">
-              <div className="h-2 w-2 bg-green-400 rounded-full mr-2"></div>
-              <span className="text-xs font-medium text-indigo-800">All systems operational</span>
+            .sidebar {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .welcome-banner {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+        }
+        
+        /* Animations */
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        /* Utility Classes */
+        .text-primary { color: var(--primary); }
+        .text-success { color: var(--secondary); }
+        .text-warning { color: var(--warning); }
+        .text-danger { color: var(--danger); }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .badge-primary { background: #e0e7ff; color: var(--primary); }
+        .badge-success { background: #d1fae5; color: var(--secondary); }
+        .badge-warning { background: #fef3c7; color: var(--warning); }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background: #f3f4f6;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <span>PLOS</span>
             </div>
-          </div>
-        </div>
-      </motion.header>
-
-      {/* Alert Banner */}
-      <motion.section 
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="bg-gradient-to-r from-amber-50 to-amber-100 border-b border-amber-200 py-3"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between flex-wrap gap-3">
-            <div className="flex items-center">
-              <AlertTriangle className="h-5 w-5 text-amber-500 mr-2 flex-shrink-0" />
-              <p className="text-sm font-medium text-amber-800">
-                3 pending alerts require attention • 
-                <button className="ml-1 text-amber-900 font-semibold hover:underline">
-                  View details
-                </button>
-              </p>
+            
+            <nav class="nav-menu">
+                <a href="#dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                <a href="#analytics"><i class="fas fa-chart-line"></i> Analytics</a>
+                <a href="#automation"><i class="fas fa-robot"></i> Automation</a>
+                <a href="#knowledge"><i class="fas fa-book"></i> Knowledge</a>
+                <a href="#settings"><i class="fas fa-cog"></i> Settings</a>
+            </nav>
+            
+            <div class="user-menu">
+                <div class="avatar">AJ</div>
+                <span>Andi Jaya</span>
             </div>
-            <motion.button
-              whileHover={{ backgroundColor: '#f59e0b' }}
-              whileTap={{ scale: 0.98 }}
-              className="px-3 py-1 bg-amber-500 text-white text-xs font-medium rounded-md shadow-sm hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500"
-            >
-              Resolve All
-            </motion.button>
-          </div>
         </div>
-      </motion.section>
-
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Dashboard Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Column - Alerts & Heatmap */}
-          <div className="space-y-6">
-            {/* Smart Alerts */}
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden"
-            >
-              <div className="px-5 py-4 border-b border-gray-200 flex justify-between items-center">
-                <div className="flex items-center">
-                  <div className="bg-red-100 p-2 rounded-lg mr-3">
-                    <AlertTriangle className="h-5 w-5 text-red-600" />
-                  </div>
-                  <h2 className="text-lg font-bold text-gray-900">Smart Alerts</h2>
-                </div>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="p-1 text-gray-400 hover:text-indigo-600 rounded-full"
-                  onClick={() => setShowTooltip({
-                    content: "Alerts are prioritized by business impact. Critical alerts trigger SMS notifications.",
-                    position: { x: 85, y: 15 }
-                  })}
-                >
-                  <HelpCircle className="h-4 w-4" />
-                </motion.button>
-              </div>
-              
-              <div className="divide-y divide-gray-100 max-h-96 overflow-y-auto">
-                {alerts.map((alert, index) => {
-                  const alertColors = {
-                    critical: 'bg-red-50 border-l-4 border-red-500',
-                    warning: 'bg-amber-50 border-l-4 border-amber-400',
-                    info: 'bg-blue-50 border-l-4 border-blue-500',
-                    success: 'bg-green-50 border-l-4 border-green-500'
-                  };
-                  
-                  const iconMap = {
-                    critical: <AlertTriangle className="h-5 w-5 text-red-500" />,
-                    warning: <Bell className="h-5 w-5 text-amber-500" />,
-                    info: <TrendingUp className="h-5 w-5 text-blue-500" />,
-                    success: <CheckCircle className="h-5 w-5 text-green-500" />
-                  };
-
-                  return (
-                    <motion.div 
-                      key={alert.id}
-                      custom={index}
-                      variants={alertVariants}
-                      initial="hidden"
-                      animate="visible"
-                      className={`${alertColors[alert.type]} px-5 py-4 hover:bg-gray-50 transition-colors`}
-                    >
-                      <div className="flex items-start">
-                        <div className="flex-shrink-0 mt-0.5 mr-3">
-                          {iconMap[alert.type]}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between">
-                            <p className="text-sm font-medium text-gray-900 truncate">
-                              {alert.message}
-                            </p>
-                            <span className={`ml-2 px-2 py-0.5 text-xs font-medium rounded-full ${
-                              alert.type === 'critical' ? 'bg-red-100 text-red-800' :
-                              alert.type === 'warning' ? 'bg-amber-100 text-amber-800' :
-                              alert.type === 'info' ? 'bg-blue-100 text-blue-800' :
-                              'bg-green-100 text-green-800'
-                            }`}>
-                              {alert.type.charAt(0).toUpperCase() + alert.type.slice(1)}
-                            </span>
-                          </div>
-                          <p className="mt-1 text-xs text-gray-500">
-                            {alert.timestamp}
-                          </p>
-                        </div>
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </motion.div>
-
-            {/* Demand Heatmap */}
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden"
-            >
-              <div className="px-5 py-4 border-b border-gray-200 flex justify-between items-center">
-                <h2 className="text-lg font-bold text-gray-900">Demand Heatmap</h2>
-                <div className="flex items-center space-x-2">
-                  <span className="text-xs bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded">
-                    Last 30 days
-                  </span>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="p-1 text-gray-400 hover:text-indigo-600 rounded-full"
-                    onClick={() => setShowTooltip({
-                      content: "Red indicates peak demand periods. Use this to optimize staffing and inventory allocation.",
-                      position: { x: 85, y: 15 }
-                    })}
-                  >
-                    <HelpCircle className="h-4 w-4" />
-                  </motion.button>
-                </div>
-              </div>
-              
-              <div className="p-4">
-                <div className="grid grid-cols-7 gap-1 mb-4 text-center text-xs font-medium text-gray-500">
-                  {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                    <div key={day}>{day}</div>
-                  ))}
-                </div>
+    </header>
+    
+    <div class="container">
+        <!-- Dashboard Layout -->
+        <div class="dashboard">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <h3>Modul PLOS</h3>
+                <ul class="sidebar-menu">
+                    <li class="active"><i class="fas fa-heartbeat"></i> Health & Wellness</li>
+                    <li><i class="fas fa-tasks"></i> Life Management</li>
+                    <li><i class="fas fa-graduation-cap"></i> Knowledge Graph</li>
+                    <li><i class="fas fa-users"></i> Relationship Intel</li>
+                    <li><i class="fas fa-chart-pie"></i> Financial Hub</li>
+                    <li><i class="fas fa-robot"></i> AI Assistants</li>
+                    <li><i class="fas fa-cube"></i> Automation</li>
+                </ul>
                 
-                <div className="grid grid-cols-7 gap-1">
-                  {heatmapData.map((item, index) => {
-                    const intensity = Math.min(100, Math.max(10, item.value));
-                    const colorClass = intensity > 70 ? 'bg-red-400' : 
-                                      intensity > 40 ? 'bg-amber-300' : 'bg-green-300';
-                    
-                    return (
-                      <motion.div
-                        key={item.date}
-                        whileHover={{ scale: 1.1, zIndex: 10 }}
-                        className={`aspect-square rounded ${colorClass} cursor-pointer`}
-                        title={`${item.date}: ${item.value} units`}
-                        onClick={() => setShowTooltip({
-                          content: `${item.value} units sold on ${new Date(item.date).toLocaleDateString()}`,
-                          position: { x: (index % 7) * 14 + 7, y: Math.floor(index/7) * 12 + 30 }
-                        })}
-                      />
-                    );
-                  })}
-                </div>
-                
-                <div className="flex justify-between mt-3 px-1 text-xs text-gray-500">
-                  <span>Low demand</span>
-                  <span>High demand</span>
-                </div>
-                <div className="flex mt-1">
-                  <div className="flex-1 h-2 bg-green-300 rounded-l"></div>
-                  <div className="flex-1 h-2 bg-amber-300"></div>
-                  <div className="flex-1 h-2 bg-red-400 rounded-r"></div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Center Column - Calendar & Status */}
-          <div className="space-y-6">
-            {/* Lead Time Calendar */}
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden"
-            >
-              <div className="px-5 py-4 border-b border-gray-200 flex justify-between items-center">
-                <h2 className="text-lg font-bold text-gray-900">Lead Time Calendar</h2>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="p-1 text-gray-400 hover:text-indigo-600 rounded-full"
-                  onClick={() => setShowTooltip({
-                    content: "Blue markers indicate expected supplier deliveries. Click dates for details.",
-                    position: { x: 85, y: 15 }
-                  })}
-                >
-                  <HelpCircle className="h-4 w-4" />
-                </motion.button>
-              </div>
-              
-              <div className="p-4">
-                <div className="grid grid-cols-7 gap-1 text-center text-xs font-medium text-gray-500 mb-2">
-                  {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(day => (
-                    <div key={day}>{day}</div>
-                  ))}
-                </div>
-                
-                <div className="grid grid-cols-7 gap-1">
-                  {Array.from({ length: 30 }, (_, i) => {
-                    const date = new Date();
-                    date.setDate(date.getDate() + i);
-                    const dateString = date.toISOString().split('T')[0];
-                    const isSelected = dateString === activeDate;
-                    const hasDelivery = calendarData[dateString];
-                    const isToday = i === 0;
-                    
-                    return (
-                      <motion.button
-                        key={dateString}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => handleDateClick(dateString)}
-                        className={`aspect-square rounded-lg text-xs font-medium transition-all ${
-                          isSelected 
-                            ? 'bg-indigo-100 text-indigo-800 border-2 border-indigo-500' 
-                            : hasDelivery
-                            ? 'bg-blue-50 text-blue-800 hover:bg-blue-100' 
-                            : isToday
-                            ? 'bg-green-50 text-green-800 font-bold' 
-                            : 'hover:bg-gray-100'
-                        }`}
-                        title={hasDelivery ? `Delivery: ${hasDelivery.supplier}` : date.toLocaleDateString()}
-                      >
-                        {date.getDate()}
-                        {hasDelivery && (
-                          <div className={`absolute bottom-0 left-0 right-0 h-1 ${
-                            isSelected ? 'bg-indigo-600' : 'bg-blue-500'
-                          } rounded-t`} />
-                        )}
-                      </motion.button>
-                    );
-                  })}
-                </div>
-                
-                <div className="mt-4 flex items-center justify-center space-x-3 text-xs">
-                  <div className="flex items-center">
-                    <div className="w-3 h-3 bg-blue-500 rounded-full mr-1"></div>
-                    <span>Supplier delivery</span>
-                  </div>
-                  <div className="flex items-center">
-                    <div className="w-3 h-3 bg-green-500 rounded-full mr-1"></div>
-                    <span>Today</span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* System Status */}
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6 }}
-              className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden"
-            >
-              <div className="px-5 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-bold text-gray-900">System Status</h2>
-              </div>
-              
-              <div className="p-5">
-                <div className="space-y-4">
-                  {[
-                    { name: 'Inventory Sync', status: 'operational', value: 99.98 },
-                    { name: 'AI Forecast Engine', status: 'operational', value: 99.92 },
-                    { name: 'Marketplace APIs', status: 'degraded', value: 95.2 },
-                    { name: 'Automated Workflows', status: 'operational', value: 99.87 }
-                  ].map((item) => (
-                    <div key={item.name}>
-                      <div className="flex justify-between mb-1">
-                        <span className="text-sm font-medium text-gray-700">{item.name}</span>
-                        <span className={`text-xs font-medium ${
-                          item.status === 'operational' ? 'text-green-600' : 'text-amber-600'
-                        }`}>
-                          {item.status === 'operational' ? 'Operational' : 'Performance issues'}
-                        </span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <motion.div
-                          initial={{ width: 0 }}
-                          animate={{ width: `${item.value}%` }}
-                          className={`h-2 rounded-full ${
-                            item.status === 'operational' ? 'bg-green-500' : 'bg-amber-400'
-                          }`}
-                        />
-                      </div>
+                <div class="system-status">
+                    <h3>System Status</h3>
+                    <div class="status-item">
+                        <span>Data Sync <span class="status-indicator status-online"></span></span>
+                        <span>Online</span>
                     </div>
-                  ))}
+                    <div class="status-item">
+                        <span>AI Processing <span class="status-indicator status-syncing"></span></span>
+                        <span>Active</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Security <span class="status-indicator status-online"></span></span>
+                        <span>Encrypted</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Storage <span class="status-indicator status-online"></span></span>
+                        <span>2.3/10 GB</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Welcome Banner -->
+                <div class="welcome-banner">
+                    <div class="welcome-text">
+                        <h2>Selamat Pagi, Andi!</h2>
+                        <p>PLOS telah menganalisis data Anda dan menyiapkan rekomendasi hari ini.</p>
+                    </div>
+                    <div class="ai-insight">
+                        <i class="fas fa-lightbulb"></i> <strong>AI Insight:</strong> Tingkat energi Anda optimal untuk meeting pukul 10:00. Siapkan presentasi terlebih dahulu.
+                    </div>
                 </div>
                 
-                <div className="mt-6 pt-4 border-t border-gray-100 text-center">
-                  <p className="text-sm text-gray-500">
-                    Last full system check: <span className="font-medium text-gray-700">2 minutes ago</span>
-                  </p>
-                  <motion.button
-                    whileHover={{ backgroundColor: '#4f46e5' }}
-                    whileTap={{ scale: 0.98 }}
-                    className="mt-2 px-3 py-1 bg-indigo-600 text-white text-xs font-medium rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  >
-                    Run Diagnostics
-                  </motion.button>
+                <!-- Module Tabs -->
+                <div class="module-tabs">
+                    <div class="module-tab active">Vital Signs</div>
+                    <div class="module-tab">Calendar & Tasks</div>
+                    <div class="module-tab">Financial Dashboard</div>
+                    <div class="module-tab">Knowledge Network</div>
+                    <div class="module-tab">Relationship Map</div>
                 </div>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Right Column - ABC Analysis & Actions */}
-          <div className="space-y-6">
-            {/* ABC Analysis */}
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.7 }}
-              className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden"
-            >
-              <div className="px-5 py-4 border-b border-gray-200 flex justify-between items-center">
-                <h2 className="text-lg font-bold text-gray-900">ABC Analysis</h2>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="p-1 text-gray-400 hover:text-indigo-600 rounded-full"
-                  onClick={() => setShowTooltip({
-                    content: "Category A items (top 20%) generate 80% of revenue. Prioritize these for stock optimization.",
-                    position: { x: 85, y: 15 }
-                  })}
-                >
-                  <HelpCircle className="h-4 w-4" />
-                </motion.button>
-              </div>
-              
-              <div className="p-4 h-80">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={abcData} layout="vertical" margin={{ left: -20 }}>
-                    <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#e2e8f0" />
-                    <XAxis type="number" hide />
-                    <YAxis 
-                      dataKey="name" 
-                      type="category" 
-                      width={120}
-                      tick={{ fontSize: 12, fontWeight: 500 }}
-                      axisLine={false}
-                      tickLine={false}
-                    />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: 'rgba(255, 255, 255, 0.9)', 
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '8px',
-                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
-                      }}
-                      formatter={(value) => [`${value}%`, 'Revenue Share']}
-                    />
-                    <Bar dataKey="value" barSize={32} radius={[4, 4, 4, 4]}>
-                      {abcData.map((entry, index) => (
-                        <Cell 
-                          key={`cell-${index}`} 
-                          fill={entry.color}
-                          stroke={entry.color}
-                        />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-              
-              <div className="px-4 pb-4 grid grid-cols-3 gap-2 text-center">
-                {abcData.map((item) => (
-                  <div key={item.name} className="text-xs">
-                    <div 
-                      className="w-3 h-3 rounded-full mx-auto mb-1" 
-                      style={{ backgroundColor: item.color }}
-                    />
-                    <span className="font-medium">{item.name.split(' ')[1]}</span>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Quick Actions */}
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.8 }}
-              className="bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-xl shadow-md overflow-hidden text-white"
-            >
-              <div className="px-5 py-4">
-                <h2 className="text-lg font-bold flex items-center">
-                  <TrendingUp className="h-5 w-5 mr-2" />
-                  Quick Actions
-                </h2>
-                <p className="mt-1 text-indigo-100 text-sm">
-                  Recommended actions based on current inventory status
-                </p>
-              </div>
-              
-              <div className="divide-y divide-indigo-700">
-                {[
-                  { title: 'Generate Restock Order', desc: 'AI-recommended order for 24 items', icon: Package },
-                  { title: 'Review Slow Movers', desc: '15 items haven\'t sold in 90 days', icon: Loader },
-                  { title: 'Adjust Safety Stock', desc: 'Update thresholds for 8 high-demand items', icon: Bell }
-                ].map((action, index) => {
-                  const Icon = action.icon;
-                  return (
-                    <motion.button
-                      key={index}
-                      whileHover={{ backgroundColor: 'rgba(255,255,255,0.1)' }}
-                      whileTap={{ scale: 0.99 }}
-                      className="w-full px-5 py-4 text-left flex items-center space-x-4"
-                    >
-                      <div className="bg-indigo-500 p-2 rounded-lg">
-                        <Icon className="h-5 w-5" />
-                      </div>
-                      <div>
-                        <h3 className="font-medium">{action.title}</h3>
-                        <p className="text-indigo-100 text-sm mt-0.5">{action.desc}</p>
-                      </div>
-                    </motion.button>
-                  );
-                })}
-              </div>
-              
-              <div className="px-5 py-4 bg-indigo-900/30 border-t border-indigo-700">
-                <motion.button
-                  whileHover={{ backgroundColor: 'rgba(255,255,255,0.2)' }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full py-2 bg-white text-indigo-700 font-medium rounded-lg shadow-md hover:bg-indigo-50 transition-colors"
-                >
-                  View All Recommendations
-                </motion.button>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </main>
-
-      {/* Onboarding Tooltip */}
-      {showTooltip && (
-        <motion.div
-          variants={tooltipVariants}
-          initial="hidden"
-          animate="visible"
-          exit="hidden"
-          className="fixed p-4 bg-white rounded-xl shadow-xl border border-gray-200 max-w-xs z-50"
-          style={{ 
-            left: `${showTooltip.position.x}%`, 
-            top: `${showTooltip.position.y}%`,
-            transform: 'translate(-50%, -50%)'
-          }}
-        >
-          <div className="flex justify-between items-start mb-2">
-            <h3 className="font-bold text-gray-900">Help</h3>
-            <button 
-              onClick={() => setShowTooltip(null)}
-              className="text-gray-400 hover:text-gray-600"
-            >
-              ✕
-            </button>
-          </div>
-          <p className="text-sm text-gray-600">{showTooltip.content}</p>
-          <div className="mt-3 flex justify-end">
-            <button 
-              onClick={() => setShowTooltip(null)}
-              className="text-xs font-medium text-indigo-600 hover:text-indigo-800"
-            >
-              Got it
-            </button>
-          </div>
-        </motion.div>
-      )}
-
-      {/* Onboarding Wizard (first-time user simulation) */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-40 p-4"
-        style={{ display: 'none' }}
-      >
-        <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl">
-          <div className="flex justify-between items-start mb-4">
-            <h2 className="text-xl font-bold text-gray-900">Welcome to your Command Center</h2>
-            <button className="text-gray-400 hover:text-gray-600">✕</button>
-          </div>
-          
-          <div className="space-y-4 mb-6">
-            <p className="text-gray-600">
-              This is your single pane of truth for inventory management. Let's get you oriented:
-            </p>
-            
-            <div className="grid grid-cols-3 gap-3">
-              {[1, 2, 3].map(i => (
-                <div key={i} className="bg-indigo-50 rounded-xl p-3 text-center">
-                  <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <span className="font-bold text-indigo-700">{i}</span>
-                  </div>
-                  <p className="text-xs font-medium text-gray-700">Step {i}</p>
+                
+                <!-- Dashboard Grid -->
+                <div class="dashboard-grid">
+                    <!-- Card 1: Health Metrics -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-heartbeat text-primary"></i> Health Metrics</h3>
+                            <span class="badge badge-primary">Live</span>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="healthChart"></canvas>
+                        </div>
+                        <div class="metrics-grid">
+                            <div class="metric-card">
+                                <div class="metric-label">Sleep Quality</div>
+                                <div class="metric-value">82%</div>
+                                <div class="text-success">+5% dari rata-rata</div>
+                            </div>
+                            <div class="metric-card warning">
+                                <div class="metric-label">HRV</div>
+                                <div class="metric-value">64ms</div>
+                                <div class="text-warning">Perlu recovery</div>
+                            </div>
+                            <div class="metric-card success">
+                                <div class="metric-label">Energy Level</div>
+                                <div class="metric-value">78%</div>
+                                <div class="text-success">Optimal</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-label">Focus Score</div>
+                                <div class="metric-value">7.2</div>
+                                <div class="text-primary">/10</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 2: Life Wheel -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-chart-pie text-primary"></i> Wheel of Life</h3>
+                            <span class="badge badge-warning">Q2 2024</span>
+                        </div>
+                        <div class="life-wheel-container">
+                            <div class="life-wheel">
+                                <!-- Wheel segments will be generated by JS -->
+                                <div class="wheel-center">Life Balance<br><small>7.4/10</small></div>
+                            </div>
+                        </div>
+                        <div style="text-align: center; margin-top: 1rem;">
+                            <p>Kesehatan & Kekayaan seimbang, Perlu fokus pada Hubungan & Pertumbuhan</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 3: Task Management -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-tasks text-primary"></i> Priority Tasks</h3>
+                            <button class="btn btn-outline">+ Add</button>
+                        </div>
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <input type="checkbox" class="task-checkbox">
+                                <div class="task-content">
+                                    <div class="task-title">Siapkan presentasi proyek Gamma</div>
+                                    <div class="task-meta"><i class="far fa-clock"></i> Hari ini, 10:00 | <span class="badge badge-primary">Kerja</span></div>
+                                </div>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" class="task-checkbox">
+                                <div class="task-content">
+                                    <div class="task-title">Olahraga 30 menit</div>
+                                    <div class="task-meta"><i class="far fa-clock"></i> Hari ini, 18:00 | <span class="badge badge-success">Kesehatan</span></div>
+                                </div>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" class="task-checkbox">
+                                <div class="task-content">
+                                    <div class="task-title">Review portofolio investasi</div>
+                                    <div class="task-meta"><i class="far fa-clock"></i> Besok, 09:00 | <span class="badge badge-warning">Keuangan</span></div>
+                                </div>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" class="task-checkbox">
+                                <div class="task-content">
+                                    <div class="task-title">Baca riset tentang Quantum Computing</div>
+                                    <div class="task-meta"><i class="far fa-clock"></i> 2 hari lagi | <span class="badge badge-primary">Pembelajaran</span></div>
+                                </div>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" class="task-checkbox">
+                                <div class="task-content">
+                                    <div class="task-title">Telepon orang tua</div>
+                                    <div class="task-meta"><i class="far fa-clock"></i> Minggu ini | <span class="badge badge-success">Hubungan</span></div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Card 4: AI Predictions -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-robot text-primary"></i> AI Predictions & Insights</h3>
+                            <span class="badge badge-success">ML Active</span>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="predictionChart"></canvas>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <h4>Rekomendasi Hari Ini:</h4>
+                            <ul style="padding-left: 1.2rem; margin-top: 0.5rem;">
+                                <li>Waktu produktif optimal: 09:00-12:00</li>
+                                <li>Risiko burnout minggu ini: <span class="text-warning">Sedang (42%)</span></li>
+                                <li>Saran nutrisi: Tingkatkan asupan protein</li>
+                                <li>Peluang investasi: Tech sector +3.2% momentum</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 5: Financial Overview -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-wallet text-primary"></i> Financial Overview</h3>
+                            <span class="badge badge-primary">Connected</span>
+                        </div>
+                        <div class="metrics-grid">
+                            <div class="metric-card success">
+                                <div class="metric-label">Net Worth</div>
+                                <div class="metric-value">$124,580</div>
+                                <div class="text-success">+2.4% bulan ini</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-label">Monthly Expenses</div>
+                                <div class="metric-value">$2,840</div>
+                                <div class="text-primary">-3% dari target</div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 1.5rem;">
+                            <h4>Portofolio Alokasi:</h4>
+                            <div style="display: flex; height: 10px; border-radius: 5px; overflow: hidden; margin-top: 0.5rem;">
+                                <div style="flex: 4; background: var(--primary);"></div>
+                                <div style="flex: 3; background: var(--secondary);"></div>
+                                <div style="flex: 2; background: var(--warning);"></div>
+                                <div style="flex: 1; background: var(--danger);"></div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-top: 0.5rem;">
+                                <span>Equities</span>
+                                <span>Bonds</span>
+                                <span>Crypto</span>
+                                <span>Cash</span>
+                            </div>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <button class="btn btn-primary" style="width: 100%;">Analisis Detail</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 6: Knowledge Graph -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-project-diagram text-primary"></i> Knowledge Connections</h3>
+                            <span class="badge badge-success">42 New</span>
+                        </div>
+                        <div style="text-align: center; margin: 1rem 0;">
+                            <div style="width: 200px; height: 200px; border-radius: 50%; background: conic-gradient(var(--primary) 0% 30%, var(--secondary) 30% 55%, var(--warning) 55% 80%, #e5e7eb 80% 100%); margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                                <div style="width: 100px; height: 100px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">
+                                    312 Nodes
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4>Topik yang Sedang Dipelajari:</h4>
+                            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;">
+                                <span class="badge badge-primary">Machine Learning</span>
+                                <span class="badge badge-success">Personal Finance</span>
+                                <span class="badge badge-warning">Neuroscience</span>
+                                <span class="badge badge-primary">Quantum Computing</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              ))}
+                
+                <!-- User Flow Simulation -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-stream text-primary"></i> PLOS Daily Flow Simulation</h3>
+                    </div>
+                    <div style="display: flex; overflow-x: auto; gap: 1rem; padding: 1rem 0;">
+                        <div style="min-width: 200px; padding: 1rem; background: #f0f9ff; border-radius: 8px; border-left: 4px solid var(--primary);">
+                            <h4><i class="fas fa-sun"></i> Pagi (06:00-09:00)</h4>
+                            <ul style="padding-left: 1.2rem; margin-top: 0.5rem;">
+                                <li>Sleep analysis & optimal wake-up</li>
+                                <li>Breakfast recommendation</li>
+                                <li>Daily schedule optimization</li>
+                                <li>Meeting preparation</li>
+                            </ul>
+                        </div>
+                        <div style="min-width: 200px; padding: 1rem; background: #f0fdf4; border-radius: 8px; border-left: 4px solid var(--secondary);">
+                            <h4><i class="fas fa-sun"></i> Siang (09:00-15:00)</h4>
+                            <ul style="padding-left: 1.2rem; margin-top: 0.5rem;">
+                                <li>Auto-expense tracking</li>
+                                <li>Energy-based schedule adjustment</li>
+                                <li>Relationship check-in reminders</li>
+                                <li>Focus session management</li>
+                            </ul>
+                        </div>
+                        <div style="min-width: 200px; padding: 1rem; background: #fefce8; border-radius: 8px; border-left: 4px solid var(--warning);">
+                            <h4><i class="fas fa-moon"></i> Sore (15:00-19:00)</h4>
+                            <ul style="padding-left: 1.2rem; margin-top: 0.5rem;">
+                                <li>Workout optimization</li>
+                                <li>Learning session</li>
+                                <li>Social connection prompts</li>
+                                <li>Financial review</li>
+                            </ul>
+                        </div>
+                        <div style="min-width: 200px; padding: 1rem; background: #fef2f2; border-radius: 8px; border-left: 4px solid var(--danger);">
+                            <h4><i class="fas fa-moon"></i> Malam (19:00-23:00)</h4>
+                            <ul style="padding-left: 1.2rem; margin-top: 0.5rem;">
+                                <li>AI-guided journaling</li>
+                                <li>Productivity analysis</li>
+                                <li>Next-day preparation</li>
+                                <li>Sleep environment optimization</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
-            
-            <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-              <div className="h-full bg-indigo-600 w-1/3"></div>
-            </div>
-          </div>
-          
-          <div className="flex justify-between">
-            <button className="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium">
-              Back
-            </button>
-            <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors">
-              Next: Configure Alerts
-            </button>
-          </div>
         </div>
-      </motion.div>
     </div>
-  );
-}
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-section">
+                <h4>PLOS Ecosystem</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Core Framework</a></li>
+                    <li><a href="#">API Documentation</a></li>
+                    <li><a href="#">Plugin Marketplace</a></li>
+                    <li><a href="#">Community</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Modules</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Quantified Self Analytics</a></li>
+                    <li><a href="#">Life Management Suite</a></li>
+                    <li><a href="#">Knowledge Graph Network</a></li>
+                    <li><a href="#">Relationship Intelligence</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Security & Privacy</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Privacy by Design</a></li>
+                    <li><a href="#">Data Encryption</a></li>
+                    <li><a href="#">Ethical Framework</a></li>
+                    <li><a href="#">Compliance</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Connect</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Research Partnership</a></li>
+                    <li><a href="#">Consultant Network</a></li>
+                    <li><a href="#">GitHub</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #374151;">
+            <p>Personal Life Operating System (PLOS) v2.1 | Architecture: Microservices + GraphQL + AI/ML</p>
+            <p style="font-size: 0.9rem; color: #9ca3af; margin-top: 0.5rem;">Next.js 15 + TypeScript + NestJS + PostgreSQL + TensorFlow.js</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Health Chart
+            const healthCtx = document.getElementById('healthChart').getContext('2d');
+            const healthChart = new Chart(healthCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
+                    datasets: [
+                        {
+                            label: 'Energi',
+                            data: [72, 75, 80, 78, 82, 70, 68],
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Fokus',
+                            data: [65, 70, 75, 72, 78, 65, 60],
+                            borderColor: '#6366f1',
+                            backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Mood',
+                            data: [70, 68, 75, 80, 78, 82, 75],
+                            borderColor: '#f59e0b',
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Initialize Prediction Chart
+            const predictionCtx = document.getElementById('predictionChart').getContext('2d');
+            const predictionChart = new Chart(predictionCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Produktivitas', 'Kesehatan', 'Keuangan', 'Hubungan', 'Pembelajaran'],
+                    datasets: [
+                        {
+                            label: 'Minggu Ini',
+                            data: [78, 82, 75, 68, 72],
+                            backgroundColor: 'rgba(99, 102, 241, 0.7)',
+                            borderColor: '#6366f1',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Prediksi Minggu Depan',
+                            data: [82, 85, 78, 72, 75],
+                            backgroundColor: 'rgba(16, 185, 129, 0.7)',
+                            borderColor: '#10b981',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Create Life Wheel
+            const lifeWheel = document.querySelector('.life-wheel');
+            const segments = [
+                {name: 'Kesehatan', value: 8.2, color: '#10b981'},
+                {name: 'Keuangan', value: 7.8, color: '#6366f1'},
+                {name: 'Karir', value: 7.5, color: '#8b5cf6'},
+                {name: 'Hubungan', value: 6.5, color: '#ef4444'},
+                {name: 'Pertumbuhan', value: 6.8, color: '#f59e0b'},
+                {name: 'Rekreasi', value: 7.2, color: '#ec4899'},
+                {name: 'Kontribusi', value: 7.0, color: '#06b6d4'},
+                {name: 'Spiritualitas', value: 7.5, color: '#84cc16'}
+            ];
+            
+            let rotation = 0;
+            segments.forEach(segment => {
+                const segmentEl = document.createElement('div');
+                segmentEl.className = 'wheel-segment';
+                segmentEl.style.backgroundColor = segment.color;
+                segmentEl.style.opacity = 0.7;
+                segmentEl.style.transform = `rotate(${rotation}deg)`;
+                segmentEl.title = `${segment.name}: ${segment.value}/10`;
+                
+                // Create value indicator
+                const valueIndicator = document.createElement('div');
+                valueIndicator.style.position = 'absolute';
+                valueIndicator.style.width = '20px';
+                valueIndicator.style.height = '20px';
+                valueIndicator.style.backgroundColor = segment.color;
+                valueIndicator.style.borderRadius = '50%';
+                valueIndicator.style.top = '20%';
+                valueIndicator.style.left = '50%';
+                valueIndicator.style.transform = 'translateX(-50%)';
+                valueIndicator.style.opacity = segment.value / 10;
+                
+                segmentEl.appendChild(valueIndicator);
+                lifeWheel.appendChild(segmentEl);
+                
+                rotation += 45;
+            });
+            
+            // Task completion functionality
+            const taskCheckboxes = document.querySelectorAll('.task-checkbox');
+            taskCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const taskItem = this.closest('.task-item');
+                    if (this.checked) {
+                        taskItem.style.opacity = '0.6';
+                        taskItem.style.textDecoration = 'line-through';
+                        
+                        // Simulate AI reaction
+                        setTimeout(() => {
+                            const aiInsight = document.querySelector('.ai-insight');
+                            aiInsight.innerHTML = `<i class="fas fa-lightbulb"></i> <strong>AI Insight:</strong> Task completed! PLOS mengupdate produktivitas score Anda (+5 pts).`;
+                            aiInsight.classList.add('pulse');
+                            setTimeout(() => {
+                                aiInsight.classList.remove('pulse');
+                            }, 2000);
+                        }, 500);
+                    } else {
+                        taskItem.style.opacity = '1';
+                        taskItem.style.textDecoration = 'none';
+                    }
+                });
+            });
+            
+            // Module tabs functionality
+            const moduleTabs = document.querySelectorAll('.module-tab');
+            moduleTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    moduleTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Simulate module switching
+                    const aiInsight = document.querySelector('.ai-insight');
+                    const moduleName = this.textContent;
+                    aiInsight.innerHTML = `<i class="fas fa-sync-alt"></i> <strong>Switching:</strong> Memuat modul ${moduleName}...`;
+                    
+                    setTimeout(() => {
+                        aiInsight.innerHTML = `<i class="fas fa-lightbulb"></i> <strong>AI Insight:</strong> Modul ${moduleName} dimuat. PLOS menganalisis data terbaru Anda.`;
+                    }, 800);
+                });
+            });
+            
+            // Sidebar menu functionality
+            const sidebarItems = document.querySelectorAll('.sidebar-menu li');
+            sidebarItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    sidebarItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Simulate real-time updates
+            setInterval(() => {
+                // Randomly update a metric
+                const metrics = document.querySelectorAll('.metric-value');
+                if (metrics.length > 0) {
+                    const randomMetric = metrics[Math.floor(Math.random() * metrics.length)];
+                    const currentValue = parseFloat(randomMetric.textContent.replace('%', '').replace('$', '').replace(',', ''));
+                    
+                    // Small random fluctuation
+                    const fluctuation = (Math.random() * 0.4) - 0.2; // -0.2 to +0.2
+                    const newValue = currentValue + fluctuation;
+                    
+                    // Format based on content
+                    if (randomMetric.textContent.includes('%')) {
+                        randomMetric.textContent = newValue.toFixed(1) + '%';
+                    } else if (randomMetric.textContent.includes('$')) {
+                        randomMetric.textContent = '$' + Math.round(newValue).toLocaleString();
+                    } else {
+                        randomMetric.textContent = newValue.toFixed(1);
+                    }
+                }
+                
+                // Update sync indicator
+                const syncIndicator = document.querySelector('.status-syncing');
+                if (syncIndicator) {
+                    syncIndicator.style.animation = 'pulse 1.5s infinite';
+                    setTimeout(() => {
+                        syncIndicator.style.animation = '';
+                    }, 1500);
+                }
+            }, 8000);
+        });
+    </script>
+</body>
+</html>
