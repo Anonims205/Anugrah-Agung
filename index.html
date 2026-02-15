@@ -1,860 +1,302 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Energy Technique - Gojo Style</title>
+    <title>Gojo Satoru's Hollow Purple - Genius Hand Tracking</title>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Arial', sans-serif;
-            overflow: hidden;
-        }
-
-        #container {
-            position: relative;
-            width: 100vw;
+            margin: 0;
+            background: #0a0a0a; /* Darker background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
             height: 100vh;
-            background: #000;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden; /* Prevent scrollbar from particle effects */
         }
-
-        #video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0;
+        .container {
+            position: relative;
+            box-shadow: 0 0 50px rgba(173, 216, 230, 0.4); /* Light blue glow */
+            border-radius: 20px;
+            overflow: hidden;
+            border: 2px solid #555;
         }
-
-        #canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-
-        #loading {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 100;
-        }
-
-        #loading.hidden {
+        #input_video {
             display: none;
         }
-
-        .loading-content {
-            text-align: center;
+        #output_canvas {
+            transform: scaleX(-1); /* Mirror effect */
+            background: black; /* Solid black background for effects */
+            display: block; /* Ensure it takes up space */
         }
-
-        .spinner {
-            width: 64px;
-            height: 64px;
-            border: 4px solid #8800ff;
-            border-top-color: transparent;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            color: white;
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        .loading-subtext {
-            color: #999;
-            font-size: 14px;
-        }
-
-        #error {
+        .info {
             position: absolute;
-            inset: 0;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 101;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 12px 18px;
+            border-radius: 10px;
+            pointer-events: none;
+            z-index: 10;
+            font-size: 1.1em;
+            color: #00FF7F; /* Neon green */
         }
-
-        #error.show {
-            display: flex;
-        }
-
-        .error-content {
-            text-align: center;
-            max-width: 500px;
-            padding: 40px;
-        }
-
-        .error-icon {
-            font-size: 80px;
-            margin-bottom: 20px;
-        }
-
-        .error-title {
+        .status-text {
             color: white;
-            font-size: 24px;
-            margin-bottom: 10px;
+            font-weight: bold;
         }
-
-        .error-message {
-            color: #999;
-            font-size: 16px;
-            line-height: 1.5;
-            margin-bottom: 20px;
-        }
-
-        .retry-button {
-            background: #8800ff;
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .retry-button:hover {
-            background: #aa00ff;
-        }
-
-        #instructions {
+        .gojo-message {
             position: absolute;
             bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
+            width: 100%;
             text-align: center;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 20px 30px;
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
+            font-size: 1.5em;
+            color: #ADD8E6; /* Light blue */
+            text-shadow: 0 0 15px #ADD8E6, 0 0 25px #ADD8E6;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            pointer-events: none;
+            z-index: 10;
         }
-
-        .instructions-title {
-            color: #8800ff;
-            font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            letter-spacing: 1px;
-        }
-
-        .instruction-item {
-            color: white;
-            font-size: 12px;
-            margin: 5px 0;
-        }
-
-        .color-dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            margin-right: 5px;
-        }
-
-        .red { background: #ff0000; }
-        .blue { background: #0088ff; }
-        .purple { background: #8800ff; }
-        .yellow { background: #ffff00; }
-
-        #permission-prompt {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 102;
-        }
-
-        #permission-prompt.hidden {
-            display: none;
-        }
-
-        .prompt-content {
-            text-align: center;
-            max-width: 500px;
-            padding: 40px;
-            background: rgba(136, 0, 255, 0.1);
-            border-radius: 20px;
-            border: 2px solid #8800ff;
-        }
-
-        .prompt-icon {
-            font-size: 80px;
-            margin-bottom: 20px;
-        }
-
-        .prompt-title {
-            color: white;
-            font-size: 28px;
-            margin-bottom: 15px;
-        }
-
-        .prompt-message {
-            color: #ccc;
-            font-size: 16px;
-            line-height: 1.6;
-            margin-bottom: 30px;
-        }
-
-        .start-button {
-            background: linear-gradient(135deg, #8800ff, #aa00ff);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 5px 20px rgba(136, 0, 255, 0.4);
-        }
-
-        .start-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(136, 0, 255, 0.6);
-        }
-
-        .start-button:active {
-            transform: translateY(0);
+        .gojo-message.active {
+            opacity: 1;
         }
     </style>
 </head>
 <body>
-    <div id="container">
-        <video id="video" playsinline muted autoplay></video>
-        <canvas id="canvas"></canvas>
 
-        <div id="permission-prompt">
-            <div class="prompt-content">
-                <div class="prompt-icon">🎥</div>
-                <div class="prompt-title">Camera Access Required</div>
-                <div class="prompt-message">
-                    This application needs access to your camera to track your hand movements and create energy effects. 
-                    Click the button below to grant permission.
-                </div>
-                <button class="start-button" id="start-button">Enable Camera</button>
-            </div>
-        </div>
+<div class="container">
+    <div class="info">Status: <span id="status" class="status-text">Memuat Model...</span></div>
+    <video id="input_video"></video>
+    <canvas id="output_canvas" width="1280" height="720"></canvas>
+    <div id="gojoMessage" class="gojo-message">Hollow Purple!</div>
+</div>
 
-        <div id="loading" class="hidden">
-            <div class="loading-content">
-                <div class="spinner"></div>
-                <div class="loading-text">Initializing Energy Technique...</div>
-                <div class="loading-subtext">Loading hand tracking...</div>
-            </div>
-        </div>
+<script type="module">
+    const videoElement = document.getElementById('input_video');
+    const canvasElement = document.getElementById('output_canvas');
+    const canvasCtx = canvasElement.getContext('2d');
+    const statusText = document.getElementById('status');
+    const gojoMessage = document.getElementById('gojoMessage');
 
-        <div id="error">
-            <div class="error-content">
-                <div class="error-icon">⚠️</div>
-                <div class="error-title">Error</div>
-                <div class="error-message" id="error-message"></div>
-                <button class="retry-button" id="retry-button">Try Again</button>
-            </div>
-        </div>
+    // Particle system for the energy effects
+    let particles = [];
+    const MAX_PARTICLES = 100;
 
-        <div id="instructions">
-            <div class="instructions-title">ENERGY TECHNIQUE CONTROLS</div>
-            <div class="instruction-item">
-                <span class="color-dot red"></span>
-                Point RIGHT index finger → RED Energy
-            </div>
-            <div class="instruction-item">
-                <span class="color-dot blue"></span>
-                Point LEFT index finger → BLUE Energy
-            </div>
-            <div class="instruction-item">
-                <span class="color-dot purple"></span>
-                Bring fingers together → PURPLE Merge
-            </div>
-            <div class="instruction-item">
-                <span class="color-dot yellow"></span>
-                Open palm → EXPLOSION
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/vision_bundle.js"></script>
-
-    <script>
-        let scene, camera, renderer;
-        let redSphere, blueSphere, purpleSphere;
-        let redParticles, blueParticles, purpleParticles, explosionParticles;
-        let videoTexture;
-        let handLandmarker;
-        let animationFrameId;
-        let lastFingerPositions = { right: null, left: null };
-        let mergeProgress = 0;
-        let explosionProgress = 0;
-        let isExploding = false;
-
-        const video = document.getElementById('video');
-        const canvas = document.getElementById('canvas');
-        const loadingDiv = document.getElementById('loading');
-        const errorDiv = document.getElementById('error');
-        const errorMessage = document.getElementById('error-message');
-        const permissionPrompt = document.getElementById('permission-prompt');
-        const startButton = document.getElementById('start-button');
-        const retryButton = document.getElementById('retry-button');
-
-        function showError(message) {
-            errorMessage.textContent = message;
-            errorDiv.classList.add('show');
-            loadingDiv.classList.add('hidden');
-            permissionPrompt.classList.add('hidden');
+    class Particle {
+        constructor(x, y, color, size, vx = 0, vy = 0) {
+            this.x = x;
+            this.y = y;
+            this.color = color;
+            this.size = size;
+            this.vx = vx + (Math.random() - 0.5) * 2; // Random initial velocity
+            this.vy = vy + (Math.random() - 0.5) * 2;
+            this.alpha = 1;
+            this.gravity = 0.05; // Light gravity for upward/outward motion
+            this.drag = 0.98; // Slow down particles
         }
 
-        function hideError() {
-            errorDiv.classList.remove('show');
+        update() {
+            this.vx *= this.drag;
+            this.vy *= this.drag;
+            this.vy += this.gravity; // Gravity effect
+            this.x += this.vx;
+            this.y += this.vy;
+            this.alpha -= 0.01; // Fade out
+            this.size *= 0.98; // Shrink
         }
 
-        function initThree() {
-            const width = window.innerWidth;
-            const height = window.innerHeight;
-
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-            camera.position.z = 5;
-
-            renderer = new THREE.WebGLRenderer({ 
-                canvas: canvas,
-                alpha: true,
-                antialias: true 
-            });
-            renderer.setSize(width, height);
-            renderer.setPixelRatio(window.devicePixelRatio);
-
-            videoTexture = new THREE.VideoTexture(video);
-            videoTexture.minFilter = THREE.LinearFilter;
-            videoTexture.magFilter = THREE.LinearFilter;
-            
-            const videoGeometry = new THREE.PlaneGeometry(16, 9);
-            const videoMaterial = new THREE.MeshBasicMaterial({ 
-                map: videoTexture,
-                side: THREE.DoubleSide 
-            });
-            const videoMesh = new THREE.Mesh(videoGeometry, videoMaterial);
-            videoMesh.position.z = -10;
-            scene.add(videoMesh);
-
-            createEnergySpheres();
-            createParticleSystems();
-
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-            scene.add(ambientLight);
-
-            const pointLight = new THREE.PointLight(0xffffff, 1, 100);
-            pointLight.position.set(0, 0, 10);
-            scene.add(pointLight);
+        draw(ctx) {
+            ctx.save();
+            ctx.globalAlpha = this.alpha;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.shadowBlur = this.size * 2;
+            ctx.shadowColor = this.color;
+            ctx.fill();
+            ctx.restore();
         }
+    }
 
-        function createEnergySpheres() {
-            // Red sphere
-            const redGeometry = new THREE.SphereGeometry(0.3, 32, 32);
-            const redMaterial = new THREE.MeshPhongMaterial({
-                color: 0xff0000,
-                emissive: 0xff0000,
-                emissiveIntensity: 2,
-                transparent: true,
-                opacity: 0.8,
-                shininess: 100
-            });
-            redSphere = new THREE.Mesh(redGeometry, redMaterial);
-            redSphere.visible = false;
-            scene.add(redSphere);
-
-            const redGlowGeometry = new THREE.SphereGeometry(0.5, 32, 32);
-            const redGlowMaterial = new THREE.MeshBasicMaterial({
-                color: 0xff0000,
-                transparent: true,
-                opacity: 0.3,
-                side: THREE.BackSide
-            });
-            const redGlow = new THREE.Mesh(redGlowGeometry, redGlowMaterial);
-            redSphere.add(redGlow);
-
-            // Blue sphere
-            const blueGeometry = new THREE.SphereGeometry(0.3, 32, 32);
-            const blueMaterial = new THREE.MeshPhongMaterial({
-                color: 0x0088ff,
-                emissive: 0x0088ff,
-                emissiveIntensity: 2,
-                transparent: true,
-                opacity: 0.8,
-                shininess: 100
-            });
-            blueSphere = new THREE.Mesh(blueGeometry, blueMaterial);
-            blueSphere.visible = false;
-            scene.add(blueSphere);
-
-            const blueGlowGeometry = new THREE.SphereGeometry(0.5, 32, 32);
-            const blueGlowMaterial = new THREE.MeshBasicMaterial({
-                color: 0x0088ff,
-                transparent: true,
-                opacity: 0.3,
-                side: THREE.BackSide
-            });
-            const blueGlow = new THREE.Mesh(blueGlowGeometry, blueGlowMaterial);
-            blueSphere.add(blueGlow);
-
-            // Purple sphere
-            const purpleGeometry = new THREE.SphereGeometry(0.5, 32, 32);
-            const purpleMaterial = new THREE.MeshPhongMaterial({
-                color: 0x8800ff,
-                emissive: 0x8800ff,
-                emissiveIntensity: 3,
-                transparent: true,
-                opacity: 0.9,
-                shininess: 100
-            });
-            purpleSphere = new THREE.Mesh(purpleGeometry, purpleMaterial);
-            purpleSphere.visible = false;
-            scene.add(purpleSphere);
-
-            const purpleGlowGeometry = new THREE.SphereGeometry(0.8, 32, 32);
-            const purpleGlowMaterial = new THREE.MeshBasicMaterial({
-                color: 0x8800ff,
-                transparent: true,
-                opacity: 0.4,
-                side: THREE.BackSide
-            });
-            const purpleGlow = new THREE.Mesh(purpleGlowGeometry, purpleGlowMaterial);
-            purpleSphere.add(purpleGlow);
-        }
-
-        function createParticleSystems() {
-            // Red particles
-            const redParticleGeometry = new THREE.BufferGeometry();
-            const redParticleCount = 200;
-            const redPositions = new Float32Array(redParticleCount * 3);
-            
-            for (let i = 0; i < redParticleCount * 3; i += 3) {
-                redPositions[i] = (Math.random() - 0.5) * 0.5;
-                redPositions[i + 1] = (Math.random() - 0.5) * 0.5;
-                redPositions[i + 2] = (Math.random() - 0.5) * 0.5;
+    function createParticles(x, y, color, count, initialVelX = 0, initialVelY = 0) {
+        for (let i = 0; i < count; i++) {
+            if (particles.length < MAX_PARTICLES) {
+                const size = Math.random() * 5 + 2;
+                particles.push(new Particle(x, y, color, size, initialVelX, initialVelY));
             }
-            
-            redParticleGeometry.setAttribute('position', new THREE.BufferAttribute(redPositions, 3));
-            
-            const redParticleMaterial = new THREE.PointsMaterial({
-                color: 0xff0000,
-                size: 0.05,
-                transparent: true,
-                opacity: 0.8,
-                blending: THREE.AdditiveBlending
-            });
-            
-            redParticles = new THREE.Points(redParticleGeometry, redParticleMaterial);
-            redParticles.visible = false;
-            scene.add(redParticles);
+        }
+    }
 
-            // Blue particles
-            const blueParticleGeometry = new THREE.BufferGeometry();
-            const blueParticleCount = 200;
-            const bluePositions = new Float32Array(blueParticleCount * 3);
-            
-            for (let i = 0; i < blueParticleCount * 3; i += 3) {
-                bluePositions[i] = (Math.random() - 0.5) * 0.5;
-                bluePositions[i + 1] = (Math.random() - 0.5) * 0.5;
-                bluePositions[i + 2] = (Math.random() - 0.5) * 0.5;
+    function updateParticles() {
+        for (let i = particles.length - 1; i >= 0; i--) {
+            particles[i].update();
+            if (particles[i].alpha <= 0.05 || particles[i].size <= 0.5) {
+                particles.splice(i, 1); // Remove faded/shrunk particles
             }
-            
-            blueParticleGeometry.setAttribute('position', new THREE.BufferAttribute(bluePositions, 3));
-            
-            const blueParticleMaterial = new THREE.PointsMaterial({
-                color: 0x0088ff,
-                size: 0.05,
-                transparent: true,
-                opacity: 0.8,
-                blending: THREE.AdditiveBlending
-            });
-            
-            blueParticles = new THREE.Points(blueParticleGeometry, blueParticleMaterial);
-            blueParticles.visible = false;
-            scene.add(blueParticles);
+        }
+    }
 
-            // Purple vortex particles
-            const purpleParticleGeometry = new THREE.BufferGeometry();
-            const purpleParticleCount = 500;
-            const purplePositions = new Float32Array(purpleParticleCount * 3);
-            
-            for (let i = 0; i < purpleParticleCount * 3; i += 3) {
-                const radius = Math.random() * 1;
-                const theta = Math.random() * Math.PI * 2;
-                const phi = Math.random() * Math.PI;
-                
-                purplePositions[i] = radius * Math.sin(phi) * Math.cos(theta);
-                purplePositions[i + 1] = radius * Math.sin(phi) * Math.sin(theta);
-                purplePositions[i + 2] = radius * Math.cos(phi);
-            }
-            
-            purpleParticleGeometry.setAttribute('position', new THREE.BufferAttribute(purplePositions, 3));
-            
-            const purpleParticleMaterial = new THREE.PointsMaterial({
-                color: 0x8800ff,
-                size: 0.08,
-                transparent: true,
-                opacity: 0.9,
-                blending: THREE.AdditiveBlending
-            });
-            
-            purpleParticles = new THREE.Points(purpleParticleGeometry, purpleParticleMaterial);
-            purpleParticles.visible = false;
-            scene.add(purpleParticles);
-
-            // Explosion particles
-            const explosionParticleGeometry = new THREE.BufferGeometry();
-            const explosionParticleCount = 1000;
-            const explosionPositions = new Float32Array(explosionParticleCount * 3);
-            const explosionVelocities = [];
-            
-            for (let i = 0; i < explosionParticleCount; i++) {
-                explosionPositions[i * 3] = 0;
-                explosionPositions[i * 3 + 1] = 0;
-                explosionPositions[i * 3 + 2] = 0;
-                
-                const theta = Math.random() * Math.PI * 2;
-                const phi = Math.random() * Math.PI;
-                const speed = Math.random() * 0.2 + 0.1;
-                
-                explosionVelocities.push({
-                    x: speed * Math.sin(phi) * Math.cos(theta),
-                    y: speed * Math.sin(phi) * Math.sin(theta),
-                    z: speed * Math.cos(phi)
-                });
-            }
-            
-            explosionParticleGeometry.setAttribute('position', new THREE.BufferAttribute(explosionPositions, 3));
-            explosionParticleGeometry.userData.velocities = explosionVelocities;
-            
-            const explosionParticleMaterial = new THREE.PointsMaterial({
-                color: 0x8800ff,
-                size: 0.1,
-                transparent: true,
-                opacity: 1,
-                blending: THREE.AdditiveBlending
-            });
-            
-            explosionParticles = new THREE.Points(explosionParticleGeometry, explosionParticleMaterial);
-            explosionParticles.visible = false;
-            scene.add(explosionParticles);
+    // Hand tracking variables
+    let leftIndexTip = null;
+    let rightIndexTip = null;
+    let combinedEnergyActive = false;
+    let lastCombinedTime = 0;
+    const COMBINE_DISTANCE_THRESHOLD = 80; // pixels
+    const OPEN_PALM_THRESHOLD = 0.6; // Ratio of open fingers to closed fingers
+    const FINGER_TIP_IDS = [mpHands.HandLandmark.INDEX_FINGER_TIP, 
+                            mpHands.HandLandmark.MIDDLE_FINGER_TIP, 
+                            mpHands.HandLandmark.RING_FINGER_TIP, 
+                            mpHands.HandLandmark.PINKY_TIP];
+    
+    // Function to check if a hand is "open"
+    // This is a simplified check. More robust would involve distances between tips and MCPs
+    function isOpenHand(landmarks) {
+        // Check if the tips of index, middle, ring, pinky fingers are above their respective MCPs
+        // (assuming y-axis for "above" with inverted canvas coordinates)
+        let openCount = 0;
+        if (landmarks[mpHands.HandLandmark.INDEX_FINGER_TIP].y < landmarks[mpHands.HandLandmark.INDEX_FINGER_MCP].y) openCount++;
+        if (landmarks[mpHands.HandLandmark.MIDDLE_FINGER_TIP].y < landmarks[mpHands.HandLandmark.MIDDLE_FINGER_MCP].y) openCount++;
+        if (landmarks[mpHands.HandLandmark.RING_FINGER_TIP].y < landmarks[mpHands.HandLandmark.RING_FINGER_MCP].y) openCount++;
+        if (landmarks[mpHands.HandLandmark.PINKY_FINGER_TIP].y < landmarks[mpHands.HandLandmark.PINKY_FINGER_MCP].y) openCount++;
+        
+        // Check thumb tip relative to base
+        if (landmarks[mpHands.HandLandmark.THUMB_TIP].x > landmarks[mpHands.HandLandmark.THUMB_CMC].x && // Right hand
+            landmarks[mpHands.HandLandmark.THUMB_TIP].y < landmarks[mpHands.HandLandmark.THUMB_CMC].y) {
+            openCount++;
+        } else if (landmarks[mpHands.HandLandmark.THUMB_TIP].x < landmarks[mpHands.HandLandmark.THUMB_CMC].x && // Left hand
+                   landmarks[mpHands.HandLandmark.THUMB_TIP].y < landmarks[mpHands.HandLandmark.THUMB_CMC].y) {
+            openCount++;
         }
 
-        async function initMediaPipe() {
-            try {
-                permissionPrompt.classList.add('hidden');
-                loadingDiv.classList.remove('hidden');
+        return openCount >= 4; // At least 4 fingers "open"
+    }
 
-                // Request camera access with better constraints
-                const constraints = {
-                    video: {
-                        facingMode: 'user',
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 }
-                    },
-                    audio: false
+
+    function onResults(results) {
+        statusText.innerText = "Aktif";
+        
+        canvasCtx.save();
+        canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+        // Draw the camera feed, mirrored
+        canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
+
+        leftIndexTip = null;
+        rightIndexTip = null;
+        let isLeftHandOpen = false;
+        let isRightHandOpen = false;
+
+        if (results.multiHandLandmarks) {
+            for (const i in results.multiHandLandmarks) {
+                const landmarks = results.multiHandLandmarks[i];
+                const handedness = results.multiHandedness[i].classification[0].label; // 'Left' or 'Right'
+
+                // Convert normalized coordinates to pixel coordinates
+                const indexTip = {
+                    x: landmarks[mpHands.HandLandmark.INDEX_FINGER_TIP].x * canvasElement.width,
+                    y: landmarks[mpHands.HandLandmark.INDEX_FINGER_TIP].y * canvasElement.height
                 };
 
-                const stream = await navigator.mediaDevices.getUserMedia(constraints);
-                
-                video.srcObject = stream;
-                
-                // Wait for video to be ready
-                await new Promise((resolve, reject) => {
-                    video.onloadedmetadata = () => {
-                        video.play()
-                            .then(resolve)
-                            .catch(reject);
-                    };
-                    video.onerror = reject;
+                // Store index finger tip positions
+                if (handedness === 'Left') {
+                    leftIndexTip = indexTip;
+                    isLeftHandOpen = isOpenHand(landmarks);
+                    // Draw Red Energy on Left Index Finger
+                    createParticles(indexTip.x, indexTip.y, 'rgba(255, 0, 0, 0.7)', 2);
+                    // Also draw the landmark
+                    drawLandmarks(canvasCtx, landmarks, {color: '#FF0000', lineWidth: 2, radius: 5});
+                    drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, {color: '#FFCCCC', lineWidth: 3});
+
+                } else if (handedness === 'Right') {
+                    rightIndexTip = indexTip;
+                    isRightHandOpen = isOpenHand(landmarks);
+                    // Draw Blue Energy on Right Index Finger
+                    createParticles(indexTip.x, indexTip.y, 'rgba(0, 0, 255, 0.7)', 2);
+                    // Also draw the landmark
+                    drawLandmarks(canvasCtx, landmarks, {color: '#0000FF', lineWidth: 2, radius: 5});
+                    drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, {color: '#CCCCFF', lineWidth: 3});
+                }
+            }
+        }
+
+        // Hollow Purple Logic
+        if (leftIndexTip && rightIndexTip) {
+            const distance = Math.sqrt(
+                Math.pow(leftIndexTip.x - rightIndexTip.x, 2) +
+                Math.pow(leftIndexTip.y - rightIndexTip.y, 2)
+            );
+
+            if (distance < COMBINE_DISTANCE_THRESHOLD) {
+                // Fingers are close enough, combine energy
+                combinedEnergyActive = true;
+                const midX = (leftIndexTip.x + rightIndexTip.x) / 2;
+                const midY = (leftIndexTip.y + rightIndexTip.y) / 2;
+                createParticles(midX, midY, 'rgba(128, 0, 128, 0.9)', 5); // Purple
+                lastCombinedTime = Date.now();
+                gojoMessage.classList.remove('active'); // Hide message while combining
+
+            } else {
+                // If combined energy was active and fingers separate, check for release
+                if (combinedEnergyActive && (isLeftHandOpen || isRightHandOpen) && (Date.now() - lastCombinedTime < 2000)) { // Small window for release after combination
+                    // Release Hollow Purple!
+                    const midX = (leftIndexTip.x + rightIndexTip.x) / 2;
+                    const midY = (leftIndexTip.y + rightIndexTip.y) / 2;
                     
-                    // Timeout after 10 seconds
-                    setTimeout(() => reject(new Error('Video load timeout')), 10000);
-                });
-
-                // Load MediaPipe
-                const vision = await FilesetResolver.forVisionTasks(
-                    "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
-                );
-                
-                handLandmarker = await HandLandmarker.createFromOptions(vision, {
-                    baseOptions: {
-                        modelAssetPath: "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/latest/hand_landmarker.task",
-                        delegate: "GPU"
-                    },
-                    numHands: 2,
-                    runningMode: "VIDEO",
-                    minHandDetectionConfidence: 0.5,
-                    minHandPresenceConfidence: 0.5,
-                    minTrackingConfidence: 0.5
-                });
-
-                loadingDiv.classList.add('hidden');
-                detectHands();
-            } catch (err) {
-                console.error('Error:', err);
-                let errorMsg = 'Failed to initialize. ';
-                
-                if (err.name === 'NotAllowedError') {
-                    errorMsg += 'Camera access was denied. Please allow camera access in your browser settings and try again.';
-                } else if (err.name === 'NotFoundError') {
-                    errorMsg += 'No camera found. Please connect a camera and try again.';
-                } else if (err.name === 'NotReadableError') {
-                    errorMsg += 'Camera is already in use by another application.';
-                } else {
-                    errorMsg += err.message || 'Please check your camera permissions and refresh the page.';
-                }
-                
-                showError(errorMsg);
-            }
-        }
-
-        function detectHands() {
-            if (video && handLandmarker && video.readyState >= 2) {
-                try {
-                    const results = handLandmarker.detectForVideo(video, Date.now());
-                    processHandResults(results);
-                } catch (err) {
-                    console.error('Hand detection error:', err);
-                }
-            }
-            
-            animationFrameId = requestAnimationFrame(detectHands);
-        }
-
-        function processHandResults(results) {
-            if (!results.landmarks || results.landmarks.length === 0) {
-                redSphere.visible = false;
-                blueSphere.visible = false;
-                redParticles.visible = false;
-                blueParticles.visible = false;
-                lastFingerPositions = { right: null, left: null };
-                mergeProgress = 0;
-                return;
-            }
-
-            let rightIndexTip = null;
-            let leftIndexTip = null;
-            let palmOpen = false;
-
-            results.landmarks.forEach((landmarks, index) => {
-                const handedness = results.handedness[index][0].categoryName;
-                const indexFingerTip = landmarks[8];
-                const indexFingerPip = landmarks[6];
-                
-                const x = (indexFingerTip.x - 0.5) * 8;
-                const y = -(indexFingerTip.y - 0.5) * 6;
-                const z = -indexFingerTip.z * 5;
-
-                const isPointing = indexFingerTip.z < indexFingerPip.z - 0.02;
-
-                const thumbTip = landmarks[4];
-                const pinkyTip = landmarks[20];
-                const palmWidth = Math.abs(thumbTip.x - pinkyTip.x);
-                palmOpen = palmWidth > 0.15;
-
-                if (isPointing) {
-                    if (handedness === 'Right') {
-                        rightIndexTip = new THREE.Vector3(x, y, z);
-                        lastFingerPositions.right = rightIndexTip;
-                    } else if (handedness === 'Left') {
-                        leftIndexTip = new THREE.Vector3(x, y, z);
-                        lastFingerPositions.left = leftIndexTip;
+                    // Simulate explosion of purple energy forward (towards the camera, so outwards on canvas)
+                    for (let i = 0; i < 50; i++) {
+                        // Stronger initial velocity for the "burst"
+                        const angle = Math.random() * Math.PI * 2; // Random direction
+                        const speed = Math.random() * 15 + 10;
+                        createParticles(midX, midY, 'rgba(128, 0, 128, 0.9)', 1, Math.cos(angle) * speed, Math.sin(angle) * speed);
                     }
+                    gojoMessage.classList.add('active');
+                    setTimeout(() => gojoMessage.classList.remove('active'), 1500); // Hide message after 1.5s
                 }
-            });
-
-            if (palmOpen && purpleSphere.visible && !isExploding) {
-                triggerExplosion();
+                combinedEnergyActive = false;
             }
-
-            updateEnergySpheres(rightIndexTip, leftIndexTip);
-        }
-
-        function updateEnergySpheres(rightPos, leftPos) {
-            const time = Date.now() * 0.001;
-
-            if (rightPos) {
-                redSphere.visible = true;
-                redParticles.visible = true;
-                redSphere.position.copy(rightPos);
-                redParticles.position.copy(rightPos);
-                
-                const positions = redParticles.geometry.attributes.position.array;
-                for (let i = 0; i < positions.length; i += 3) {
-                    const angle = time * 2 + i;
-                    positions[i] = Math.cos(angle) * 0.3;
-                    positions[i + 1] = Math.sin(angle) * 0.3;
-                    positions[i + 2] = Math.sin(time * 3 + i) * 0.2;
-                }
-                redParticles.geometry.attributes.position.needsUpdate = true;
-                redParticles.rotation.z = time;
-            } else {
-                redSphere.visible = false;
-                redParticles.visible = false;
-            }
-
-            if (leftPos) {
-                blueSphere.visible = true;
-                blueParticles.visible = true;
-                blueSphere.position.copy(leftPos);
-                blueParticles.position.copy(leftPos);
-                
-                const positions = blueParticles.geometry.attributes.position.array;
-                for (let i = 0; i < positions.length; i += 3) {
-                    const angle = time * 2 + i;
-                    positions[i] = Math.cos(angle) * 0.3;
-                    positions[i + 1] = Math.sin(angle) * 0.3;
-                    positions[i + 2] = Math.cos(time * 3 + i) * 0.2;
-                }
-                blueParticles.geometry.attributes.position.needsUpdate = true;
-                blueParticles.rotation.z = -time;
-            } else {
-                blueSphere.visible = false;
-                blueParticles.visible = false;
-            }
-
-            if (rightPos && leftPos) {
-                const distance = rightPos.distanceTo(leftPos);
-                
-                if (distance < 2) {
-                    mergeProgress = Math.min(mergeProgress + 0.05, 1);
-                    
-                    const midpoint = new THREE.Vector3()
-                        .addVectors(rightPos, leftPos)
-                        .multiplyScalar(0.5);
-                    
-                    purpleSphere.position.copy(midpoint);
-                    purpleSphere.visible = true;
-                    purpleParticles.visible = true;
-                    purpleParticles.position.copy(midpoint);
-                    
-                    const scale = 0.5 + mergeProgress * 0.5;
-                    purpleSphere.scale.set(scale, scale, scale);
-                    
-                    const positions = purpleParticles.geometry.attributes.position.array;
-                    for (let i = 0; i < positions.length; i += 3) {
-                        const angle = time * 3 + i * 0.01;
-                        const radius = 0.5 + Math.sin(time * 2 + i) * 0.3;
-                        positions[i] = Math.cos(angle) * radius;
-                        positions[i + 1] = Math.sin(angle) * radius;
-                        positions[i + 2] = Math.sin(time * 4 + i) * 0.5;
-                    }
-                    purpleParticles.geometry.attributes.position.needsUpdate = true;
-                    purpleParticles.rotation.z = time * 2;
-                    
-                    redSphere.visible = false;
-                    blueSphere.visible = false;
-                    redParticles.visible = false;
-                    blueParticles.visible = false;
-                } else {
-                    purpleSphere.visible = false;
-                    purpleParticles.visible = false;
-                    mergeProgress = Math.max(mergeProgress - 0.05, 0);
-                }
-            } else {
-                purpleSphere.visible = false;
-                purpleParticles.visible = false;
-                mergeProgress = Math.max(mergeProgress - 0.05, 0);
-            }
-        }
-
-        function triggerExplosion() {
-            isExploding = true;
-            explosionProgress = 0;
-            explosionParticles.visible = true;
-            explosionParticles.position.copy(purpleSphere.position);
-            
-            const positions = explosionParticles.geometry.attributes.position.array;
-            for (let i = 0; i < positions.length; i += 3) {
-                positions[i] = 0;
-                positions[i + 1] = 0;
-                positions[i + 2] = 0;
-            }
-            explosionParticles.geometry.attributes.position.needsUpdate = true;
-            
-            purpleSphere.visible = false;
-            purpleParticles.visible = false;
-        }
-
-        function animate() {
-            animationFrameId = requestAnimationFrame(animate);
-
-            if (isExploding) {
-                explosionProgress += 0.02;
-                
-                const positions = explosionParticles.geometry.attributes.position.array;
-                const velocities = explosionParticles.geometry.userData.velocities;
-                
-                for (let i = 0; i < velocities.length; i++) {
-                    positions[i * 3] += velocities[i].x;
-                    positions[i * 3 + 1] += velocities[i].y;
-                    positions[i * 3 + 2] += velocities[i].z;
-                }
-                
-                explosionParticles.geometry.attributes.position.needsUpdate = true;
-                explosionParticles.material.opacity = 1 - explosionProgress;
-                
-                if (explosionProgress >= 1) {
-                    isExploding = false;
-                    explosionParticles.visible = false;
-                    explosionProgress = 0;
-                }
-            }
-
-            renderer.render(scene, camera);
-        }
-
-        function onWindowResize() {
-            const width = window.innerWidth;
-            const height = window.innerHeight;
-            
-            camera.aspect = width / height;
-            camera.updateProjectionMatrix();
-            renderer.setSize(width, height);
-        }
-
-        window.addEventListener('resize', onWindowResize);
-
-        // Event listeners for buttons
-        startButton.addEventListener('click', initMediaPipe);
-        retryButton.addEventListener('click', () => {
-            hideError();
-            permissionPrompt.classList.remove('hidden');
-        });
-
-        // Check if camera is already available
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            // Browser supports camera API
         } else {
-            showError('Your browser does not support camera access. Please use a modern browser like Chrome, Firefox, or Safari.');
+            combinedEnergyActive = false; // Reset if only one hand or no hands
+            gojoMessage.classList.remove('active');
         }
 
-        // Start Three.js and animation
-        initThree();
-        animate();
-    </script>
+        // Update and draw particles
+        updateParticles();
+        for (const p of particles) {
+            p.draw(canvasCtx);
+        }
+
+        canvasCtx.restore();
+        requestAnimationFrame(() => {}); // This helps keep animation smooth
+    }
+
+    const hands = new Hands({locateFile: (file) => {
+        return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+    }});
+
+    hands.setOptions({
+        maxNumHands: 2,
+        modelComplexity: 1, // Higher complexity for better accuracy (0 or 1)
+        minDetectionConfidence: 0.7, // Higher confidence to reduce false positives
+        minTrackingConfidence: 0.6
+    });
+
+    hands.onResults(onResults);
+
+    const camera = new Camera(videoElement, {
+        onFrame: async () => {
+            await hands.send({image: videoElement});
+        },
+        width: 1280,
+        height: 720
+    });
+    camera.start();
+</script>
+
 </body>
 </html>
