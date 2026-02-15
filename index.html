@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -12,703 +11,850 @@
             box-sizing: border-box;
         }
 
-```
-    body {
-        font-family: 'Arial', sans-serif;
-        overflow: hidden;
-    }
+        body {
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
 
-    #container {
-        position: relative;
-        width: 100vw;
-        height: 100vh;
-        background: #000;
-    }
+        #container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+        }
 
-    #video {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        opacity: 0;
-    }
+        #video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+        }
 
-    #canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-    }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
 
-    #loading {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: rgba(0, 0, 0, 0.9);
-        z-index: 100;
-    }
+        #loading {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 100;
+        }
 
-    #loading.hidden {
-        display: none;
-    }
+        #loading.hidden {
+            display: none;
+        }
 
-    .loading-content {
-        text-align: center;
-    }
+        .loading-content {
+            text-align: center;
+        }
 
-    .spinner {
-        width: 64px;
-        height: 64px;
-        border: 4px solid #8800ff;
-        border-top-color: transparent;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-        margin: 0 auto 20px;
-    }
+        .spinner {
+            width: 64px;
+            height: 64px;
+            border: 4px solid #8800ff;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
 
-    @keyframes spin {
-        to { transform: rotate(360deg); }
-    }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
 
-    .loading-text {
-        color: white;
-        font-size: 24px;
-        margin-bottom: 10px;
-    }
+        .loading-text {
+            color: white;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
 
-    .loading-subtext {
-        color: #999;
-        font-size: 14px;
-    }
+        .loading-subtext {
+            color: #999;
+            font-size: 14px;
+        }
 
-    #error {
-        position: absolute;
-        inset: 0;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        background: rgba(0, 0, 0, 0.95);
-        z-index: 101;
-    }
+        #error {
+            position: absolute;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 101;
+        }
 
-    #error.show {
-        display: flex;
-    }
+        #error.show {
+            display: flex;
+        }
 
-    .error-content {
-        text-align: center;
-        max-width: 500px;
-        padding: 40px;
-    }
+        .error-content {
+            text-align: center;
+            max-width: 500px;
+            padding: 40px;
+        }
 
-    .error-icon {
-        font-size: 80px;
-        margin-bottom: 20px;
-    }
+        .error-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
 
-    .error-title {
-        color: white;
-        font-size: 24px;
-        margin-bottom: 10px;
-    }
+        .error-title {
+            color: white;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
 
-    .error-message {
-        color: #999;
-        font-size: 16px;
-        line-height: 1.5;
-    }
+        .error-message {
+            color: #999;
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
 
-    #instructions {
-        position: absolute;
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%);
-        text-align: center;
-        background: rgba(0, 0, 0, 0.7);
-        padding: 20px 30px;
-        border-radius: 10px;
-        backdrop-filter: blur(10px);
-    }
+        .retry-button {
+            background: #8800ff;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
 
-    .instructions-title {
-        color: #8800ff;
-        font-size: 14px;
-        font-weight: bold;
-        margin-bottom: 10px;
-        letter-spacing: 1px;
-    }
+        .retry-button:hover {
+            background: #aa00ff;
+        }
 
-    .instruction-item {
-        color: white;
-        font-size: 12px;
-        margin: 5px 0;
-    }
+        #instructions {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px 30px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
 
-    .color-dot {
-        display: inline-block;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        margin-right: 5px;
-    }
+        .instructions-title {
+            color: #8800ff;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
 
-    .red { background: #ff0000; }
-    .blue { background: #0088ff; }
-    .purple { background: #8800ff; }
-    .yellow { background: #ffff00; }
-</style>
-```
+        .instruction-item {
+            color: white;
+            font-size: 12px;
+            margin: 5px 0;
+        }
 
+        .color-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .red { background: #ff0000; }
+        .blue { background: #0088ff; }
+        .purple { background: #8800ff; }
+        .yellow { background: #ffff00; }
+
+        #permission-prompt {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 102;
+        }
+
+        #permission-prompt.hidden {
+            display: none;
+        }
+
+        .prompt-content {
+            text-align: center;
+            max-width: 500px;
+            padding: 40px;
+            background: rgba(136, 0, 255, 0.1);
+            border-radius: 20px;
+            border: 2px solid #8800ff;
+        }
+
+        .prompt-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .prompt-title {
+            color: white;
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        .prompt-message {
+            color: #ccc;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .start-button {
+            background: linear-gradient(135deg, #8800ff, #aa00ff);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 5px 20px rgba(136, 0, 255, 0.4);
+        }
+
+        .start-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(136, 0, 255, 0.6);
+        }
+
+        .start-button:active {
+            transform: translateY(0);
+        }
+    </style>
 </head>
 <body>
     <div id="container">
         <video id="video" playsinline muted autoplay></video>
         <canvas id="canvas"></canvas>
 
-```
-    <div id="loading">
-        <div class="loading-content">
-            <div class="spinner"></div>
-            <div class="loading-text">Initializing Energy Technique...</div>
-            <div class="loading-subtext">Loading hand tracking...</div>
+        <div id="permission-prompt">
+            <div class="prompt-content">
+                <div class="prompt-icon">🎥</div>
+                <div class="prompt-title">Camera Access Required</div>
+                <div class="prompt-message">
+                    This application needs access to your camera to track your hand movements and create energy effects. 
+                    Click the button below to grant permission.
+                </div>
+                <button class="start-button" id="start-button">Enable Camera</button>
+            </div>
+        </div>
+
+        <div id="loading" class="hidden">
+            <div class="loading-content">
+                <div class="spinner"></div>
+                <div class="loading-text">Initializing Energy Technique...</div>
+                <div class="loading-subtext">Loading hand tracking...</div>
+            </div>
+        </div>
+
+        <div id="error">
+            <div class="error-content">
+                <div class="error-icon">⚠️</div>
+                <div class="error-title">Error</div>
+                <div class="error-message" id="error-message"></div>
+                <button class="retry-button" id="retry-button">Try Again</button>
+            </div>
+        </div>
+
+        <div id="instructions">
+            <div class="instructions-title">ENERGY TECHNIQUE CONTROLS</div>
+            <div class="instruction-item">
+                <span class="color-dot red"></span>
+                Point RIGHT index finger → RED Energy
+            </div>
+            <div class="instruction-item">
+                <span class="color-dot blue"></span>
+                Point LEFT index finger → BLUE Energy
+            </div>
+            <div class="instruction-item">
+                <span class="color-dot purple"></span>
+                Bring fingers together → PURPLE Merge
+            </div>
+            <div class="instruction-item">
+                <span class="color-dot yellow"></span>
+                Open palm → EXPLOSION
+            </div>
         </div>
     </div>
 
-    <div id="error">
-        <div class="error-content">
-            <div class="error-icon">⚠️</div>
-            <div class="error-title">Error</div>
-            <div class="error-message" id="error-message"></div>
-        </div>
-    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/vision_bundle.js"></script>
 
-    <div id="instructions">
-        <div class="instructions-title">ENERGY TECHNIQUE CONTROLS</div>
-        <div class="instruction-item">
-            <span class="color-dot red"></span>
-            Point RIGHT index finger → RED Energy
-        </div>
-        <div class="instruction-item">
-            <span class="color-dot blue"></span>
-            Point LEFT index finger → BLUE Energy
-        </div>
-        <div class="instruction-item">
-            <span class="color-dot purple"></span>
-            Bring fingers together → PURPLE Merge
-        </div>
-        <div class="instruction-item">
-            <span class="color-dot yellow"></span>
-            Open palm → EXPLOSION
-        </div>
-    </div>
-</div>
+    <script>
+        let scene, camera, renderer;
+        let redSphere, blueSphere, purpleSphere;
+        let redParticles, blueParticles, purpleParticles, explosionParticles;
+        let videoTexture;
+        let handLandmarker;
+        let animationFrameId;
+        let lastFingerPositions = { right: null, left: null };
+        let mergeProgress = 0;
+        let explosionProgress = 0;
+        let isExploding = false;
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/vision_bundle.js"></script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const loadingDiv = document.getElementById('loading');
+        const errorDiv = document.getElementById('error');
+        const errorMessage = document.getElementById('error-message');
+        const permissionPrompt = document.getElementById('permission-prompt');
+        const startButton = document.getElementById('start-button');
+        const retryButton = document.getElementById('retry-button');
 
-<script>
-    let scene, camera, renderer;
-    let redSphere, blueSphere, purpleSphere;
-    let redParticles, blueParticles, purpleParticles, explosionParticles;
-    let videoTexture;
-    let handLandmarker;
-    let animationFrameId;
-    let lastFingerPositions = { right: null, left: null };
-    let mergeProgress = 0;
-    let explosionProgress = 0;
-    let isExploding = false;
-
-    const video = document.getElementById('video');
-    const canvas = document.getElementById('canvas');
-    const loadingDiv = document.getElementById('loading');
-    const errorDiv = document.getElementById('error');
-    const errorMessage = document.getElementById('error-message');
-
-    function showError(message) {
-        errorMessage.textContent = message;
-        errorDiv.classList.add('show');
-        loadingDiv.classList.add('hidden');
-    }
-
-    function initThree() {
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-
-        scene = new THREE.Scene();
-        camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-        camera.position.z = 5;
-
-        renderer = new THREE.WebGLRenderer({ 
-            canvas: canvas,
-            alpha: true,
-            antialias: true 
-        });
-        renderer.setSize(width, height);
-        renderer.setPixelRatio(window.devicePixelRatio);
-
-        videoTexture = new THREE.VideoTexture(video);
-        videoTexture.minFilter = THREE.LinearFilter;
-        videoTexture.magFilter = THREE.LinearFilter;
-        
-        const videoGeometry = new THREE.PlaneGeometry(16, 9);
-        const videoMaterial = new THREE.MeshBasicMaterial({ 
-            map: videoTexture,
-            side: THREE.DoubleSide 
-        });
-        const videoMesh = new THREE.Mesh(videoGeometry, videoMaterial);
-        videoMesh.position.z = -10;
-        scene.add(videoMesh);
-
-        createEnergySpheres();
-        createParticleSystems();
-
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-        scene.add(ambientLight);
-
-        const pointLight = new THREE.PointLight(0xffffff, 1, 100);
-        pointLight.position.set(0, 0, 10);
-        scene.add(pointLight);
-    }
-
-    function createEnergySpheres() {
-        // Red sphere
-        const redGeometry = new THREE.SphereGeometry(0.3, 32, 32);
-        const redMaterial = new THREE.MeshPhongMaterial({
-            color: 0xff0000,
-            emissive: 0xff0000,
-            emissiveIntensity: 2,
-            transparent: true,
-            opacity: 0.8,
-            shininess: 100
-        });
-        redSphere = new THREE.Mesh(redGeometry, redMaterial);
-        redSphere.visible = false;
-        scene.add(redSphere);
-
-        const redGlowGeometry = new THREE.SphereGeometry(0.5, 32, 32);
-        const redGlowMaterial = new THREE.MeshBasicMaterial({
-            color: 0xff0000,
-            transparent: true,
-            opacity: 0.3,
-            side: THREE.BackSide
-        });
-        const redGlow = new THREE.Mesh(redGlowGeometry, redGlowMaterial);
-        redSphere.add(redGlow);
-
-        // Blue sphere
-        const blueGeometry = new THREE.SphereGeometry(0.3, 32, 32);
-        const blueMaterial = new THREE.MeshPhongMaterial({
-            color: 0x0088ff,
-            emissive: 0x0088ff,
-            emissiveIntensity: 2,
-            transparent: true,
-            opacity: 0.8,
-            shininess: 100
-        });
-        blueSphere = new THREE.Mesh(blueGeometry, blueMaterial);
-        blueSphere.visible = false;
-        scene.add(blueSphere);
-
-        const blueGlowGeometry = new THREE.SphereGeometry(0.5, 32, 32);
-        const blueGlowMaterial = new THREE.MeshBasicMaterial({
-            color: 0x0088ff,
-            transparent: true,
-            opacity: 0.3,
-            side: THREE.BackSide
-        });
-        const blueGlow = new THREE.Mesh(blueGlowGeometry, blueGlowMaterial);
-        blueSphere.add(blueGlow);
-
-        // Purple sphere
-        const purpleGeometry = new THREE.SphereGeometry(0.5, 32, 32);
-        const purpleMaterial = new THREE.MeshPhongMaterial({
-            color: 0x8800ff,
-            emissive: 0x8800ff,
-            emissiveIntensity: 3,
-            transparent: true,
-            opacity: 0.9,
-            shininess: 100
-        });
-        purpleSphere = new THREE.Mesh(purpleGeometry, purpleMaterial);
-        purpleSphere.visible = false;
-        scene.add(purpleSphere);
-
-        const purpleGlowGeometry = new THREE.SphereGeometry(0.8, 32, 32);
-        const purpleGlowMaterial = new THREE.MeshBasicMaterial({
-            color: 0x8800ff,
-            transparent: true,
-            opacity: 0.4,
-            side: THREE.BackSide
-        });
-        const purpleGlow = new THREE.Mesh(purpleGlowGeometry, purpleGlowMaterial);
-        purpleSphere.add(purpleGlow);
-    }
-
-    function createParticleSystems() {
-        // Red particles
-        const redParticleGeometry = new THREE.BufferGeometry();
-        const redParticleCount = 200;
-        const redPositions = new Float32Array(redParticleCount * 3);
-        
-        for (let i = 0; i < redParticleCount * 3; i += 3) {
-            redPositions[i] = (Math.random() - 0.5) * 0.5;
-            redPositions[i + 1] = (Math.random() - 0.5) * 0.5;
-            redPositions[i + 2] = (Math.random() - 0.5) * 0.5;
-        }
-        
-        redParticleGeometry.setAttribute('position', new THREE.BufferAttribute(redPositions, 3));
-        
-        const redParticleMaterial = new THREE.PointsMaterial({
-            color: 0xff0000,
-            size: 0.05,
-            transparent: true,
-            opacity: 0.8,
-            blending: THREE.AdditiveBlending
-        });
-        
-        redParticles = new THREE.Points(redParticleGeometry, redParticleMaterial);
-        redParticles.visible = false;
-        scene.add(redParticles);
-
-        // Blue particles
-        const blueParticleGeometry = new THREE.BufferGeometry();
-        const blueParticleCount = 200;
-        const bluePositions = new Float32Array(blueParticleCount * 3);
-        
-        for (let i = 0; i < blueParticleCount * 3; i += 3) {
-            bluePositions[i] = (Math.random() - 0.5) * 0.5;
-            bluePositions[i + 1] = (Math.random() - 0.5) * 0.5;
-            bluePositions[i + 2] = (Math.random() - 0.5) * 0.5;
-        }
-        
-        blueParticleGeometry.setAttribute('position', new THREE.BufferAttribute(bluePositions, 3));
-        
-        const blueParticleMaterial = new THREE.PointsMaterial({
-            color: 0x0088ff,
-            size: 0.05,
-            transparent: true,
-            opacity: 0.8,
-            blending: THREE.AdditiveBlending
-        });
-        
-        blueParticles = new THREE.Points(blueParticleGeometry, blueParticleMaterial);
-        blueParticles.visible = false;
-        scene.add(blueParticles);
-
-        // Purple vortex particles
-        const purpleParticleGeometry = new THREE.BufferGeometry();
-        const purpleParticleCount = 500;
-        const purplePositions = new Float32Array(purpleParticleCount * 3);
-        
-        for (let i = 0; i < purpleParticleCount * 3; i += 3) {
-            const radius = Math.random() * 1;
-            const theta = Math.random() * Math.PI * 2;
-            const phi = Math.random() * Math.PI;
-            
-            purplePositions[i] = radius * Math.sin(phi) * Math.cos(theta);
-            purplePositions[i + 1] = radius * Math.sin(phi) * Math.sin(theta);
-            purplePositions[i + 2] = radius * Math.cos(phi);
-        }
-        
-        purpleParticleGeometry.setAttribute('position', new THREE.BufferAttribute(purplePositions, 3));
-        
-        const purpleParticleMaterial = new THREE.PointsMaterial({
-            color: 0x8800ff,
-            size: 0.08,
-            transparent: true,
-            opacity: 0.9,
-            blending: THREE.AdditiveBlending
-        });
-        
-        purpleParticles = new THREE.Points(purpleParticleGeometry, purpleParticleMaterial);
-        purpleParticles.visible = false;
-        scene.add(purpleParticles);
-
-        // Explosion particles
-        const explosionParticleGeometry = new THREE.BufferGeometry();
-        const explosionParticleCount = 1000;
-        const explosionPositions = new Float32Array(explosionParticleCount * 3);
-        const explosionVelocities = [];
-        
-        for (let i = 0; i < explosionParticleCount; i++) {
-            explosionPositions[i * 3] = 0;
-            explosionPositions[i * 3 + 1] = 0;
-            explosionPositions[i * 3 + 2] = 0;
-            
-            const theta = Math.random() * Math.PI * 2;
-            const phi = Math.random() * Math.PI;
-            const speed = Math.random() * 0.2 + 0.1;
-            
-            explosionVelocities.push({
-                x: speed * Math.sin(phi) * Math.cos(theta),
-                y: speed * Math.sin(phi) * Math.sin(theta),
-                z: speed * Math.cos(phi)
-            });
-        }
-        
-        explosionParticleGeometry.setAttribute('position', new THREE.BufferAttribute(explosionPositions, 3));
-        explosionParticleGeometry.userData.velocities = explosionVelocities;
-        
-        const explosionParticleMaterial = new THREE.PointsMaterial({
-            color: 0x8800ff,
-            size: 0.1,
-            transparent: true,
-            opacity: 1,
-            blending: THREE.AdditiveBlending
-        });
-        
-        explosionParticles = new THREE.Points(explosionParticleGeometry, explosionParticleMaterial);
-        explosionParticles.visible = false;
-        scene.add(explosionParticles);
-    }
-
-    async function initMediaPipe() {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ 
-                video: { facingMode: 'user', width: 1280, height: 720 } 
-            });
-            
-            video.srcObject = stream;
-            await video.play();
-
-            const vision = await FilesetResolver.forVisionTasks(
-                "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
-            );
-            
-            handLandmarker = await HandLandmarker.createFromOptions(vision, {
-                baseOptions: {
-                    modelAssetPath: "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/latest/hand_landmarker.task",
-                    delegate: "GPU"
-                },
-                numHands: 2,
-                runningMode: "VIDEO",
-                minHandDetectionConfidence: 0.5,
-                minHandPresenceConfidence: 0.5,
-                minTrackingConfidence: 0.5
-            });
-
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorDiv.classList.add('show');
             loadingDiv.classList.add('hidden');
-            detectHands();
-        } catch (err) {
-            console.error('Error:', err);
-            showError('Failed to access camera or load hand tracking. Please allow camera access and refresh the page.');
-        }
-    }
-
-    function detectHands() {
-        if (video && handLandmarker && video.readyState >= 2) {
-            const results = handLandmarker.detectForVideo(video, Date.now());
-            processHandResults(results);
-        }
-        
-        animationFrameId = requestAnimationFrame(detectHands);
-    }
-
-    function processHandResults(results) {
-        if (!results.landmarks || results.landmarks.length === 0) {
-            redSphere.visible = false;
-            blueSphere.visible = false;
-            redParticles.visible = false;
-            blueParticles.visible = false;
-            lastFingerPositions = { right: null, left: null };
-            mergeProgress = 0;
-            return;
+            permissionPrompt.classList.add('hidden');
         }
 
-        let rightIndexTip = null;
-        let leftIndexTip = null;
-        let palmOpen = false;
+        function hideError() {
+            errorDiv.classList.remove('show');
+        }
 
-        results.landmarks.forEach((landmarks, index) => {
-            const handedness = results.handedness[index][0].categoryName;
-            const indexFingerTip = landmarks[8];
-            const indexFingerPip = landmarks[6];
+        function initThree() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+            camera.position.z = 5;
+
+            renderer = new THREE.WebGLRenderer({ 
+                canvas: canvas,
+                alpha: true,
+                antialias: true 
+            });
+            renderer.setSize(width, height);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            videoTexture = new THREE.VideoTexture(video);
+            videoTexture.minFilter = THREE.LinearFilter;
+            videoTexture.magFilter = THREE.LinearFilter;
             
-            const x = (indexFingerTip.x - 0.5) * 8;
-            const y = -(indexFingerTip.y - 0.5) * 6;
-            const z = -indexFingerTip.z * 5;
+            const videoGeometry = new THREE.PlaneGeometry(16, 9);
+            const videoMaterial = new THREE.MeshBasicMaterial({ 
+                map: videoTexture,
+                side: THREE.DoubleSide 
+            });
+            const videoMesh = new THREE.Mesh(videoGeometry, videoMaterial);
+            videoMesh.position.z = -10;
+            scene.add(videoMesh);
 
-            const isPointing = indexFingerTip.z < indexFingerPip.z - 0.02;
+            createEnergySpheres();
+            createParticleSystems();
 
-            const thumbTip = landmarks[4];
-            const pinkyTip = landmarks[20];
-            const palmWidth = Math.abs(thumbTip.x - pinkyTip.x);
-            palmOpen = palmWidth > 0.15;
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
 
-            if (isPointing) {
-                if (handedness === 'Right') {
-                    rightIndexTip = new THREE.Vector3(x, y, z);
-                    lastFingerPositions.right = rightIndexTip;
-                } else if (handedness === 'Left') {
-                    leftIndexTip = new THREE.Vector3(x, y, z);
-                    lastFingerPositions.left = leftIndexTip;
+            const pointLight = new THREE.PointLight(0xffffff, 1, 100);
+            pointLight.position.set(0, 0, 10);
+            scene.add(pointLight);
+        }
+
+        function createEnergySpheres() {
+            // Red sphere
+            const redGeometry = new THREE.SphereGeometry(0.3, 32, 32);
+            const redMaterial = new THREE.MeshPhongMaterial({
+                color: 0xff0000,
+                emissive: 0xff0000,
+                emissiveIntensity: 2,
+                transparent: true,
+                opacity: 0.8,
+                shininess: 100
+            });
+            redSphere = new THREE.Mesh(redGeometry, redMaterial);
+            redSphere.visible = false;
+            scene.add(redSphere);
+
+            const redGlowGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+            const redGlowMaterial = new THREE.MeshBasicMaterial({
+                color: 0xff0000,
+                transparent: true,
+                opacity: 0.3,
+                side: THREE.BackSide
+            });
+            const redGlow = new THREE.Mesh(redGlowGeometry, redGlowMaterial);
+            redSphere.add(redGlow);
+
+            // Blue sphere
+            const blueGeometry = new THREE.SphereGeometry(0.3, 32, 32);
+            const blueMaterial = new THREE.MeshPhongMaterial({
+                color: 0x0088ff,
+                emissive: 0x0088ff,
+                emissiveIntensity: 2,
+                transparent: true,
+                opacity: 0.8,
+                shininess: 100
+            });
+            blueSphere = new THREE.Mesh(blueGeometry, blueMaterial);
+            blueSphere.visible = false;
+            scene.add(blueSphere);
+
+            const blueGlowGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+            const blueGlowMaterial = new THREE.MeshBasicMaterial({
+                color: 0x0088ff,
+                transparent: true,
+                opacity: 0.3,
+                side: THREE.BackSide
+            });
+            const blueGlow = new THREE.Mesh(blueGlowGeometry, blueGlowMaterial);
+            blueSphere.add(blueGlow);
+
+            // Purple sphere
+            const purpleGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+            const purpleMaterial = new THREE.MeshPhongMaterial({
+                color: 0x8800ff,
+                emissive: 0x8800ff,
+                emissiveIntensity: 3,
+                transparent: true,
+                opacity: 0.9,
+                shininess: 100
+            });
+            purpleSphere = new THREE.Mesh(purpleGeometry, purpleMaterial);
+            purpleSphere.visible = false;
+            scene.add(purpleSphere);
+
+            const purpleGlowGeometry = new THREE.SphereGeometry(0.8, 32, 32);
+            const purpleGlowMaterial = new THREE.MeshBasicMaterial({
+                color: 0x8800ff,
+                transparent: true,
+                opacity: 0.4,
+                side: THREE.BackSide
+            });
+            const purpleGlow = new THREE.Mesh(purpleGlowGeometry, purpleGlowMaterial);
+            purpleSphere.add(purpleGlow);
+        }
+
+        function createParticleSystems() {
+            // Red particles
+            const redParticleGeometry = new THREE.BufferGeometry();
+            const redParticleCount = 200;
+            const redPositions = new Float32Array(redParticleCount * 3);
+            
+            for (let i = 0; i < redParticleCount * 3; i += 3) {
+                redPositions[i] = (Math.random() - 0.5) * 0.5;
+                redPositions[i + 1] = (Math.random() - 0.5) * 0.5;
+                redPositions[i + 2] = (Math.random() - 0.5) * 0.5;
+            }
+            
+            redParticleGeometry.setAttribute('position', new THREE.BufferAttribute(redPositions, 3));
+            
+            const redParticleMaterial = new THREE.PointsMaterial({
+                color: 0xff0000,
+                size: 0.05,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending
+            });
+            
+            redParticles = new THREE.Points(redParticleGeometry, redParticleMaterial);
+            redParticles.visible = false;
+            scene.add(redParticles);
+
+            // Blue particles
+            const blueParticleGeometry = new THREE.BufferGeometry();
+            const blueParticleCount = 200;
+            const bluePositions = new Float32Array(blueParticleCount * 3);
+            
+            for (let i = 0; i < blueParticleCount * 3; i += 3) {
+                bluePositions[i] = (Math.random() - 0.5) * 0.5;
+                bluePositions[i + 1] = (Math.random() - 0.5) * 0.5;
+                bluePositions[i + 2] = (Math.random() - 0.5) * 0.5;
+            }
+            
+            blueParticleGeometry.setAttribute('position', new THREE.BufferAttribute(bluePositions, 3));
+            
+            const blueParticleMaterial = new THREE.PointsMaterial({
+                color: 0x0088ff,
+                size: 0.05,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending
+            });
+            
+            blueParticles = new THREE.Points(blueParticleGeometry, blueParticleMaterial);
+            blueParticles.visible = false;
+            scene.add(blueParticles);
+
+            // Purple vortex particles
+            const purpleParticleGeometry = new THREE.BufferGeometry();
+            const purpleParticleCount = 500;
+            const purplePositions = new Float32Array(purpleParticleCount * 3);
+            
+            for (let i = 0; i < purpleParticleCount * 3; i += 3) {
+                const radius = Math.random() * 1;
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.random() * Math.PI;
+                
+                purplePositions[i] = radius * Math.sin(phi) * Math.cos(theta);
+                purplePositions[i + 1] = radius * Math.sin(phi) * Math.sin(theta);
+                purplePositions[i + 2] = radius * Math.cos(phi);
+            }
+            
+            purpleParticleGeometry.setAttribute('position', new THREE.BufferAttribute(purplePositions, 3));
+            
+            const purpleParticleMaterial = new THREE.PointsMaterial({
+                color: 0x8800ff,
+                size: 0.08,
+                transparent: true,
+                opacity: 0.9,
+                blending: THREE.AdditiveBlending
+            });
+            
+            purpleParticles = new THREE.Points(purpleParticleGeometry, purpleParticleMaterial);
+            purpleParticles.visible = false;
+            scene.add(purpleParticles);
+
+            // Explosion particles
+            const explosionParticleGeometry = new THREE.BufferGeometry();
+            const explosionParticleCount = 1000;
+            const explosionPositions = new Float32Array(explosionParticleCount * 3);
+            const explosionVelocities = [];
+            
+            for (let i = 0; i < explosionParticleCount; i++) {
+                explosionPositions[i * 3] = 0;
+                explosionPositions[i * 3 + 1] = 0;
+                explosionPositions[i * 3 + 2] = 0;
+                
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.random() * Math.PI;
+                const speed = Math.random() * 0.2 + 0.1;
+                
+                explosionVelocities.push({
+                    x: speed * Math.sin(phi) * Math.cos(theta),
+                    y: speed * Math.sin(phi) * Math.sin(theta),
+                    z: speed * Math.cos(phi)
+                });
+            }
+            
+            explosionParticleGeometry.setAttribute('position', new THREE.BufferAttribute(explosionPositions, 3));
+            explosionParticleGeometry.userData.velocities = explosionVelocities;
+            
+            const explosionParticleMaterial = new THREE.PointsMaterial({
+                color: 0x8800ff,
+                size: 0.1,
+                transparent: true,
+                opacity: 1,
+                blending: THREE.AdditiveBlending
+            });
+            
+            explosionParticles = new THREE.Points(explosionParticleGeometry, explosionParticleMaterial);
+            explosionParticles.visible = false;
+            scene.add(explosionParticles);
+        }
+
+        async function initMediaPipe() {
+            try {
+                permissionPrompt.classList.add('hidden');
+                loadingDiv.classList.remove('hidden');
+
+                // Request camera access with better constraints
+                const constraints = {
+                    video: {
+                        facingMode: 'user',
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    },
+                    audio: false
+                };
+
+                const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                
+                video.srcObject = stream;
+                
+                // Wait for video to be ready
+                await new Promise((resolve, reject) => {
+                    video.onloadedmetadata = () => {
+                        video.play()
+                            .then(resolve)
+                            .catch(reject);
+                    };
+                    video.onerror = reject;
+                    
+                    // Timeout after 10 seconds
+                    setTimeout(() => reject(new Error('Video load timeout')), 10000);
+                });
+
+                // Load MediaPipe
+                const vision = await FilesetResolver.forVisionTasks(
+                    "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
+                );
+                
+                handLandmarker = await HandLandmarker.createFromOptions(vision, {
+                    baseOptions: {
+                        modelAssetPath: "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/latest/hand_landmarker.task",
+                        delegate: "GPU"
+                    },
+                    numHands: 2,
+                    runningMode: "VIDEO",
+                    minHandDetectionConfidence: 0.5,
+                    minHandPresenceConfidence: 0.5,
+                    minTrackingConfidence: 0.5
+                });
+
+                loadingDiv.classList.add('hidden');
+                detectHands();
+            } catch (err) {
+                console.error('Error:', err);
+                let errorMsg = 'Failed to initialize. ';
+                
+                if (err.name === 'NotAllowedError') {
+                    errorMsg += 'Camera access was denied. Please allow camera access in your browser settings and try again.';
+                } else if (err.name === 'NotFoundError') {
+                    errorMsg += 'No camera found. Please connect a camera and try again.';
+                } else if (err.name === 'NotReadableError') {
+                    errorMsg += 'Camera is already in use by another application.';
+                } else {
+                    errorMsg += err.message || 'Please check your camera permissions and refresh the page.';
+                }
+                
+                showError(errorMsg);
+            }
+        }
+
+        function detectHands() {
+            if (video && handLandmarker && video.readyState >= 2) {
+                try {
+                    const results = handLandmarker.detectForVideo(video, Date.now());
+                    processHandResults(results);
+                } catch (err) {
+                    console.error('Hand detection error:', err);
                 }
             }
-        });
-
-        if (palmOpen && purpleSphere.visible && !isExploding) {
-            triggerExplosion();
+            
+            animationFrameId = requestAnimationFrame(detectHands);
         }
 
-        updateEnergySpheres(rightIndexTip, leftIndexTip);
-    }
-
-    function updateEnergySpheres(rightPos, leftPos) {
-        const time = Date.now() * 0.001;
-
-        if (rightPos) {
-            redSphere.visible = true;
-            redParticles.visible = true;
-            redSphere.position.copy(rightPos);
-            redParticles.position.copy(rightPos);
-            
-            const positions = redParticles.geometry.attributes.position.array;
-            for (let i = 0; i < positions.length; i += 3) {
-                const angle = time * 2 + i;
-                positions[i] = Math.cos(angle) * 0.3;
-                positions[i + 1] = Math.sin(angle) * 0.3;
-                positions[i + 2] = Math.sin(time * 3 + i) * 0.2;
-            }
-            redParticles.geometry.attributes.position.needsUpdate = true;
-            redParticles.rotation.z = time;
-        } else {
-            redSphere.visible = false;
-            redParticles.visible = false;
-        }
-
-        if (leftPos) {
-            blueSphere.visible = true;
-            blueParticles.visible = true;
-            blueSphere.position.copy(leftPos);
-            blueParticles.position.copy(leftPos);
-            
-            const positions = blueParticles.geometry.attributes.position.array;
-            for (let i = 0; i < positions.length; i += 3) {
-                const angle = time * 2 + i;
-                positions[i] = Math.cos(angle) * 0.3;
-                positions[i + 1] = Math.sin(angle) * 0.3;
-                positions[i + 2] = Math.cos(time * 3 + i) * 0.2;
-            }
-            blueParticles.geometry.attributes.position.needsUpdate = true;
-            blueParticles.rotation.z = -time;
-        } else {
-            blueSphere.visible = false;
-            blueParticles.visible = false;
-        }
-
-        if (rightPos && leftPos) {
-            const distance = rightPos.distanceTo(leftPos);
-            
-            if (distance < 2) {
-                mergeProgress = Math.min(mergeProgress + 0.05, 1);
-                
-                const midpoint = new THREE.Vector3()
-                    .addVectors(rightPos, leftPos)
-                    .multiplyScalar(0.5);
-                
-                purpleSphere.position.copy(midpoint);
-                purpleSphere.visible = true;
-                purpleParticles.visible = true;
-                purpleParticles.position.copy(midpoint);
-                
-                const scale = 0.5 + mergeProgress * 0.5;
-                purpleSphere.scale.set(scale, scale, scale);
-                
-                const positions = purpleParticles.geometry.attributes.position.array;
-                for (let i = 0; i < positions.length; i += 3) {
-                    const angle = time * 3 + i * 0.01;
-                    const radius = 0.5 + Math.sin(time * 2 + i) * 0.3;
-                    positions[i] = Math.cos(angle) * radius;
-                    positions[i + 1] = Math.sin(angle) * radius;
-                    positions[i + 2] = Math.sin(time * 4 + i) * 0.5;
-                }
-                purpleParticles.geometry.attributes.position.needsUpdate = true;
-                purpleParticles.rotation.z = time * 2;
-                
+        function processHandResults(results) {
+            if (!results.landmarks || results.landmarks.length === 0) {
                 redSphere.visible = false;
                 blueSphere.visible = false;
                 redParticles.visible = false;
                 blueParticles.visible = false;
+                lastFingerPositions = { right: null, left: null };
+                mergeProgress = 0;
+                return;
+            }
+
+            let rightIndexTip = null;
+            let leftIndexTip = null;
+            let palmOpen = false;
+
+            results.landmarks.forEach((landmarks, index) => {
+                const handedness = results.handedness[index][0].categoryName;
+                const indexFingerTip = landmarks[8];
+                const indexFingerPip = landmarks[6];
+                
+                const x = (indexFingerTip.x - 0.5) * 8;
+                const y = -(indexFingerTip.y - 0.5) * 6;
+                const z = -indexFingerTip.z * 5;
+
+                const isPointing = indexFingerTip.z < indexFingerPip.z - 0.02;
+
+                const thumbTip = landmarks[4];
+                const pinkyTip = landmarks[20];
+                const palmWidth = Math.abs(thumbTip.x - pinkyTip.x);
+                palmOpen = palmWidth > 0.15;
+
+                if (isPointing) {
+                    if (handedness === 'Right') {
+                        rightIndexTip = new THREE.Vector3(x, y, z);
+                        lastFingerPositions.right = rightIndexTip;
+                    } else if (handedness === 'Left') {
+                        leftIndexTip = new THREE.Vector3(x, y, z);
+                        lastFingerPositions.left = leftIndexTip;
+                    }
+                }
+            });
+
+            if (palmOpen && purpleSphere.visible && !isExploding) {
+                triggerExplosion();
+            }
+
+            updateEnergySpheres(rightIndexTip, leftIndexTip);
+        }
+
+        function updateEnergySpheres(rightPos, leftPos) {
+            const time = Date.now() * 0.001;
+
+            if (rightPos) {
+                redSphere.visible = true;
+                redParticles.visible = true;
+                redSphere.position.copy(rightPos);
+                redParticles.position.copy(rightPos);
+                
+                const positions = redParticles.geometry.attributes.position.array;
+                for (let i = 0; i < positions.length; i += 3) {
+                    const angle = time * 2 + i;
+                    positions[i] = Math.cos(angle) * 0.3;
+                    positions[i + 1] = Math.sin(angle) * 0.3;
+                    positions[i + 2] = Math.sin(time * 3 + i) * 0.2;
+                }
+                redParticles.geometry.attributes.position.needsUpdate = true;
+                redParticles.rotation.z = time;
+            } else {
+                redSphere.visible = false;
+                redParticles.visible = false;
+            }
+
+            if (leftPos) {
+                blueSphere.visible = true;
+                blueParticles.visible = true;
+                blueSphere.position.copy(leftPos);
+                blueParticles.position.copy(leftPos);
+                
+                const positions = blueParticles.geometry.attributes.position.array;
+                for (let i = 0; i < positions.length; i += 3) {
+                    const angle = time * 2 + i;
+                    positions[i] = Math.cos(angle) * 0.3;
+                    positions[i + 1] = Math.sin(angle) * 0.3;
+                    positions[i + 2] = Math.cos(time * 3 + i) * 0.2;
+                }
+                blueParticles.geometry.attributes.position.needsUpdate = true;
+                blueParticles.rotation.z = -time;
+            } else {
+                blueSphere.visible = false;
+                blueParticles.visible = false;
+            }
+
+            if (rightPos && leftPos) {
+                const distance = rightPos.distanceTo(leftPos);
+                
+                if (distance < 2) {
+                    mergeProgress = Math.min(mergeProgress + 0.05, 1);
+                    
+                    const midpoint = new THREE.Vector3()
+                        .addVectors(rightPos, leftPos)
+                        .multiplyScalar(0.5);
+                    
+                    purpleSphere.position.copy(midpoint);
+                    purpleSphere.visible = true;
+                    purpleParticles.visible = true;
+                    purpleParticles.position.copy(midpoint);
+                    
+                    const scale = 0.5 + mergeProgress * 0.5;
+                    purpleSphere.scale.set(scale, scale, scale);
+                    
+                    const positions = purpleParticles.geometry.attributes.position.array;
+                    for (let i = 0; i < positions.length; i += 3) {
+                        const angle = time * 3 + i * 0.01;
+                        const radius = 0.5 + Math.sin(time * 2 + i) * 0.3;
+                        positions[i] = Math.cos(angle) * radius;
+                        positions[i + 1] = Math.sin(angle) * radius;
+                        positions[i + 2] = Math.sin(time * 4 + i) * 0.5;
+                    }
+                    purpleParticles.geometry.attributes.position.needsUpdate = true;
+                    purpleParticles.rotation.z = time * 2;
+                    
+                    redSphere.visible = false;
+                    blueSphere.visible = false;
+                    redParticles.visible = false;
+                    blueParticles.visible = false;
+                } else {
+                    purpleSphere.visible = false;
+                    purpleParticles.visible = false;
+                    mergeProgress = Math.max(mergeProgress - 0.05, 0);
+                }
             } else {
                 purpleSphere.visible = false;
                 purpleParticles.visible = false;
                 mergeProgress = Math.max(mergeProgress - 0.05, 0);
             }
-        } else {
-            purpleSphere.visible = false;
-            purpleParticles.visible = false;
-            mergeProgress = Math.max(mergeProgress - 0.05, 0);
         }
-    }
 
-    function triggerExplosion() {
-        isExploding = true;
-        explosionProgress = 0;
-        explosionParticles.visible = true;
-        explosionParticles.position.copy(purpleSphere.position);
-        
-        const positions = explosionParticles.geometry.attributes.position.array;
-        for (let i = 0; i < positions.length; i += 3) {
-            positions[i] = 0;
-            positions[i + 1] = 0;
-            positions[i + 2] = 0;
-        }
-        explosionParticles.geometry.attributes.position.needsUpdate = true;
-        
-        purpleSphere.visible = false;
-        purpleParticles.visible = false;
-    }
-
-    function animate() {
-        animationFrameId = requestAnimationFrame(animate);
-
-        if (isExploding) {
-            explosionProgress += 0.02;
+        function triggerExplosion() {
+            isExploding = true;
+            explosionProgress = 0;
+            explosionParticles.visible = true;
+            explosionParticles.position.copy(purpleSphere.position);
             
             const positions = explosionParticles.geometry.attributes.position.array;
-            const velocities = explosionParticles.geometry.userData.velocities;
-            
-            for (let i = 0; i < velocities.length; i++) {
-                positions[i * 3] += velocities[i].x;
-                positions[i * 3 + 1] += velocities[i].y;
-                positions[i * 3 + 2] += velocities[i].z;
+            for (let i = 0; i < positions.length; i += 3) {
+                positions[i] = 0;
+                positions[i + 1] = 0;
+                positions[i + 2] = 0;
             }
-            
             explosionParticles.geometry.attributes.position.needsUpdate = true;
-            explosionParticles.material.opacity = 1 - explosionProgress;
             
-            if (explosionProgress >= 1) {
-                isExploding = false;
-                explosionParticles.visible = false;
-                explosionProgress = 0;
-            }
+            purpleSphere.visible = false;
+            purpleParticles.visible = false;
         }
 
-        renderer.render(scene, camera);
-    }
+        function animate() {
+            animationFrameId = requestAnimationFrame(animate);
 
-    function onWindowResize() {
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-        
-        camera.aspect = width / height;
-        camera.updateProjectionMatrix();
-        renderer.setSize(width, height);
-    }
+            if (isExploding) {
+                explosionProgress += 0.02;
+                
+                const positions = explosionParticles.geometry.attributes.position.array;
+                const velocities = explosionParticles.geometry.userData.velocities;
+                
+                for (let i = 0; i < velocities.length; i++) {
+                    positions[i * 3] += velocities[i].x;
+                    positions[i * 3 + 1] += velocities[i].y;
+                    positions[i * 3 + 2] += velocities[i].z;
+                }
+                
+                explosionParticles.geometry.attributes.position.needsUpdate = true;
+                explosionParticles.material.opacity = 1 - explosionProgress;
+                
+                if (explosionProgress >= 1) {
+                    isExploding = false;
+                    explosionParticles.visible = false;
+                    explosionProgress = 0;
+                }
+            }
 
-    window.addEventListener('resize', onWindowResize);
+            renderer.render(scene, camera);
+        }
 
-    // Start everything
-    initThree();
-    initMediaPipe();
-    animate();
-</script>
-```
+        function onWindowResize() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+        }
 
+        window.addEventListener('resize', onWindowResize);
+
+        // Event listeners for buttons
+        startButton.addEventListener('click', initMediaPipe);
+        retryButton.addEventListener('click', () => {
+            hideError();
+            permissionPrompt.classList.remove('hidden');
+        });
+
+        // Check if camera is already available
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            // Browser supports camera API
+        } else {
+            showError('Your browser does not support camera access. Please use a modern browser like Chrome, Firefox, or Safari.');
+        }
+
+        // Start Three.js and animation
+        initThree();
+        animate();
+    </script>
 </body>
 </html>
