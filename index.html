@@ -1,302 +1,276 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gojo Satoru's Hollow Purple - Genius Hand Tracking</title>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-
+    <title>Gojo Hand Tracking - Red, Blue, Purple</title>
     <style>
-        body {
-            margin: 0;
-            background: #0a0a0a; /* Darker background */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            color: #e0e0e0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden; /* Prevent scrollbar from particle effects */
+        body { margin: 0; overflow: hidden; background: #000; font-family: 'Segoe UI', sans-serif; }
+        .container { position: relative; width: 100vw; height: 100vh; }
+        #webcam { position: absolute; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+        #three-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none; }
+        #instructions {
+            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+            color: white; background: rgba(0,0,0,0.6); padding: 15px 25px;
+            border-radius: 30px; border: 1px solid #7d2ae8; z-index: 10; text-align: center;
         }
-        .container {
-            position: relative;
-            box-shadow: 0 0 50px rgba(173, 216, 230, 0.4); /* Light blue glow */
-            border-radius: 20px;
-            overflow: hidden;
-            border: 2px solid #555;
-        }
-        #input_video {
-            display: none;
-        }
-        #output_canvas {
-            transform: scaleX(-1); /* Mirror effect */
-            background: black; /* Solid black background for effects */
-            display: block; /* Ensure it takes up space */
-        }
-        .info {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 12px 18px;
-            border-radius: 10px;
-            pointer-events: none;
-            z-index: 10;
-            font-size: 1.1em;
-            color: #00FF7F; /* Neon green */
-        }
-        .status-text {
-            color: white;
-            font-weight: bold;
-        }
-        .gojo-message {
-            position: absolute;
-            bottom: 30px;
-            width: 100%;
-            text-align: center;
-            font-size: 1.5em;
-            color: #ADD8E6; /* Light blue */
-            text-shadow: 0 0 15px #ADD8E6, 0 0 25px #ADD8E6;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-            pointer-events: none;
-            z-index: 10;
-        }
-        .gojo-message.active {
-            opacity: 1;
-        }
+        .technique-label { font-weight: bold; text-transform: uppercase; letter-spacing: 2px; }
     </style>
 </head>
 <body>
+    <div class="container">
+        <video id="webcam" autoplay playsinline></video>
+        <div id="three-canvas"></div>
+        <div id="instructions">
+            <div id="status">Initializing Six Eyes...</div>
+            <div style="font-size: 12px; margin-top: 5px; opacity: 0.8;">
+                Right Index: <span style="color: #ff4d4d">RED</span> | Left Index: <span style="color: #4d94ff">BLUE</span> | Together: <span style="color: #a366ff">PURPLE</span>
+            </div>
+        </div>
+    </div>
 
-<div class="container">
-    <div class="info">Status: <span id="status" class="status-text">Memuat Model...</span></div>
-    <video id="input_video"></video>
-    <canvas id="output_canvas" width="1280" height="720"></canvas>
-    <div id="gojoMessage" class="gojo-message">Hollow Purple!</div>
-</div>
-
-<script type="module">
-    const videoElement = document.getElementById('input_video');
-    const canvasElement = document.getElementById('output_canvas');
-    const canvasCtx = canvasElement.getContext('2d');
-    const statusText = document.getElementById('status');
-    const gojoMessage = document.getElementById('gojoMessage');
-
-    // Particle system for the energy effects
-    let particles = [];
-    const MAX_PARTICLES = 100;
-
-    class Particle {
-        constructor(x, y, color, size, vx = 0, vy = 0) {
-            this.x = x;
-            this.y = y;
-            this.color = color;
-            this.size = size;
-            this.vx = vx + (Math.random() - 0.5) * 2; // Random initial velocity
-            this.vy = vy + (Math.random() - 0.5) * 2;
-            this.alpha = 1;
-            this.gravity = 0.05; // Light gravity for upward/outward motion
-            this.drag = 0.98; // Slow down particles
-        }
-
-        update() {
-            this.vx *= this.drag;
-            this.vy *= this.drag;
-            this.vy += this.gravity; // Gravity effect
-            this.x += this.vx;
-            this.y += this.vy;
-            this.alpha -= 0.01; // Fade out
-            this.size *= 0.98; // Shrink
-        }
-
-        draw(ctx) {
-            ctx.save();
-            ctx.globalAlpha = this.alpha;
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fillStyle = this.color;
-            ctx.shadowBlur = this.size * 2;
-            ctx.shadowColor = this.color;
-            ctx.fill();
-            ctx.restore();
-        }
-    }
-
-    function createParticles(x, y, color, count, initialVelX = 0, initialVelY = 0) {
-        for (let i = 0; i < count; i++) {
-            if (particles.length < MAX_PARTICLES) {
-                const size = Math.random() * 5 + 2;
-                particles.push(new Particle(x, y, color, size, initialVelX, initialVelY));
-            }
-        }
-    }
-
-    function updateParticles() {
-        for (let i = particles.length - 1; i >= 0; i--) {
-            particles[i].update();
-            if (particles[i].alpha <= 0.05 || particles[i].size <= 0.5) {
-                particles.splice(i, 1); // Remove faded/shrunk particles
-            }
-        }
-    }
-
-    // Hand tracking variables
-    let leftIndexTip = null;
-    let rightIndexTip = null;
-    let combinedEnergyActive = false;
-    let lastCombinedTime = 0;
-    const COMBINE_DISTANCE_THRESHOLD = 80; // pixels
-    const OPEN_PALM_THRESHOLD = 0.6; // Ratio of open fingers to closed fingers
-    const FINGER_TIP_IDS = [mpHands.HandLandmark.INDEX_FINGER_TIP, 
-                            mpHands.HandLandmark.MIDDLE_FINGER_TIP, 
-                            mpHands.HandLandmark.RING_FINGER_TIP, 
-                            mpHands.HandLandmark.PINKY_TIP];
+    <!-- Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.158.0/three.min.js"></script>
     
-    // Function to check if a hand is "open"
-    // This is a simplified check. More robust would involve distances between tips and MCPs
-    function isOpenHand(landmarks) {
-        // Check if the tips of index, middle, ring, pinky fingers are above their respective MCPs
-        // (assuming y-axis for "above" with inverted canvas coordinates)
-        let openCount = 0;
-        if (landmarks[mpHands.HandLandmark.INDEX_FINGER_TIP].y < landmarks[mpHands.HandLandmark.INDEX_FINGER_MCP].y) openCount++;
-        if (landmarks[mpHands.HandLandmark.MIDDLE_FINGER_TIP].y < landmarks[mpHands.HandLandmark.MIDDLE_FINGER_MCP].y) openCount++;
-        if (landmarks[mpHands.HandLandmark.RING_FINGER_TIP].y < landmarks[mpHands.HandLandmark.RING_FINGER_MCP].y) openCount++;
-        if (landmarks[mpHands.HandLandmark.PINKY_FINGER_TIP].y < landmarks[mpHands.HandLandmark.PINKY_FINGER_MCP].y) openCount++;
+    <!-- Post Processing for the Cinematic Glow (Bloom) -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+
+    <script>
+        const videoElement = document.getElementById('webcam');
+        const statusElement = document.getElementById('status');
+        let scene, camera, renderer, composer, clock;
+        let redSphere, blueSphere, purpleSphere, particles;
+        let handData = { left: null, right: null };
         
-        // Check thumb tip relative to base
-        if (landmarks[mpHands.HandLandmark.THUMB_TIP].x > landmarks[mpHands.HandLandmark.THUMB_CMC].x && // Right hand
-            landmarks[mpHands.HandLandmark.THUMB_TIP].y < landmarks[mpHands.HandLandmark.THUMB_CMC].y) {
-            openCount++;
-        } else if (landmarks[mpHands.HandLandmark.THUMB_TIP].x < landmarks[mpHands.HandLandmark.THUMB_CMC].x && // Left hand
-                   landmarks[mpHands.HandLandmark.THUMB_TIP].y < landmarks[mpHands.HandLandmark.THUMB_CMC].y) {
-            openCount++;
+        // --- CONFIGURATION ---
+        const PARAMS = {
+            bloomStrength: 2.5,
+            bloomRadius: 0.5,
+            bloomThreshold: 0.1,
+            particleCount: 500,
+            mergeDistance: 0.15 // Normalized distance to trigger Purple
+        };
+
+        async function init() {
+            setupThreeJS();
+            setupParticles();
+            createTechniqueSpheres();
+            await setupMediaPipe();
+            animate();
         }
 
-        return openCount >= 4; // At least 4 fingers "open"
-    }
+        function setupThreeJS() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+            clock = new THREE.Clock();
 
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            document.getElementById('three-canvas').appendChild(renderer.domElement);
 
-    function onResults(results) {
-        statusText.innerText = "Aktif";
-        
-        canvasCtx.save();
-        canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-        // Draw the camera feed, mirrored
-        canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
-
-        leftIndexTip = null;
-        rightIndexTip = null;
-        let isLeftHandOpen = false;
-        let isRightHandOpen = false;
-
-        if (results.multiHandLandmarks) {
-            for (const i in results.multiHandLandmarks) {
-                const landmarks = results.multiHandLandmarks[i];
-                const handedness = results.multiHandedness[i].classification[0].label; // 'Left' or 'Right'
-
-                // Convert normalized coordinates to pixel coordinates
-                const indexTip = {
-                    x: landmarks[mpHands.HandLandmark.INDEX_FINGER_TIP].x * canvasElement.width,
-                    y: landmarks[mpHands.HandLandmark.INDEX_FINGER_TIP].y * canvasElement.height
-                };
-
-                // Store index finger tip positions
-                if (handedness === 'Left') {
-                    leftIndexTip = indexTip;
-                    isLeftHandOpen = isOpenHand(landmarks);
-                    // Draw Red Energy on Left Index Finger
-                    createParticles(indexTip.x, indexTip.y, 'rgba(255, 0, 0, 0.7)', 2);
-                    // Also draw the landmark
-                    drawLandmarks(canvasCtx, landmarks, {color: '#FF0000', lineWidth: 2, radius: 5});
-                    drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, {color: '#FFCCCC', lineWidth: 3});
-
-                } else if (handedness === 'Right') {
-                    rightIndexTip = indexTip;
-                    isRightHandOpen = isOpenHand(landmarks);
-                    // Draw Blue Energy on Right Index Finger
-                    createParticles(indexTip.x, indexTip.y, 'rgba(0, 0, 255, 0.7)', 2);
-                    // Also draw the landmark
-                    drawLandmarks(canvasCtx, landmarks, {color: '#0000FF', lineWidth: 2, radius: 5});
-                    drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, {color: '#CCCCFF', lineWidth: 3});
-                }
-            }
-        }
-
-        // Hollow Purple Logic
-        if (leftIndexTip && rightIndexTip) {
-            const distance = Math.sqrt(
-                Math.pow(leftIndexTip.x - rightIndexTip.x, 2) +
-                Math.pow(leftIndexTip.y - rightIndexTip.y, 2)
+            // Post-Processing (Bloom is the secret to the "Anime Energy" look)
+            const renderScene = new THREE.RenderPass(scene, camera);
+            const bloomPass = new THREE.UnrealBloomPass(
+                new THREE.Vector2(window.innerWidth, window.innerHeight),
+                PARAMS.bloomStrength, PARAMS.bloomRadius, PARAMS.bloomThreshold
             );
+            
+            composer = new THREE.EffectComposer(renderer);
+            composer.addPass(renderScene);
+            composer.addPass(bloomPass);
 
-            if (distance < COMBINE_DISTANCE_THRESHOLD) {
-                // Fingers are close enough, combine energy
-                combinedEnergyActive = true;
-                const midX = (leftIndexTip.x + rightIndexTip.x) / 2;
-                const midY = (leftIndexTip.y + rightIndexTip.y) / 2;
-                createParticles(midX, midY, 'rgba(128, 0, 128, 0.9)', 5); // Purple
-                lastCombinedTime = Date.now();
-                gojoMessage.classList.remove('active'); // Hide message while combining
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                composer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
 
-            } else {
-                // If combined energy was active and fingers separate, check for release
-                if (combinedEnergyActive && (isLeftHandOpen || isRightHandOpen) && (Date.now() - lastCombinedTime < 2000)) { // Small window for release after combination
-                    // Release Hollow Purple!
-                    const midX = (leftIndexTip.x + rightIndexTip.x) / 2;
-                    const midY = (leftIndexTip.y + rightIndexTip.y) / 2;
-                    
-                    // Simulate explosion of purple energy forward (towards the camera, so outwards on canvas)
-                    for (let i = 0; i < 50; i++) {
-                        // Stronger initial velocity for the "burst"
-                        const angle = Math.random() * Math.PI * 2; // Random direction
-                        const speed = Math.random() * 15 + 10;
-                        createParticles(midX, midY, 'rgba(128, 0, 128, 0.9)', 1, Math.cos(angle) * speed, Math.sin(angle) * speed);
-                    }
-                    gojoMessage.classList.add('active');
-                    setTimeout(() => gojoMessage.classList.remove('active'), 1500); // Hide message after 1.5s
-                }
-                combinedEnergyActive = false;
+        function createTechniqueSpheres() {
+            const sphereGeo = new THREE.SphereGeometry(1, 32, 32);
+            
+            // Reversal Red (Plasma)
+            const redMat = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.8 });
+            redSphere = new THREE.Mesh(sphereGeo, redMat);
+            redSphere.scale.set(0.2, 0.2, 0.2);
+            redSphere.visible = false;
+            scene.add(redSphere);
+
+            // Lapse Blue (Electric)
+            const blueMat = new THREE.MeshBasicMaterial({ color: 0x0088ff, transparent: true, opacity: 0.8 });
+            blueSphere = new THREE.Mesh(sphereGeo, blueMat);
+            blueSphere.scale.set(0.2, 0.2, 0.2);
+            blueSphere.visible = false;
+            scene.add(blueSphere);
+
+            // Hollow Purple (Gravity)
+            const purpleGroup = new THREE.Group();
+            const coreMat = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black core
+            const core = new THREE.Mesh(sphereGeo, coreMat);
+            core.scale.set(0.3, 0.3, 0.3);
+            
+            const auraMat = new THREE.MeshBasicMaterial({ color: 0xaa00ff, transparent: true, opacity: 0.6, wireframe: true });
+            const aura = new THREE.Mesh(sphereGeo, auraMat);
+            aura.scale.set(0.5, 0.5, 0.5);
+            
+            purpleGroup.add(core, aura);
+            purpleSphere = purpleGroup;
+            purpleSphere.visible = false;
+            scene.add(purpleSphere);
+        }
+
+        function setupParticles() {
+            const geo = new THREE.BufferGeometry();
+            const pos = new Float32Array(PARAMS.particleCount * 3);
+            const colors = new Float32Array(PARAMS.particleCount * 3);
+            
+            for(let i=0; i<PARAMS.particleCount * 3; i++) {
+                pos[i] = (Math.random() - 0.5) * 10;
             }
-        } else {
-            combinedEnergyActive = false; // Reset if only one hand or no hands
-            gojoMessage.classList.remove('active');
+            
+            geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+            const mat = new THREE.PointsMaterial({ size: 0.05, vertexColors: true, transparent: true, blending: THREE.AdditiveBlending });
+            particles = new THREE.Points(geo, mat);
+            scene.add(particles);
         }
 
-        // Update and draw particles
-        updateParticles();
-        for (const p of particles) {
-            p.draw(canvasCtx);
+        async function setupMediaPipe() {
+            const hands = new Hands({
+                locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+            });
+
+            hands.setOptions({
+                maxNumHands: 2,
+                modelComplexity: 1,
+                minDetectionConfidence: 0.7,
+                minTrackingConfidence: 0.7
+            });
+
+            hands.onResults(onResults);
+
+            const cameraPipe = new Camera(videoElement, {
+                onFrame: async () => { await hands.send({image: videoElement}); },
+                width: 1280, height: 720
+            });
+            cameraPipe.start();
+            statusElement.textContent = "Six Eyes Active";
         }
 
-        canvasCtx.restore();
-        requestAnimationFrame(() => {}); // This helps keep animation smooth
-    }
+        function onResults(results) {
+            handData.left = null;
+            handData.right = null;
 
-    const hands = new Hands({locateFile: (file) => {
-        return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
-    }});
+            if (results.multiHandLandmarks) {
+                results.multiHandLandmarks.forEach((landmarks, index) => {
+                    const label = results.multiHandedness[index].label; // Left or Right
+                    // Note: MediaPipe labels are mirrored by default
+                    if (label === 'Left') handData.right = landmarks; 
+                    else handData.left = landmarks;
+                });
+            }
+        }
 
-    hands.setOptions({
-        maxNumHands: 2,
-        modelComplexity: 1, // Higher complexity for better accuracy (0 or 1)
-        minDetectionConfidence: 0.7, // Higher confidence to reduce false positives
-        minTrackingConfidence: 0.6
-    });
+        function updateEnergyLogic() {
+            const time = clock.getElapsedTime();
+            
+            // Hide all by default
+            redSphere.visible = false;
+            blueSphere.visible = false;
+            purpleSphere.visible = false;
 
-    hands.onResults(onResults);
+            if (handData.left && handData.right) {
+                const lIndex = handData.left[8];
+                const rIndex = handData.right[8];
+                
+                // Map to 3D space
+                const lPos = new THREE.Vector3((lIndex.x - 0.5) * -10, (0.5 - lIndex.y) * 6, 0);
+                const rPos = new THREE.Vector3((rIndex.x - 0.5) * -10, (0.5 - rIndex.y) * 6, 0);
+                
+                const dist = lPos.distanceTo(rPos);
 
-    const camera = new Camera(videoElement, {
-        onFrame: async () => {
-            await hands.send({image: videoElement});
-        },
-        width: 1280,
-        height: 720
-    });
-    camera.start();
-</script>
+                if (dist < 1.2) {
+                    // PURPLE MODE
+                    purpleSphere.visible = true;
+                    purpleSphere.position.lerpVectors(lPos, rPos, 0.5);
+                    purpleSphere.scale.setScalar(1 + Math.sin(time * 10) * 0.1);
+                    purpleSphere.rotation.y += 0.2;
+                    statusElement.textContent = "🫴 Hollow Technique: Purple";
+                    statusElement.style.color = "#a366ff";
+                    updateParticles(purpleSphere.position, 0xaa00ff);
+                } else {
+                    // SEPARATE MODE
+                    showTechnique(redSphere, rPos, "Red", "#ff4d4d");
+                    showTechnique(blueSphere, lPos, "Blue", "#4d94ff");
+                    statusElement.textContent = "Amplification/Reversal";
+                    statusElement.style.color = "white";
+                }
+            } else if (handData.right) {
+                const rIndex = handData.right[8];
+                const rPos = new THREE.Vector3((rIndex.x - 0.5) * -10, (0.5 - rIndex.y) * 6, 0);
+                showTechnique(redSphere, rPos, "Red", "#ff4d4d");
+                updateParticles(rPos, 0xff0000);
+            } else if (handData.left) {
+                const lIndex = handData.left[8];
+                const lPos = new THREE.Vector3((lIndex.x - 0.5) * -10, (0.5 - lIndex.y) * 6, 0);
+                showTechnique(blueSphere, lPos, "Blue", "#4d94ff");
+                updateParticles(lPos, 0x0088ff);
+            }
+        }
 
+        function showTechnique(obj, pos, name, color) {
+            obj.visible = true;
+            obj.position.copy(pos);
+            obj.scale.setScalar(0.3 + Math.sin(Date.now() * 0.01) * 0.05);
+        }
+
+        function updateParticles(targetPos, colorHex) {
+            const positions = particles.geometry.attributes.position.array;
+            const colors = new THREE.Color(colorHex);
+            const colorAttr = new THREE.Float32Array(PARAMS.particleCount * 3);
+
+            for (let i = 0; i < PARAMS.particleCount; i++) {
+                const i3 = i * 3;
+                // Vortex physics: pull toward center and rotate
+                const p = new THREE.Vector3(positions[i3], positions[i3+1], positions[i3+2]);
+                p.sub(targetPos);
+                p.applyAxisAngle(new THREE.Vector3(0,0,1), 0.1);
+                p.multiplyScalar(0.95); // Gravity pull
+                
+                if (p.length() < 0.1) { // Respawn far away
+                    const angle = Math.random() * Math.PI * 2;
+                    p.set(Math.cos(angle) * 3, Math.sin(angle) * 3, (Math.random()-0.5)*2);
+                }
+                
+                p.add(targetPos);
+                positions[i3] = p.x;
+                positions[i3+1] = p.y;
+                positions[i3+2] = p.z;
+
+                colorAttr[i3] = colors.r;
+                colorAttr[i3+1] = colors.g;
+                colorAttr[i3+2] = colors.b;
+            }
+            particles.geometry.setAttribute('color', new THREE.BufferAttribute(colorAttr, 3));
+            particles.geometry.attributes.position.needsUpdate = true;
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            updateEnergyLogic();
+            composer.render();
+        }
+
+        init();
+    </script>
 </body>
 </html>
