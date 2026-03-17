@@ -418,9 +418,8 @@
 <nav class="w-full max-w-7xl flex flex-col md:flex-row justify-between items-center mb-12 relative z-10 gap-6">
     <div>
         <h1 class="text-3xl font-display font-bold tracking-tighter text-white">
-            GUNGDAYS<span class="text-emerald-500">.</span>
+            GUNGDAYS TRADING PROTOCOL
         </h1>
-        <p class="text-xs text-slate-500 tracking-[0.2em] font-medium mt-1">UNLIMITED STORAGE EDITION v10</p>
     </div>
     <div class="flex gap-8 text-sm font-medium tracking-wide">
         <button onclick="switchTab('trade')" id="btn-tab-trade" class="nav-btn active">TERMINAL</button>
@@ -436,7 +435,7 @@
     <!-- Left Column -->
     <div class="lg:col-span-4 space-y-6">
         <div class="glass-panel rounded-3xl p-6">
-            <h3 class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mb-4">01 // ASSET CONFIGURATION</h3>
+            <h3 class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mb-4">ASSET CONFIGURATION</h3>
             <div class="space-y-4">
                 <div>
                     <label class="text-xs text-slate-500 mb-1 block">TICKER</label>
@@ -453,7 +452,7 @@
             </div>
         </div>
     <div class="glass-panel rounded-3xl p-6">
-        <h3 class="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-4">02 // RISK CALCULATOR</h3>
+        <h3 class="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-4">RISK CALCULATOR</h3>
         <div class="space-y-4">
             <div class="flex gap-3">
                 <div class="w-2/3">
@@ -497,7 +496,7 @@
         <div class="absolute -top-10 -right-10 text-[150px] font-display font-bold text-white opacity-[0.02] select-none pointer-events-none">CHECK</div>
         <div class="flex justify-between items-start mb-8 pb-6 border-b border-white/5">
             <div>
-                <h3 class="text-[10px] font-bold text-purple-400 uppercase tracking-widest mb-1">03 // EXECUTION PROTOCOL</h3>
+                <h3 class="text-[10px] font-bold text-purple-400 uppercase tracking-widest mb-1">EXECUTION PROTOCOL</h3>
                 <h2 class="text-xl text-white font-medium">Confluence Checklist</h2>
                 <p class="text-xs text-slate-500 mt-1">Click item to verify with confirmation</p>
             </div>
@@ -511,68 +510,60 @@
             </div>
         </div>
         <div id="checklist-container" class="space-y-1 flex-grow overflow-y-auto pr-2 mb-6"></div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-auto">
-            <div class="md:col-span-2">
-                <textarea id="input-notes" class="w-full h-full glass-input rounded-xl px-4 py-3 text-sm text-slate-300 resize-none" placeholder="Execution Thesis / Market Sentiment..."></textarea>
-            </div>
-            <div class="md:col-span-1">
-                <button id="btn-save-trade" onclick="saveNewTrade()" class="w-full h-full rounded-xl font-display font-bold text-xl text-black bg-emerald-500 hover:bg-emerald-400 transition-all duration-300 flex flex-col items-center justify-center shadow-[0_0_30px_rgba(0,220,130,0.3)] cursor-pointer group">
-                    <span class="group-hover:scale-105 transition">EXECUTE TRADE</span>
-                    <span id="btn-subtext" class="text-[10px] font-sans font-normal opacity-50 mt-1">CONFIRM TRADE</span>
-                </button>
-            </div>
+        <div class="mt-auto">
+            <textarea id="input-notes" class="w-full glass-input rounded-xl px-4 py-3 text-sm text-slate-300 resize-none" placeholder="Execution Thesis / Market Sentiment..." rows="3"></textarea>
         </div>
     </div>
 
     <div class="glass-panel rounded-3xl p-8">
-        <h3 class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mb-6">CONFLUENCE SUMMARY</h3>
+        <h3 class="text-2xl font-display font-bold text-emerald-400 uppercase tracking-widest mb-6 text-center">CONFLUENCE SUMMARY</h3>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
             <div class="text-center">
                 <div class="flex items-baseline justify-center mb-1">
-                    <div class="text-3xl font-display font-bold text-white" id="summary-weekly">0</div>
-                    <span class="text-lg font-display font-bold text-slate-500 ml-0.5">%</span>
+                    <div class="text-3xl font-display font-bold text-emerald-400" id="summary-weekly">0</div>
+                    <span class="text-lg font-display font-bold text-emerald-500 ml-0.5">%</span>
                 </div>
-                <div class="text-[10px] text-slate-500 uppercase tracking-widest">WEEKLY</div>
+                <div class="text-sm font-bold text-slate-400 uppercase tracking-widest">WEEKLY</div>
                 <div class="w-full h-1 bg-white/10 rounded-full mt-2 overflow-hidden">
                     <div id="summary-weekly-bar" class="h-full bg-emerald-500 transition-all duration-1000" style="width: 0%"></div>
                 </div>
             </div>
             <div class="text-center">
                 <div class="flex items-baseline justify-center mb-1">
-                    <div class="text-3xl font-display font-bold text-white" id="summary-daily">0</div>
-                    <span class="text-lg font-display font-bold text-slate-500 ml-0.5">%</span>
+                    <div class="text-3xl font-display font-bold text-emerald-400" id="summary-daily">0</div>
+                    <span class="text-lg font-display font-bold text-emerald-500 ml-0.5">%</span>
                 </div>
-                <div class="text-[10px] text-slate-500 uppercase tracking-widest">DAILY</div>
+                <div class="text-sm font-bold text-slate-400 uppercase tracking-widest">DAILY</div>
                 <div class="w-full h-1 bg-white/10 rounded-full mt-2 overflow-hidden">
                     <div id="summary-daily-bar" class="h-full bg-emerald-500 transition-all duration-1000" style="width: 0%"></div>
                 </div>
             </div>
             <div class="text-center">
                 <div class="flex items-baseline justify-center mb-1">
-                    <div class="text-3xl font-display font-bold text-white" id="summary-4h">0</div>
-                    <span class="text-lg font-display font-bold text-slate-500 ml-0.5">%</span>
+                    <div class="text-3xl font-display font-bold text-emerald-400" id="summary-4h">0</div>
+                    <span class="text-lg font-display font-bold text-emerald-500 ml-0.5">%</span>
                 </div>
-                <div class="text-[10px] text-slate-500 uppercase tracking-widest">4H</div>
+                <div class="text-sm font-bold text-slate-400 uppercase tracking-widest">H4</div>
                 <div class="w-full h-1 bg-white/10 rounded-full mt-2 overflow-hidden">
                     <div id="summary-4h-bar" class="h-full bg-emerald-500 transition-all duration-1000" style="width: 0%"></div>
                 </div>
             </div>
             <div class="text-center">
                 <div class="flex items-baseline justify-center mb-1">
-                    <div class="text-3xl font-display font-bold text-white" id="summary-intraday">0</div>
-                    <span class="text-lg font-display font-bold text-slate-500 ml-0.5">%</span>
+                    <div class="text-3xl font-display font-bold text-emerald-400" id="summary-intraday">0</div>
+                    <span class="text-lg font-display font-bold text-emerald-500 ml-0.5">%</span>
                 </div>
-                <div class="text-[10px] text-slate-500 uppercase tracking-widest">2H, 1H, 30m</div>
+                <div class="text-sm font-bold text-slate-400 uppercase tracking-widest">2H, 1H, 30m</div>
                 <div class="w-full h-1 bg-white/10 rounded-full mt-2 overflow-hidden">
                     <div id="summary-intraday-bar" class="h-full bg-emerald-500 transition-all duration-1000" style="width: 0%"></div>
                 </div>
             </div>
             <div class="text-center">
                 <div class="flex items-baseline justify-center mb-1">
-                    <div class="text-3xl font-display font-bold text-white" id="summary-entry">0</div>
-                    <span class="text-lg font-display font-bold text-slate-500 ml-0.5">%</span>
+                    <div class="text-3xl font-display font-bold text-emerald-400" id="summary-entry">0</div>
+                    <span class="text-lg font-display font-bold text-emerald-500 ml-0.5">%</span>
                 </div>
-                <div class="text-[10px] text-slate-500 uppercase tracking-widest">ENTRY SIGNAL</div>
+                <div class="text-sm font-bold text-slate-400 uppercase tracking-widest">ENTRY</div>
                 <div class="w-full h-1 bg-white/10 rounded-full mt-2 overflow-hidden">
                     <div id="summary-entry-bar" class="h-full bg-emerald-500 transition-all duration-1000" style="width: 0%"></div>
                 </div>
@@ -586,6 +577,9 @@
                     <span id="summary-percent-symbol" class="text-5xl font-display font-bold text-slate-500">%</span>
                 </div>
                 <div id="summary-probability-label" class="text-lg font-bold text-slate-500 uppercase tracking-wider mt-2">Weak Setup</div>
+                <button id="btn-save-trade" onclick="saveNewTrade()" class="mt-6 w-full rounded-xl font-display font-bold text-lg text-black bg-emerald-500 hover:bg-emerald-400 transition-all duration-300 py-4 shadow-[0_0_30px_rgba(0,220,130,0.3)] cursor-pointer tracking-widest">
+                    EXECUTE TRADE
+                </button>
             </div>
         </div>
     </div>
@@ -2148,10 +2142,11 @@
             `;
 
             // Card header with category name + live score
+            const displayName = category.replace(/\s*TIMEFRAME\s*/gi, '').trim();
             card.insertAdjacentHTML('beforeend', `
                 <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,0.06);">
                     <div>
-                        <span style="font-size:10px; font-weight:700; color:${catColor}; text-transform:uppercase; letter-spacing:0.12em;">${category}</span>
+                        <span style="font-size:15px; font-weight:700; color:${catColor}; text-transform:uppercase; letter-spacing:0.1em;">${displayName}</span>
                         <p id="cat-confluence-label-${catId}" style="font-size:9px; color:#475569; margin-top:2px;">0% confluence</p>
                     </div>
                     <div style="text-align:right;">
@@ -2247,8 +2242,7 @@
         document.getElementById('percent-symbol').className = `text-5xl font-display font-bold ${color} ml-1 transition-all duration-500`;
         label.innerText = probabilityLabel;
         label.className = `text-xs font-bold ${color} uppercase tracking-wider mt-1`;
-        btn.className = `w-full h-full rounded-xl font-display font-bold text-xl text-black ${getButtonStyle(score)} transition-all duration-300 flex flex-col items-center justify-center cursor-pointer group`;
-        document.getElementById('btn-subtext').innerText = probabilityLabel.toUpperCase();
+        btn.className = `mt-6 w-full rounded-xl font-display font-bold text-lg text-black ${getButtonStyle(score)} transition-all duration-300 py-4 cursor-pointer tracking-widest`;
 
         // Update per-category card scores
         updateCategoryCardScores();
@@ -2314,10 +2308,11 @@
 
         const map = { 'WEEKLY TIMEFRAME': 'summary-weekly', 'DAILY TIMEFRAME': 'summary-daily', 'H4 TIMEFRAME': 'summary-4h', '2H, 1H, 30M TIMEFRAME': 'summary-intraday', 'ENTRY SIGNAL': 'summary-entry' };
         Object.entries(map).forEach(([cat, id]) => {
-            if (cats[cat]) {
-                document.getElementById(id).textContent = cats[cat].score;
-                document.getElementById(`${id}-bar`).style.width = cats[cat].max > 0 ? Math.round((cats[cat].score / cats[cat].max) * 100) + '%' : '0%';
-            }
+            const catData = cats[cat];
+            const scoreEl = document.getElementById(id);
+            const barEl = document.getElementById(`${id}-bar`);
+            if (scoreEl) scoreEl.textContent = catData ? catData.score : 0;
+            if (barEl) barEl.style.width = (catData && catData.max > 0) ? Math.round((catData.score / catData.max) * 100) + '%' : '0%';
         });
     }
 
