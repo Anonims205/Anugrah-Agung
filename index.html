@@ -2030,19 +2030,34 @@
                 `;
                 li.ondragstart = (e) => { li.classList.add('dragging'); e.dataTransfer.setData('text/plain', item.id); };
                 li.ondragend = () => { li.classList.remove('dragging'); };
-                li.ondragover = (e) => e.preventDefault();
+                li.ondragover = (e) => {
+                    e.preventDefault();
+                    const draggingEl = container.querySelector('.dragging');
+                    if (!draggingEl || draggingEl === li) return;
+                    const box = li.getBoundingClientRect();
+                    const offset = e.clientY - box.top - box.height / 2;
+                    if (offset < 0) {
+                        container.insertBefore(draggingEl, li);
+                    } else {
+                        container.insertBefore(draggingEl, li.nextSibling);
+                    }
+                };
                 li.ondrop = (e) => {
                     e.preventDefault();
                     const srcId = e.dataTransfer.getData('text/plain');
                     const tgtId = li.getAttribute('data-id');
                     if (srcId !== tgtId) {
-                        const si = appData.checklist.findIndex(x => x.id === srcId);
-                        const ti = appData.checklist.findIndex(x => x.id === tgtId);
-                        if (si !== -1 && ti !== -1) {
-                            const moved = appData.checklist.splice(si, 1)[0];
-                            appData.checklist.splice(ti, 0, moved);
-                            saveData(); renderSettingsChecklist(); renderChecklist();
-                        }
+                        // Rebuild appData.checklist order from current DOM visual order
+                        const allVisibleIds = [...container.querySelectorAll('[data-id]')].map(el => el.getAttribute('data-id'));
+                        const newOrder = [];
+                        allVisibleIds.forEach(id => {
+                            const found = appData.checklist.find(x => x.id === id);
+                            if (found) newOrder.push(found);
+                        });
+                        // Keep any items not in DOM (shouldn't happen, but safety net)
+                        appData.checklist.forEach(x => { if (!newOrder.find(n => n.id === x.id)) newOrder.push(x); });
+                        appData.checklist = newOrder;
+                        saveData(); renderSettingsChecklist(); renderChecklist();
                     }
                 };
                 container.appendChild(li);
