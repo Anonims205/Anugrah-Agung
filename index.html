@@ -434,6 +434,52 @@
 /* History filter/sort */
 #hist-pair-filter, #hist-sort, #hist-dir-filter { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); color: white; }
 #hist-sort option, #hist-dir-filter option { background: #151A23; }
+
+/* ============ PAIR PERFORMANCE TABLE v2 ============ */
+.ppt-container { overflow-x: auto; }
+.ppt-table { width: 100%; border-collapse: separate; border-spacing: 0 4px; font-size: 13px; }
+.ppt-table thead tr th {
+    padding: 10px 16px; text-align: left; font-size: 10px; font-weight: 700;
+    color: #475569; text-transform: uppercase; letter-spacing: 0.1em;
+    cursor: pointer; user-select: none; white-space: nowrap; transition: color 0.2s;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.ppt-table thead tr th:hover { color: #00DC82; }
+.ppt-table thead tr th.sort-asc::after { content: ' ↑'; color: #00DC82; }
+.ppt-table thead tr th.sort-desc::after { content: ' ↓'; color: #00DC82; }
+.ppt-table tbody tr {
+    transition: all 0.2s ease;
+    border-radius: 12px;
+}
+.ppt-table tbody tr td {
+    padding: 13px 16px; background: rgba(255,255,255,0.02);
+    transition: background 0.2s;
+}
+.ppt-table tbody tr td:first-child { border-radius: 12px 0 0 12px; }
+.ppt-table tbody tr td:last-child { border-radius: 0 12px 12px 0; }
+.ppt-table tbody tr:hover td { background: rgba(0,220,130,0.05); }
+.ppt-table tbody tr.top-row td { background: rgba(0,220,130,0.07); }
+.ppt-table tbody tr.top-row:hover td { background: rgba(0,220,130,0.12); }
+.ppt-table tbody tr.loss-row td { background: rgba(255,77,77,0.04); }
+.ppt-table tbody tr.loss-row:hover td { background: rgba(255,77,77,0.08); }
+.ppt-winbar-wrap { width: 70px; height: 5px; background: rgba(255,255,255,0.07); border-radius: 999px; overflow: hidden; margin-top: 5px; }
+.ppt-winbar-fill { height: 100%; border-radius: 999px; transition: width 1.2s cubic-bezier(0.34,1.56,0.64,1); }
+.ppt-badge-win { display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;background:rgba(0,220,130,0.12);border:1px solid rgba(0,220,130,0.25);color:#00DC82;font-size:11px;font-weight:700; }
+.ppt-badge-loss { display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;background:rgba(255,77,77,0.12);border:1px solid rgba(255,77,77,0.25);color:#FF4D4D;font-size:11px;font-weight:700; }
+.ppt-pair-icon { width: 36px; height: 36px; border-radius: 10px; display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;font-family:'JetBrains Mono',monospace;flex-shrink:0; }
+.ppt-score-ring { position:relative;display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px; }
+.ppt-score-ring svg { position:absolute;top:0;left:0;transform:rotate(-90deg); }
+.ppt-score-ring span { font-size:10px;font-weight:700;font-family:'JetBrains Mono',monospace; }
+.ppt-search { background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.08);color:white;transition:all 0.3s; }
+.ppt-search:focus { border-color:#00DC82;background:rgba(0,220,130,0.05);box-shadow:0 0 15px rgba(0,220,130,0.1);outline:none; }
+.ppt-filter-btn { padding:6px 14px;border-radius:8px;font-size:11px;font-weight:700;transition:all 0.2s;border:1px solid rgba(255,255,255,0.08);color:#64748B; }
+.ppt-filter-btn:hover { border-color:rgba(255,255,255,0.15);color:#e2e8f0; }
+.ppt-filter-btn.active { background:rgba(0,220,130,0.1);border-color:rgba(0,220,130,0.3);color:#00DC82; }
+.ppt-empty { text-align:center;padding:48px 0; }
+@keyframes pptFadeUp { from { opacity:0;transform:translateY(10px); } to { opacity:1;transform:translateY(0); } }
+.ppt-row-animate { animation: pptFadeUp 0.4s ease forwards; }
+.ppt-sparkbar-wrap { display:flex;align-items:flex-end;gap:2px;height:24px; }
+.ppt-sparkbar { border-radius:2px;width:6px;transition:all 0.3s; }
 </style>
 </head>
 <body class="min-h-screen flex flex-col items-center pt-10 pb-20 px-4 sm:px-8">
@@ -861,6 +907,55 @@
     </div>
     <div id="monthly-chart-container" class="w-full h-64 flex items-end justify-between gap-2 md:gap-4 px-2 md:px-4 border-b border-white/5 pb-2"></div>
 </div>
+
+<!-- PAIR PERFORMANCE TABLE v2 -->
+<div class="glass-panel rounded-2xl p-6 md:p-8">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <div>
+            <div class="flex items-center gap-3 mb-1">
+                <div class="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                    <svg width="15" height="15" fill="none" stroke="#00DC82" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                </div>
+                <h3 class="text-lg font-bold text-white">Pair Performance Table</h3>
+            </div>
+            <p class="text-xs text-slate-500 ml-11">Ranked by Net P&amp;L — click any column header to sort</p>
+        </div>
+        <div class="flex items-center gap-2 flex-wrap">
+            <div class="flex gap-1" id="ppt-filter-group">
+                <button class="ppt-filter-btn active" onclick="setPptFilter('ALL',this)">All</button>
+                <button class="ppt-filter-btn" onclick="setPptFilter('WIN',this)">Profitable</button>
+                <button class="ppt-filter-btn" onclick="setPptFilter('LOSS',this)">Losing</button>
+            </div>
+            <input id="ppt-search-input" type="text" class="ppt-search rounded-xl px-3 py-2 text-sm" style="width:130px" placeholder="Search pair..." oninput="pptApplyFilters()">
+            <button onclick="renderPairPerfTable()" title="Refresh" class="w-8 h-8 rounded-xl bg-white/5 hover:bg-emerald-500/10 hover:text-emerald-400 flex items-center justify-center transition text-slate-500">
+                <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            </button>
+        </div>
+    </div>
+    <div id="ppt-summary-chips" class="flex gap-3 flex-wrap mb-5"></div>
+    <div class="ppt-container">
+        <table class="ppt-table" id="ppt-main-table">
+            <thead><tr>
+                <th style="min-width:160px" onclick="pptSort('pair')">Pair</th>
+                <th onclick="pptSort('trades')">Trades</th>
+                <th onclick="pptSort('winRate')">Win Rate</th>
+                <th onclick="pptSort('totalPnL')">Net P&amp;L</th>
+                <th onclick="pptSort('avgPnL')">Avg P&amp;L</th>
+                <th onclick="pptSort('bestWin')">Best Win</th>
+                <th onclick="pptSort('worstLoss')">Worst Loss</th>
+                <th onclick="pptSort('avgScore')">Avg Score</th>
+            </tr></thead>
+            <tbody id="ppt-tbody">
+                <tr><td colspan="8" class="ppt-empty text-sm text-slate-500 py-12 text-center">Loading data...</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="ppt-footer" class="mt-4 pt-4 border-t border-white/5 flex justify-between items-center text-xs text-slate-600">
+        <span id="ppt-row-count"></span>
+        <span>Sorted by <span id="ppt-sort-label" class="text-slate-400 font-semibold">Net P&L ↓</span></span>
+    </div>
+</div>
+
 </div>
 
 <!-- HISTORY VIEW -->
@@ -3182,7 +3277,7 @@
             ['dash-best-pair', 'dash-best-pair-pnl', 'dash-worst-pair', 'dash-worst-pair-pnl'].forEach(id => document.getElementById(id).innerText = '--');
         }
 
-        renderCalendar(); renderMonthlyChart(); renderWeeklyStats();
+        renderCalendar(); renderMonthlyChart(); renderWeeklyStats(); renderPairPerfTable();
     }
 
     async function renderMonthlyChart() {
@@ -3568,6 +3663,203 @@
             </table>
         `;
         container.innerHTML = tableHTML;
+    }
+
+    // =================== PAIR PERFORMANCE TABLE v2 ===================
+    let pptAllRows = [];
+    let pptFilteredRows = [];
+    let pptSortKey = 'totalPnL';
+    let pptSortDir = -1; // -1 = desc, 1 = asc
+    let pptCurrentFilter = 'ALL';
+
+    const PPT_COLORS = ['#00DC82','#3B82F6','#F59E0B','#8B5CF6','#EC4899','#06B6D4','#F97316','#84CC16'];
+
+    async function renderPairPerfTable() {
+        const tbody = document.getElementById('ppt-tbody');
+        const chips = document.getElementById('ppt-summary-chips');
+        if (!tbody) return;
+
+        const allTrades = await getTradesFromDB(10000);
+        const closed = allTrades.filter(t => t.status === 'WIN' || t.status === 'LOSS');
+
+        if (!closed.length) {
+            tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:48px 0;color:#475569;font-size:13px;">No completed trades yet. Start trading to see pair analytics.</td></tr>`;
+            if (chips) chips.innerHTML = '';
+            return;
+        }
+
+        const statsMap = {};
+        closed.forEach(t => {
+            const p = t.pair || 'UNKNOWN';
+            if (!statsMap[p]) statsMap[p] = { trades:0, wins:0, losses:0, totalPnL:0, bestWin:0, worstLoss:0, scoreSum:0, pnlList:[] };
+            const s = statsMap[p];
+            const pnl = parseFloat(t.profit);
+            s.trades++;
+            s.totalPnL += pnl;
+            s.scoreSum += (t.score || 0);
+            s.pnlList.push(pnl);
+            if (t.status === 'WIN') { s.wins++; if (pnl > s.bestWin) s.bestWin = pnl; }
+            else { s.losses++; if (pnl < s.worstLoss) s.worstLoss = pnl; }
+        });
+
+        pptAllRows = Object.entries(statsMap).map(([pair, s], i) => ({
+            pair,
+            trades: s.trades,
+            wins: s.wins,
+            losses: s.losses,
+            winRate: Math.round((s.wins / s.trades) * 100),
+            totalPnL: s.totalPnL,
+            avgPnL: s.totalPnL / s.trades,
+            bestWin: s.bestWin,
+            worstLoss: s.worstLoss,
+            avgScore: Math.round(s.scoreSum / s.trades),
+            pnlList: s.pnlList,
+            colorIdx: i % PPT_COLORS.length
+        }));
+
+        // Summary chips
+        const totalPairs = pptAllRows.length;
+        const profPairs = pptAllRows.filter(r => r.totalPnL > 0).length;
+        const totalNet = pptAllRows.reduce((a,b)=>a+b.totalPnL,0);
+        const topPair = [...pptAllRows].sort((a,b)=>b.totalPnL-a.totalPnL)[0];
+        if (chips) {
+            chips.innerHTML = [
+                { label:'Total Pairs', val: totalPairs, color:'#00DC82' },
+                { label:'Profitable', val: profPairs + '/' + totalPairs, color:'#00DC82' },
+                { label:'Net P&L', val: (totalNet>=0?'+':'') + '$' + Math.abs(totalNet).toFixed(2), color: totalNet>=0?'#00DC82':'#FF4D4D' },
+                { label:'Top Pair', val: topPair ? topPair.pair : '--', color:'#F59E0B' }
+            ].map(c=>`
+                <div style="padding:8px 14px;border-radius:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);display:flex;flex-direction:column;gap:2px;">
+                    <span style="font-size:9px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.08em;">${c.label}</span>
+                    <span style="font-size:15px;font-weight:800;color:${c.color};font-family:'JetBrains Mono',monospace;">${c.val}</span>
+                </div>
+            `).join('');
+        }
+
+        pptApplyFilters();
+    }
+
+    function pptApplyFilters() {
+        const search = (document.getElementById('ppt-search-input')?.value || '').toUpperCase().trim();
+        pptFilteredRows = pptAllRows.filter(r => {
+            if (search && !r.pair.toUpperCase().includes(search)) return false;
+            if (pptCurrentFilter === 'WIN' && r.totalPnL <= 0) return false;
+            if (pptCurrentFilter === 'LOSS' && r.totalPnL >= 0) return false;
+            return true;
+        });
+        pptRenderRows();
+    }
+
+    function pptSort(key) {
+        if (pptSortKey === key) pptSortDir *= -1;
+        else { pptSortKey = key; pptSortDir = key === 'pair' ? 1 : -1; }
+        // Update header classes
+        document.querySelectorAll('#ppt-main-table thead th').forEach(th => {
+            th.classList.remove('sort-asc','sort-desc');
+        });
+        const headers = ['pair','trades','winRate','totalPnL','avgPnL','bestWin','worstLoss','avgScore'];
+        const idx = headers.indexOf(key);
+        if (idx >= 0) {
+            const th = document.querySelectorAll('#ppt-main-table thead th')[idx];
+            if (th) th.classList.add(pptSortDir === 1 ? 'sort-asc' : 'sort-desc');
+        }
+        const sortLabels = { pair:'Pair', trades:'Trades', winRate:'Win Rate', totalPnL:'Net P&L', avgPnL:'Avg P&L', bestWin:'Best Win', worstLoss:'Worst Loss', avgScore:'Avg Score' };
+        const lbl = document.getElementById('ppt-sort-label');
+        if (lbl) lbl.textContent = (sortLabels[key]||key) + (pptSortDir===1?' ↑':' ↓');
+        pptRenderRows();
+    }
+
+    function setPptFilter(filter, btn) {
+        pptCurrentFilter = filter;
+        document.querySelectorAll('#ppt-filter-group .ppt-filter-btn').forEach(b => b.classList.remove('active'));
+        if (btn) btn.classList.add('active');
+        pptApplyFilters();
+    }
+
+    function pptRenderRows() {
+        const tbody = document.getElementById('ppt-tbody');
+        if (!tbody) return;
+        const rows = [...pptFilteredRows].sort((a, b) => {
+            const av = a[pptSortKey], bv = b[pptSortKey];
+            if (typeof av === 'string') return av.localeCompare(bv) * pptSortDir;
+            return (bv - av) * pptSortDir;
+        });
+
+        const rc = document.getElementById('ppt-row-count');
+        if (rc) rc.textContent = rows.length + ' pair' + (rows.length !== 1 ? 's' : '');
+
+        if (!rows.length) {
+            tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:40px 0;color:#475569;font-size:13px;">No pairs match your filters.</td></tr>`;
+            return;
+        }
+
+        const maxAbsPnL = Math.max(...pptAllRows.map(r => Math.abs(r.totalPnL)), 1);
+
+        tbody.innerHTML = rows.map((r, i) => {
+            const isTop = r.totalPnL > 0;
+            const isLoss = r.totalPnL < 0;
+            const rowClass = i === 0 && isTop ? 'top-row ppt-row-animate' : isLoss ? 'loss-row ppt-row-animate' : 'ppt-row-animate';
+            const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
+            const color = PPT_COLORS[r.colorIdx];
+            const pnlColor = isTop ? '#00DC82' : isLoss ? '#FF4D4D' : '#e2e8f0';
+            const wr = r.winRate;
+            const wrColor = wr >= 60 ? '#00DC82' : wr >= 45 ? '#F59E0B' : '#FF4D4D';
+
+            // Score ring SVG
+            const scoreR = 14, scoreCirc = 2 * Math.PI * scoreR;
+            const scoreFill = scoreCirc - (scoreCirc * r.avgScore / 100);
+            const scoreColor = r.avgScore >= 70 ? '#00DC82' : r.avgScore >= 50 ? '#F59E0B' : '#FF4D4D';
+
+            // Mini sparkbars for last 5 trades
+            const last5 = r.pnlList.slice(-5);
+            const maxAbs5 = Math.max(...last5.map(Math.abs), 1);
+            const sparks = last5.map(v => {
+                const h = Math.max(4, Math.round((Math.abs(v)/maxAbs5)*22));
+                const c = v >= 0 ? '#00DC82' : '#FF4D4D';
+                return `<div class="ppt-sparkbar" style="height:${h}px;background:${c};opacity:0.7;"></div>`;
+            }).join('');
+
+            // P&L bar width relative to max
+            const barW = Math.round((Math.abs(r.totalPnL)/maxAbsPnL)*100);
+
+            return `<tr class="${rowClass}" style="animation-delay:${i*30}ms">
+                <td>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <div class="ppt-pair-icon" style="background:${color}18;color:${color};border:1px solid ${color}30;">${r.pair.substring(0,3)}</div>
+                        <div>
+                            <div style="font-size:13px;font-weight:700;color:white;font-family:'JetBrains Mono',monospace;">${medal ? medal+' ' : ''}${r.pair}</div>
+                            <div style="font-size:10px;color:#475569;margin-top:2px;">${r.wins}W / ${r.losses}L</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <span style="font-size:18px;font-weight:800;color:white;font-family:'JetBrains Mono',monospace;">${r.trades}</span>
+                    <div class="ppt-sparkbar-wrap" style="margin-top:4px;">${sparks}</div>
+                </td>
+                <td>
+                    <div style="font-size:14px;font-weight:700;color:${wrColor};font-family:'JetBrains Mono',monospace;">${r.winRate}%</div>
+                    <div class="ppt-winbar-wrap"><div class="ppt-winbar-fill" style="width:${wr}%;background:${wrColor};"></div></div>
+                </td>
+                <td>
+                    <div style="font-size:14px;font-weight:800;color:${pnlColor};font-family:'JetBrains Mono',monospace;">${r.totalPnL>=0?'+':'-'}$${Math.abs(r.totalPnL).toFixed(2)}</div>
+                    <div style="margin-top:5px;height:3px;border-radius:999px;width:${barW}%;background:${pnlColor};opacity:0.5;max-width:100px;"></div>
+                </td>
+                <td>
+                    <span style="font-size:13px;font-weight:600;color:${r.avgPnL>=0?'#00DC82':'#FF4D4D'};font-family:'JetBrains Mono',monospace;">${r.avgPnL>=0?'+':'-'}$${Math.abs(r.avgPnL).toFixed(2)}</span>
+                </td>
+                <td><span style="font-size:13px;font-weight:600;color:#00DC82;font-family:'JetBrains Mono',monospace;">$${r.bestWin.toFixed(2)}</span></td>
+                <td><span style="font-size:13px;font-weight:600;color:#FF4D4D;font-family:'JetBrains Mono',monospace;">-$${Math.abs(r.worstLoss).toFixed(2)}</span></td>
+                <td>
+                    <div class="ppt-score-ring">
+                        <svg width="38" height="38" viewBox="0 0 38 38">
+                            <circle cx="19" cy="19" r="${scoreR}" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="3"/>
+                            <circle cx="19" cy="19" r="${scoreR}" fill="none" stroke="${scoreColor}" stroke-width="3" stroke-dasharray="${scoreCirc}" stroke-dashoffset="${scoreFill}" stroke-linecap="round"/>
+                        </svg>
+                        <span style="color:${scoreColor};">${r.avgScore}%</span>
+                    </div>
+                </td>
+            </tr>`;
+        }).join('');
     }
 
     // =================== ACCOUNT MANAGEMENT ===================
