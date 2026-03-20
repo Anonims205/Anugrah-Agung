@@ -405,6 +405,35 @@
 
 .bar-grow { animation: growHeight 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; height: 0; }
 @keyframes growHeight { to { height: var(--h); } }
+
+/* Pair Dropdown */
+#pair-dropdown { box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+.pair-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; cursor: pointer; transition: all 0.15s; border-bottom: 1px solid rgba(255,255,255,0.03); }
+.pair-item:hover { background: rgba(0,220,130,0.08); }
+.pair-item:active { background: rgba(0,220,130,0.15); }
+.pair-category-header { padding: 8px 14px 4px; font-size: 10px; font-weight: 700; color: #00DC82; letter-spacing: 0.1em; text-transform: uppercase; }
+.pair-flags { font-size: 18px; line-height: 1; }
+
+/* Account Slider */
+#account-slider::-webkit-scrollbar { display: none; }
+.account-chip { flex-shrink: 0; snap-align: start; padding: 8px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); cursor: pointer; transition: all 0.2s ease; display: flex; flex-direction: column; gap: 2px; min-width: 130px; }
+.account-chip:hover { border-color: rgba(255,215,0,0.3); background: rgba(255,215,0,0.05); }
+.account-chip.active { border-color: rgba(255,215,0,0.5); background: rgba(255,215,0,0.1); box-shadow: 0 0 20px rgba(255,215,0,0.1); }
+.account-chip .ac-name { font-size: 11px; font-weight: 700; color: #e2e8f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.account-chip .ac-type { font-size: 9px; font-weight: 600; color: #64748b; letter-spacing: 0.05em; text-transform: uppercase; }
+.account-chip .ac-bal { font-size: 12px; font-weight: 700; color: #FFD700; font-family: 'JetBrains Mono', monospace; }
+
+/* Pair Comparison Table */
+.pair-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.pair-table th { padding: 10px 12px; text-align: left; font-size: 10px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.pair-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.03); color: #e2e8f0; }
+.pair-table tr:hover td { background: rgba(255,255,255,0.02); }
+.pair-table .win-rate-bar { height: 4px; border-radius: 2px; background: rgba(255,255,255,0.08); overflow: hidden; margin-top: 4px; }
+.pair-table .win-rate-fill { height: 100%; background: #00DC82; border-radius: 2px; transition: width 1s cubic-bezier(0.34,1.56,0.64,1); }
+
+/* History filter/sort */
+#hist-pair-filter, #hist-sort, #hist-dir-filter { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); color: white; }
+#hist-sort option, #hist-dir-filter option { background: #151A23; }
 </style>
 </head>
 <body class="min-h-screen flex flex-col items-center pt-10 pb-20 px-4 sm:px-8">
@@ -434,12 +463,48 @@
 <div id="view-trade" class="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-8 fade-in relative z-10">
     <!-- Left Column -->
     <div class="lg:col-span-4 space-y-6">
+        <!-- MULTI ACCOUNT SELECTOR -->
+        <div class="glass-panel rounded-3xl p-5">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-[10px] font-bold text-yellow-400 uppercase tracking-widest">ACTIVE ACCOUNT</h3>
+                <button onclick="openAccountModal()" class="text-[10px] text-slate-500 hover:text-yellow-400 transition flex items-center gap-1">
+                    <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    Manage
+                </button>
+            </div>
+            <!-- Account Slider -->
+            <div class="relative overflow-hidden">
+                <div id="account-slider" class="flex gap-2 overflow-x-auto pb-1 snap-x snap-mandatory" style="scroll-behavior:smooth;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+            <div id="active-account-balance" class="mt-3 pt-3 border-t border-white/5 flex justify-between items-center">
+                <span class="text-[10px] text-slate-500 uppercase">Balance</span>
+                <span class="text-sm font-display font-bold text-white" id="active-balance-display">$0.00</span>
+            </div>
+        </div>
+
         <div class="glass-panel rounded-3xl p-6">
             <h3 class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mb-4">ASSET CONFIGURATION</h3>
             <div class="space-y-4">
+                <!-- Pair input stays for manual entry -->
                 <div>
                     <label class="text-xs text-slate-500 mb-1 block">TICKER</label>
-                    <input type="text" id="input-pair" class="w-full glass-input rounded-xl px-4 py-3 text-lg font-display font-bold uppercase tracking-wider" placeholder="XAUUSD">
+                    <div class="relative">
+                        <input type="text" id="input-pair" class="w-full glass-input rounded-xl px-4 py-3 text-lg font-display font-bold uppercase tracking-wider pr-10" placeholder="XAUUSD" oninput="filterPairDropdown(this.value)" onfocus="openPairDropdown()" onblur="setTimeout(closePairDropdown,200)">
+                        <button onclick="togglePairDropdown()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-emerald-400 transition">
+                            <svg id="pair-chevron" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </button>
+                    </div>
+                    <!-- Pair Dropdown -->
+                    <div id="pair-dropdown" class="hidden mt-1 rounded-2xl overflow-hidden border border-white/10 bg-[#0d1117] shadow-2xl z-50 relative">
+                        <div class="p-2 border-b border-white/5">
+                            <input type="text" id="pair-search" placeholder="Search pairs..." class="w-full bg-transparent text-sm text-white placeholder-slate-500 outline-none px-2 py-1" oninput="filterPairDropdown(this.value)">
+                        </div>
+                        <div id="pair-list" class="overflow-y-auto max-h-72 overflow-x-hidden" style="scrollbar-width:thin;">
+                            <!-- Rendered by JS -->
+                        </div>
+                    </div>
                 </div>
                 <div>
                     <label class="text-xs text-slate-500 mb-1 block">BIAS</label>
@@ -829,6 +894,25 @@
             </button>
         </div>
     </div>
+    <!-- Filter & Sort Bar -->
+    <div class="flex flex-wrap gap-3 mb-6 items-center">
+        <div class="relative flex-1 min-w-[140px]">
+            <input type="text" id="hist-pair-filter" placeholder="Filter by pair..." class="w-full glass-input rounded-xl px-4 py-2 text-sm uppercase" oninput="applyHistoryFilters()">
+        </div>
+        <select id="hist-sort" class="glass-input rounded-xl px-4 py-2 text-sm text-slate-300 cursor-pointer" onchange="applyHistoryFilters()">
+            <option value="date_desc">Newest First</option>
+            <option value="date_asc">Oldest First</option>
+            <option value="pnl_desc">Highest P&L</option>
+            <option value="pnl_asc">Lowest P&L</option>
+            <option value="score_desc">Best Score</option>
+            <option value="score_asc">Worst Score</option>
+        </select>
+        <select id="hist-dir-filter" class="glass-input rounded-xl px-4 py-2 text-sm text-slate-300 cursor-pointer" onchange="applyHistoryFilters()">
+            <option value="ALL">All Directions</option>
+            <option value="LONG">LONG Only</option>
+            <option value="SHORT">SHORT Only</option>
+        </select>
+    </div>
     <div id="history-card-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     <div id="history-loader" class="infinite-loader hidden"><div class="loading-spinner"></div></div>
     <div id="empty-history-msg" class="text-center py-20 opacity-30 font-display text-xl hidden">NO DATA RECORDED</div>
@@ -848,10 +932,11 @@
                 <div id="total-weight-calc" class="text-2xl font-display font-bold text-emerald-400">0</div>
             </div>
         </div>
-    <div class="flex gap-2 mb-8 p-1 glass-panel rounded-2xl">
-        <button onclick="switchSystemTab('checklist')" id="system-tab-checklist" class="system-tab-btn active">Checklist</button>
-        <button onclick="switchSystemTab('categories')" id="system-tab-categories" class="system-tab-btn">Categories</button>
-        <button onclick="switchSystemTab('notes')" id="system-tab-notes" class="system-tab-btn">Confluence Notes</button>
+    <div class="flex gap-2 mb-8 p-1 glass-panel rounded-2xl overflow-x-auto">
+        <button onclick="switchSystemTab('checklist')" id="system-tab-checklist" class="system-tab-btn active whitespace-nowrap">Checklist</button>
+        <button onclick="switchSystemTab('categories')" id="system-tab-categories" class="system-tab-btn whitespace-nowrap">Categories</button>
+        <button onclick="switchSystemTab('pairs')" id="system-tab-pairs" class="system-tab-btn whitespace-nowrap">Pair Manager</button>
+        <button onclick="switchSystemTab('notes')" id="system-tab-notes" class="system-tab-btn whitespace-nowrap">Confluence Notes</button>
     </div>
     
     <div id="system-checklist-tab" class="system-tab-content">
@@ -903,6 +988,47 @@
                 </div>
                 <div id="category-list" class="space-y-2 max-h-60 overflow-y-auto pr-2"></div>
             </div>
+        </div>
+    </div>
+    
+    <div id="system-pairs-tab" class="system-tab-content hidden-tab">
+        <!-- Pair Comparison Table -->
+        <div class="glass-panel rounded-2xl p-6 mb-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-white">Pair Performance Comparison</h3>
+                <button onclick="renderPairComparison()" class="text-xs text-emerald-400 hover:text-emerald-300 transition flex items-center gap-1">
+                    <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                    Refresh
+                </button>
+            </div>
+            <div id="pair-comparison-table" class="overflow-x-auto">
+                <p class="text-xs text-slate-500 text-center py-8">Loading pair data...</p>
+            </div>
+        </div>
+
+        <!-- Pair Category Manager -->
+        <div class="glass-panel rounded-2xl p-6">
+            <h3 class="text-lg font-bold text-white mb-2">Pair List Manager</h3>
+            <p class="text-xs text-slate-500 mb-4">Manage which pairs appear in the quick-select dropdown on the Terminal.</p>
+            
+            <!-- Add pair -->
+            <div class="flex gap-2 mb-4">
+                <input type="text" id="new-pair-name" class="flex-grow glass-input rounded-xl px-4 py-3 uppercase font-bold" placeholder="e.g. BTCUSD">
+                <select id="new-pair-category" class="glass-input rounded-xl px-4 py-3 text-sm text-slate-300 cursor-pointer">
+                    <option value="Major Pairs">Major Pairs</option>
+                    <option value="Minor Pairs">Minor Pairs</option>
+                    <option value="Exotic Pairs">Exotic Pairs</option>
+                    <option value="Metals">Metals</option>
+                    <option value="Indices">Indices</option>
+                    <option value="Crypto">Crypto</option>
+                    <option value="Energy">Energy</option>
+                    <option value="Custom">Custom</option>
+                </select>
+                <button onclick="addCustomPair()" class="bg-emerald-500 hover:bg-emerald-400 text-black px-5 rounded-xl font-bold transition">ADD</button>
+            </div>
+
+            <!-- Pair list by category -->
+            <div id="pair-manager-list" class="space-y-4 max-h-96 overflow-y-auto pr-1"></div>
         </div>
     </div>
     
@@ -1476,7 +1602,7 @@
             const ss = tx.objectStore('settings');
             const cs = tx.objectStore('checklist');
             cs.clear();
-            appData.checklist.forEach(item => cs.add(item));
+            appData.checklist.forEach((item, idx) => cs.add({ ...item, _sortOrder: idx }));
             ss.put({ key: 'categories', value: appData.categories });
             ss.put({ key: 'customCategories', value: appData.customCategories });
             ss.put({ key: 'categoryOrder', value: appData.categoryOrder });
@@ -1503,7 +1629,10 @@
             Promise.all(promises).then(([checklist, categories, customCategories, categoryOrder, confluenceNotes, confirmationConfigs]) => {
                 if (checklist && checklist.length > 0) {
                     const seen = new Set();
-                    appData.checklist = checklist.filter(item => { if (seen.has(item.id)) return false; seen.add(item.id); return true; });
+                    appData.checklist = checklist
+                        .sort((a, b) => (a._sortOrder ?? 9999) - (b._sortOrder ?? 9999))
+                        .filter(item => { if (seen.has(item.id)) return false; seen.add(item.id); return true; })
+                        .map(item => { const c = {...item}; delete c._sortOrder; return c; });
                 }
                 if (categories) appData.categories = categories;
                 if (customCategories) appData.customCategories = customCategories;
@@ -1545,7 +1674,9 @@
             categoryOrder: appData.categoryOrder,
             confluenceNotes: appData.confluenceNotes,
             confirmationConfigs: appData.confirmationConfigs,
-            trash: appData.trash
+            trash: appData.trash,
+            customPairs: appData.customPairs || {},
+            accounts: appData.accounts || []
         }));
         updateDashboard();
     }
@@ -1564,6 +1695,8 @@
                 appData.confluenceNotes = p.confluenceNotes || {};
                 appData.confirmationConfigs = p.confirmationConfigs || {};
                 appData.trash = p.trash || [];
+                appData.customPairs = p.customPairs || {};
+                appData.accounts = p.accounts || [];
             }
         }
         await loadTrashFromDB();
@@ -1875,15 +2008,20 @@
     // =================== SYSTEM TABS ===================
     function switchSystemTab(tab) {
         currentSystemTab = tab;
-        ['checklist', 'categories', 'notes'].forEach(t => {
-            document.getElementById(`system-tab-${t}`).classList.remove('active');
-            document.getElementById(`system-${t}-tab`).classList.add('hidden-tab');
+        ['checklist', 'categories', 'pairs', 'notes'].forEach(t => {
+            const btn = document.getElementById(`system-tab-${t}`);
+            const panel = document.getElementById(`system-${t}-tab`);
+            if (btn) btn.classList.remove('active');
+            if (panel) panel.classList.add('hidden-tab');
         });
-        document.getElementById(`system-tab-${tab}`).classList.add('active');
-        document.getElementById(`system-${tab}-tab`).classList.remove('hidden-tab');
+        const activeBtn = document.getElementById(`system-tab-${tab}`);
+        const activePanel = document.getElementById(`system-${tab}-tab`);
+        if (activeBtn) activeBtn.classList.add('active');
+        if (activePanel) activePanel.classList.remove('hidden-tab');
         if (tab === 'checklist') renderSettingsChecklist();
         if (tab === 'categories') renderCategoryList();
         if (tab === 'notes') renderAllConfluenceNotes();
+        if (tab === 'pairs') { renderPairManagerList(); renderPairComparison(); }
     }
 
     // =================== CATEGORY MANAGEMENT ===================
@@ -2643,6 +2781,25 @@
                 pageTrades = await getTradesFromDB(HISTORY_PAGE_SIZE, offset, { status: currentFilter });
                 hasMoreHistory = pageTrades.length === HISTORY_PAGE_SIZE;
             }
+            // Apply client-side pair + direction filters
+            if (typeof histPairFilter !== 'undefined' && histPairFilter) {
+                pageTrades = pageTrades.filter(t => (t.pair || '').toUpperCase().includes(histPairFilter));
+            }
+            if (typeof histDirFilter !== 'undefined' && histDirFilter && histDirFilter !== 'ALL') {
+                pageTrades = pageTrades.filter(t => (t.direction || '') === histDirFilter);
+            }
+            // Apply sort
+            if (typeof histSort !== 'undefined' && histSort) {
+                pageTrades.sort((a, b) => {
+                    if (histSort === 'date_desc') return new Date(b.date) - new Date(a.date);
+                    if (histSort === 'date_asc') return new Date(a.date) - new Date(b.date);
+                    if (histSort === 'pnl_desc') return parseFloat(b.profit) - parseFloat(a.profit);
+                    if (histSort === 'pnl_asc') return parseFloat(a.profit) - parseFloat(b.profit);
+                    if (histSort === 'score_desc') return (b.score || 0) - (a.score || 0);
+                    if (histSort === 'score_asc') return (a.score || 0) - (b.score || 0);
+                    return 0;
+                });
+            }
             await displayHistoryTrades(pageTrades);
             currentHistoryPage++;
             document.getElementById('current-trade-count').textContent = Math.min(currentHistoryPage * HISTORY_PAGE_SIZE, totalTradeCount);
@@ -3182,6 +3339,353 @@
         document.getElementById('modal-full-image').classList.remove('flex');
     }
 
+    // =================== PAIR DATA ===================
+    const DEFAULT_PAIRS = {
+        "Major Pairs": [
+            { symbol: "EUR/USD", key: "EURUSD", flags: "🇪🇺/🇺🇸" },
+            { symbol: "GBP/USD", key: "GBPUSD", flags: "🇬🇧/🇺🇸" },
+            { symbol: "USD/JPY", key: "USDJPY", flags: "🇺🇸/🇯🇵" },
+            { symbol: "USD/CHF", key: "USDCHF", flags: "🇺🇸/🇨🇭" },
+            { symbol: "AUD/USD", key: "AUDUSD", flags: "🇦🇺/🇺🇸" },
+            { symbol: "USD/CAD", key: "USDCAD", flags: "🇺🇸/🇨🇦" },
+            { symbol: "NZD/USD", key: "NZDUSD", flags: "🇳🇿/🇺🇸" }
+        ],
+        "Minor Pairs": [
+            { symbol: "EUR/GBP", key: "EURGBP", flags: "🇪🇺/🇬🇧" },
+            { symbol: "EUR/JPY", key: "EURJPY", flags: "🇪🇺/🇯🇵" },
+            { symbol: "GBP/JPY", key: "GBPJPY", flags: "🇬🇧/🇯🇵" },
+            { symbol: "AUD/JPY", key: "AUDJPY", flags: "🇦🇺/🇯🇵" },
+            { symbol: "EUR/AUD", key: "EURAUD", flags: "🇪🇺/🇦🇺" },
+            { symbol: "GBP/AUD", key: "GBPAUD", flags: "🇬🇧/🇦🇺" }
+        ],
+        "Metals": [
+            { symbol: "XAU/USD", key: "XAUUSD", flags: "🥇/🇺🇸" },
+            { symbol: "XAG/USD", key: "XAGUSD", flags: "🥈/🇺🇸" }
+        ],
+        "Indices": [
+            { symbol: "US30", key: "US30", flags: "📈/🇺🇸" },
+            { symbol: "NAS100", key: "NAS100", flags: "💻/🇺🇸" },
+            { symbol: "SPX500", key: "SPX500", flags: "📊/🇺🇸" },
+            { symbol: "GER40", key: "GER40", flags: "📈/🇩🇪" },
+            { symbol: "UK100", key: "UK100", flags: "📈/🇬🇧" }
+        ],
+        "Crypto": [
+            { symbol: "BTC/USD", key: "BTCUSD", flags: "₿/🇺🇸" },
+            { symbol: "ETH/USD", key: "ETHUSD", flags: "Ξ/🇺🇸" }
+        ],
+        "Energy": [
+            { symbol: "USOIL", key: "USOIL", flags: "🛢/🇺🇸" },
+            { symbol: "NGAS", key: "NGAS", flags: "🔥/🇺🇸" }
+        ]
+    };
+
+    let pairDropdownOpen = false;
+
+    function getPairList() {
+        // Merge default with custom pairs stored in appData
+        if (!appData.customPairs) appData.customPairs = {};
+        const merged = JSON.parse(JSON.stringify(DEFAULT_PAIRS));
+        Object.entries(appData.customPairs).forEach(([cat, pairs]) => {
+            if (!merged[cat]) merged[cat] = [];
+            pairs.forEach(p => { if (!merged[cat].find(x => x.key === p.key)) merged[cat].push(p); });
+        });
+        return merged;
+    }
+
+    function renderPairDropdown(filter = '') {
+        const list = document.getElementById('pair-list');
+        if (!list) return;
+        list.innerHTML = '';
+        const pairs = getPairList();
+        let hasResults = false;
+        Object.entries(pairs).forEach(([category, items]) => {
+            const filtered = filter ? items.filter(p => p.key.toLowerCase().includes(filter.toLowerCase()) || p.symbol.toLowerCase().includes(filter.toLowerCase())) : items;
+            if (!filtered.length) return;
+            hasResults = true;
+            list.insertAdjacentHTML('beforeend', `<div class="pair-category-header">${category}</div>`);
+            filtered.forEach(p => {
+                list.insertAdjacentHTML('beforeend', `
+                    <div class="pair-item" onclick="selectPair('${p.key}')">
+                        <span class="pair-flags">${p.flags}</span>
+                        <span class="font-bold text-white text-sm">${p.symbol}</span>
+                        <span class="text-slate-500 text-xs ml-auto">${p.key}</span>
+                    </div>
+                `);
+            });
+        });
+        if (!hasResults) {
+            list.innerHTML = '<p class="text-center text-slate-500 text-xs py-4">No pairs found</p>';
+        }
+    }
+
+    function openPairDropdown() {
+        const dd = document.getElementById('pair-dropdown');
+        if (!dd) return;
+        renderPairDropdown(document.getElementById('input-pair').value);
+        dd.classList.remove('hidden');
+        pairDropdownOpen = true;
+        document.getElementById('pair-chevron').style.transform = 'rotate(180deg)';
+    }
+
+    function closePairDropdown() {
+        const dd = document.getElementById('pair-dropdown');
+        if (dd) dd.classList.add('hidden');
+        pairDropdownOpen = false;
+        document.getElementById('pair-chevron').style.transform = '';
+    }
+
+    function togglePairDropdown() {
+        if (pairDropdownOpen) closePairDropdown();
+        else openPairDropdown();
+    }
+
+    function filterPairDropdown(val) {
+        openPairDropdown();
+        const search = document.getElementById('pair-search');
+        if (search && document.activeElement !== search) search.value = val;
+        renderPairDropdown(val);
+    }
+
+    function selectPair(key) {
+        document.getElementById('input-pair').value = key;
+        closePairDropdown();
+    }
+
+    // =================== PAIR MANAGER (SYSTEM TAB) ===================
+    function renderPairManagerList() {
+        const container = document.getElementById('pair-manager-list');
+        if (!container) return;
+        container.innerHTML = '';
+        const pairs = getPairList();
+        Object.entries(pairs).forEach(([category, items]) => {
+            const isCustomCat = appData.customPairs && appData.customPairs[category];
+            container.insertAdjacentHTML('beforeend', `
+                <div class="mb-2">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">${category}</span>
+                        <div class="flex-1 h-px bg-white/5"></div>
+                    </div>
+                    <div class="space-y-1">
+                        ${items.map(p => `
+                            <div class="flex items-center justify-between p-2 rounded-lg bg-white/3 hover:bg-white/5 transition">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-base">${p.flags}</span>
+                                    <span class="text-sm font-bold text-white">${p.symbol}</span>
+                                    <span class="text-[10px] text-slate-500">${p.key}</span>
+                                </div>
+                                ${(appData.customPairs && appData.customPairs[category] && appData.customPairs[category].find(x=>x.key===p.key)) ?
+                                    `<button onclick="removeCustomPair('${category}','${p.key}')" class="text-xs text-red-400/60 hover:text-red-400 transition">✕ Remove</button>` :
+                                    `<span class="text-[9px] text-slate-600 uppercase">default</span>`
+                                }
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `);
+        });
+    }
+
+    function addCustomPair() {
+        const name = document.getElementById('new-pair-name').value.trim().toUpperCase();
+        const cat = document.getElementById('new-pair-category').value;
+        if (!name) return;
+        if (!appData.customPairs) appData.customPairs = {};
+        if (!appData.customPairs[cat]) appData.customPairs[cat] = [];
+        const symbol = name.length === 6 ? name.slice(0,3)+'/'+name.slice(3) : name;
+        const existing = appData.customPairs[cat].find(p => p.key === name);
+        if (!existing) {
+            appData.customPairs[cat].push({ symbol, key: name, flags: "📊/📊" });
+            saveData();
+        }
+        document.getElementById('new-pair-name').value = '';
+        renderPairManagerList();
+    }
+
+    function removeCustomPair(cat, key) {
+        if (!appData.customPairs || !appData.customPairs[cat]) return;
+        appData.customPairs[cat] = appData.customPairs[cat].filter(p => p.key !== key);
+        saveData();
+        renderPairManagerList();
+    }
+
+    // =================== PAIR COMPARISON TABLE ===================
+    async function renderPairComparison() {
+        const container = document.getElementById('pair-comparison-table');
+        if (!container) return;
+        const allTrades = await getTradesFromDB(10000);
+        const closed = allTrades.filter(t => t.status === 'WIN' || t.status === 'LOSS');
+        if (!closed.length) { container.innerHTML = '<p class="text-xs text-slate-500 text-center py-8">No completed trades to compare yet.</p>'; return; }
+
+        // Aggregate by pair
+        const stats = {};
+        closed.forEach(t => {
+            const p = t.pair || 'UNKNOWN';
+            if (!stats[p]) stats[p] = { trades: 0, wins: 0, losses: 0, totalPnL: 0, bestWin: 0, worstLoss: 0, avgScore: 0, scoreSum: 0 };
+            stats[p].trades++;
+            if (t.status === 'WIN') { stats[p].wins++; const pnl = parseFloat(t.profit); stats[p].totalPnL += pnl; if (pnl > stats[p].bestWin) stats[p].bestWin = pnl; }
+            if (t.status === 'LOSS') { stats[p].losses++; const pnl = parseFloat(t.profit); stats[p].totalPnL += pnl; if (pnl < stats[p].worstLoss) stats[p].worstLoss = pnl; }
+            stats[p].scoreSum += (t.score || 0);
+        });
+
+        const rows = Object.entries(stats).map(([pair, s]) => ({
+            pair, ...s,
+            winRate: Math.round((s.wins / s.trades) * 100),
+            avgScore: Math.round(s.scoreSum / s.trades)
+        })).sort((a, b) => b.totalPnL - a.totalPnL);
+
+        const tableHTML = `
+            <table class="pair-table">
+                <thead>
+                    <tr>
+                        <th>Pair</th>
+                        <th>Trades</th>
+                        <th>Win Rate</th>
+                        <th>Net P&L</th>
+                        <th>Best Win</th>
+                        <th>Worst Loss</th>
+                        <th>Avg Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${rows.map((r, i) => {
+                        const pnlColor = r.totalPnL >= 0 ? 'text-emerald-400' : 'text-red-400';
+                        const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
+                        return `
+                        <tr>
+                            <td class="font-bold text-white font-mono">${medal} ${r.pair}</td>
+                            <td class="text-slate-400">${r.trades}</td>
+                            <td>
+                                <div class="text-white font-bold">${r.winRate}%</div>
+                                <div class="win-rate-bar" style="width:80px;"><div class="win-rate-fill" style="width:${r.winRate}%"></div></div>
+                            </td>
+                            <td class="font-bold font-mono ${pnlColor}">${r.totalPnL >= 0 ? '+' : ''}$${r.totalPnL.toFixed(2)}</td>
+                            <td class="text-emerald-400 font-mono">$${r.bestWin.toFixed(2)}</td>
+                            <td class="text-red-400 font-mono">${r.worstLoss < 0 ? '-' : ''}$${Math.abs(r.worstLoss).toFixed(2)}</td>
+                            <td class="text-slate-300">${r.avgScore}%</td>
+                        </tr>`;
+                    }).join('')}
+                </tbody>
+            </table>
+        `;
+        container.innerHTML = tableHTML;
+    }
+
+    // =================== ACCOUNT MANAGEMENT ===================
+    function getAccounts() {
+        if (!appData.accounts) appData.accounts = [];
+        if (!appData.accounts.length) {
+            appData.accounts = [{ id: 1, name: 'Main Account', type: 'Demo', balance: 10000, active: true }];
+        }
+        return appData.accounts;
+    }
+
+    function getActiveAccount() {
+        const accs = getAccounts();
+        return accs.find(a => a.active) || accs[0];
+    }
+
+    function renderAccountSlider() {
+        const slider = document.getElementById('account-slider');
+        if (!slider) return;
+        const accs = getAccounts();
+        slider.innerHTML = accs.map(a => `
+            <div class="account-chip ${a.active ? 'active' : ''}" onclick="setActiveAccount(${a.id})">
+                <span class="ac-name">${a.name}</span>
+                <span class="ac-type">${a.type}</span>
+                <span class="ac-bal">$${parseFloat(a.balance||0).toLocaleString('en', {minimumFractionDigits:2,maximumFractionDigits:2})}</span>
+            </div>
+        `).join('');
+        const active = getActiveAccount();
+        const balDisplay = document.getElementById('active-balance-display');
+        if (balDisplay && active) balDisplay.textContent = '$' + parseFloat(active.balance||0).toLocaleString('en',{minimumFractionDigits:2,maximumFractionDigits:2});
+        // Sync calc-equity with active account balance
+        const calcEq = document.getElementById('calc-equity');
+        if (calcEq && active && !calcEq.value) calcEq.value = active.balance || 10000;
+    }
+
+    function setActiveAccount(id) {
+        getAccounts().forEach(a => a.active = (a.id === id));
+        saveData();
+        renderAccountSlider();
+        const active = getActiveAccount();
+        if (active) {
+            document.getElementById('calc-equity').value = active.balance || 10000;
+            calculateRisk();
+        }
+    }
+
+    function openAccountModal() {
+        renderAccountListModal();
+        document.getElementById('modal-accounts').classList.remove('hidden');
+        document.getElementById('modal-accounts').classList.add('flex');
+    }
+
+    function closeAccountModal() {
+        document.getElementById('modal-accounts').classList.add('hidden');
+        document.getElementById('modal-accounts').classList.remove('flex');
+    }
+
+    function renderAccountListModal() {
+        const container = document.getElementById('account-list-modal');
+        if (!container) return;
+        const accs = getAccounts();
+        container.innerHTML = accs.map(a => `
+            <div class="flex items-center justify-between p-3 rounded-xl border ${a.active ? 'border-yellow-500/30 bg-yellow-500/5' : 'border-white/5 bg-white/2'} transition">
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-sm text-white truncate">${a.name}</span>
+                        <span class="text-[9px] px-1.5 py-0.5 rounded-full font-bold ${a.type === 'Live' ? 'bg-red-500/20 text-red-400' : a.type === 'Prop' ? 'bg-purple-500/20 text-purple-400' : 'bg-blue-500/20 text-blue-400'}">${a.type}</span>
+                    </div>
+                    <div class="text-xs text-yellow-400 font-mono mt-0.5">$${parseFloat(a.balance||0).toLocaleString('en',{minimumFractionDigits:2})}</div>
+                </div>
+                <div class="flex items-center gap-2 ml-2">
+                    ${!a.active ? `<button onclick="setActiveAccount(${a.id});renderAccountListModal();" class="text-[10px] text-emerald-400 hover:text-emerald-300 transition px-2 py-1 rounded-lg bg-emerald-500/10">Set Active</button>` : `<span class="text-[10px] text-yellow-400 font-bold">✓ Active</span>`}
+                    ${accs.length > 1 ? `<button onclick="deleteAccount(${a.id})" class="text-xs text-red-400/50 hover:text-red-400 transition w-6 h-6 flex items-center justify-center rounded-lg bg-red-500/5">✕</button>` : ''}
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function addAccount() {
+        const name = document.getElementById('new-account-name').value.trim();
+        const balance = parseFloat(document.getElementById('new-account-balance').value) || 10000;
+        const type = document.getElementById('new-account-type').value;
+        if (!name) return;
+        const accs = getAccounts();
+        const id = Date.now();
+        accs.push({ id, name, type, balance, active: false });
+        appData.accounts = accs;
+        saveData();
+        renderAccountSlider();
+        renderAccountListModal();
+        document.getElementById('new-account-name').value = '';
+        document.getElementById('new-account-balance').value = '';
+    }
+
+    function deleteAccount(id) {
+        const accs = getAccounts();
+        if (accs.length <= 1) return;
+        const wasActive = accs.find(a => a.id === id && a.active);
+        appData.accounts = accs.filter(a => a.id !== id);
+        if (wasActive && appData.accounts.length) appData.accounts[0].active = true;
+        saveData();
+        renderAccountSlider();
+        renderAccountListModal();
+    }
+
+    // =================== HISTORY FILTER / SORT ===================
+    let histPairFilter = '';
+    let histSort = 'date_desc';
+    let histDirFilter = 'ALL';
+
+    async function applyHistoryFilters() {
+        histPairFilter = (document.getElementById('hist-pair-filter')?.value || '').toUpperCase().trim();
+        histSort = document.getElementById('hist-sort')?.value || 'date_desc';
+        histDirFilter = document.getElementById('hist-dir-filter')?.value || 'ALL';
+        resetHistoryView();
+        await loadHistoryWithPagination();
+    }
+
     // =================== INIT ===================
     window.onload = async function() {
         await loadData();
@@ -3189,17 +3693,60 @@
         if (!appData.categoryOrder) appData.categoryOrder = [...DEFAULT_CATEGORIES];
         if (!appData.confluenceNotes) appData.confluenceNotes = {};
         if (!appData.confirmationConfigs) appData.confirmationConfigs = {};
+        if (!appData.customPairs) appData.customPairs = {};
+        if (!appData.accounts) appData.accounts = [];
         renderChecklist();
         renderCategoryList();
         renderSettingsChecklist();
         updateDashboard();
+        getAccounts();
+        renderAccountSlider();
+        const activeAcc = getActiveAccount();
         if (!document.getElementById('calc-equity').value) {
-            document.getElementById('calc-equity').value = localStorage.getItem('lastEquity') || 10000;
+            document.getElementById('calc-equity').value = (activeAcc && activeAcc.balance) ? activeAcc.balance : (localStorage.getItem('lastEquity') || 10000);
         }
         updateConfluenceSummary();
         updateConfluenceNotesDisplay();
+        setupInfiniteScroll();
+        renderPairDropdown();
     };
 </script>
+<!-- Account Management Modal -->
+<div id="modal-accounts" class="fixed inset-0 bg-black/80 backdrop-blur-xl hidden items-center justify-center z-50 p-4 fade-in">
+    <div class="glass-panel w-full max-w-md rounded-3xl overflow-hidden flex flex-col max-h-[85vh]">
+        <div class="p-6 border-b border-white/5 flex justify-between items-center">
+            <div>
+                <h2 class="text-xl font-display font-bold text-white">Account Manager</h2>
+                <p class="text-xs text-slate-500 mt-1">Manage your trading accounts</p>
+            </div>
+            <button onclick="closeAccountModal()" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center text-white transition">&times;</button>
+        </div>
+        <div class="p-6 overflow-y-auto flex-1 space-y-5">
+            <!-- Add Account -->
+            <div class="space-y-3">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Add Account</h3>
+                <div class="flex gap-2">
+                    <input type="text" id="new-account-name" class="flex-grow glass-input rounded-xl px-4 py-3 text-sm" placeholder="Account name (e.g. IC Markets Demo)">
+                </div>
+                <div class="flex gap-2">
+                    <input type="number" id="new-account-balance" class="flex-grow glass-input rounded-xl px-4 py-3 text-sm" placeholder="Initial balance ($)">
+                    <select id="new-account-type" class="glass-input rounded-xl px-4 py-3 text-sm cursor-pointer">
+                        <option value="Demo">Demo</option>
+                        <option value="Live">Live</option>
+                        <option value="Prop">Prop</option>
+                        <option value="Backtest">Backtest</option>
+                    </select>
+                </div>
+                <button onclick="addAccount()" class="w-full py-3 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400 font-bold rounded-xl transition border border-yellow-500/30">+ Add Account</button>
+            </div>
+            <!-- Account List -->
+            <div class="space-y-2">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Your Accounts</h3>
+                <div id="account-list-modal" class="space-y-2"></div>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
