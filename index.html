@@ -3,41 +3,58 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Principles — Ray Dalio Companion</title>
+<title>Principles — Ray Dalio Companion v2</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0d0d0d;
-  --bg2: #141414;
-  --bg3: #1c1c1c;
-  --card: #1a1a1a;
-  --border: #2a2a2a;
+  --bg: #080808;
+  --bg2: #0f0f0f;
+  --bg3: #161616;
+  --card: #111111;
+  --card2: #161616;
+  --border: #232323;
+  --border2: #2e2e2e;
   --gold: #c9a84c;
   --gold2: #e8c472;
-  --gold-dim: rgba(201,168,76,0.15);
-  --text: #e8e4dc;
-  --text2: #a09890;
-  --text3: #5a5550;
+  --gold3: #f0d080;
+  --gold-dim: rgba(201,168,76,0.12);
+  --gold-dim2: rgba(201,168,76,0.06);
+  --text: #ede9e0;
+  --text2: #9a9088;
+  --text3: #525050;
   --red: #c45c4c;
+  --red-dim: rgba(196,92,76,0.12);
   --green: #5a9e6e;
+  --green-dim: rgba(90,158,110,0.12);
   --blue: #4c7ec9;
+  --blue-dim: rgba(76,126,201,0.12);
   --font-serif: 'Playfair Display', Georgia, serif;
   --font-sans: 'IBM Plex Sans', sans-serif;
   --font-mono: 'IBM Plex Mono', monospace;
+  --radius: 3px;
+  --sidebar: 230px;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
-html { font-size:16px; }
+html { font-size:16px; scroll-behavior:smooth; }
 body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-sans);
   min-height: 100vh;
   display: flex;
+  overflow: hidden;
 }
-/* SIDEBAR */
+
+/* ═══════════════════ SCROLLBAR ═══════════════════ */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #3a3a3a; }
+
+/* ═══════════════════ SIDEBAR ═══════════════════ */
 .sidebar {
-  width: 220px;
-  min-width: 220px;
+  width: var(--sidebar);
+  min-width: var(--sidebar);
   background: var(--bg2);
   border-right: 1px solid var(--border);
   display: flex;
@@ -46,385 +63,897 @@ body {
   position: sticky;
   top: 0;
   overflow-y: auto;
+  z-index: 100;
+  transition: transform 0.3s ease;
 }
 .sidebar-logo {
-  padding: 28px 24px 20px;
+  padding: 28px 22px 20px;
   border-bottom: 1px solid var(--border);
 }
 .sidebar-logo h1 {
   font-family: var(--font-serif);
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-size: 1.15rem;
+  font-weight: 900;
   color: var(--gold);
   letter-spacing: 0.02em;
+  line-height: 1.1;
 }
-.sidebar-logo p {
-  font-size: 0.7rem;
+.sidebar-logo .sub {
+  font-size: 0.62rem;
   color: var(--text3);
   font-family: var(--font-mono);
-  margin-top: 3px;
-  letter-spacing: 0.08em;
+  margin-top: 4px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
-.nav { padding: 12px 0; flex: 1; }
+.sidebar-logo .version {
+  display: inline-block;
+  font-size: 0.58rem;
+  font-family: var(--font-mono);
+  color: var(--gold);
+  opacity: 0.5;
+  border: 1px solid currentColor;
+  padding: 1px 5px;
+  margin-top: 8px;
+  letter-spacing: 0.06em;
+}
+.nav { padding: 10px 0; flex: 1; }
+.nav-section-label {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text3);
+  padding: 14px 22px 6px;
+}
 .nav-item {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 24px;
+  padding: 9px 22px;
   cursor: pointer;
   transition: all 0.15s;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   color: var(--text2);
   border-left: 2px solid transparent;
   letter-spacing: 0.01em;
+  position: relative;
 }
 .nav-item:hover { background: var(--bg3); color: var(--text); }
-.nav-item.active { color: var(--gold); border-left-color: var(--gold); background: var(--gold-dim); }
-.nav-item .icon { font-size: 1rem; width: 18px; text-align: center; }
+.nav-item.active { color: var(--gold); border-left-color: var(--gold); background: var(--gold-dim2); }
+.nav-item .icon { font-size: 0.9rem; width: 16px; text-align: center; opacity: 0.8; }
+.nav-badge {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  background: var(--gold-dim);
+  color: var(--gold);
+  border: 1px solid rgba(201,168,76,0.3);
+  padding: 1px 6px;
+  border-radius: 10px;
+}
 .sidebar-footer {
-  padding: 16px 24px;
+  padding: 14px 22px;
   border-top: 1px solid var(--border);
-  font-size: 0.68rem;
+}
+.sidebar-footer-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.sf-stat {
+  text-align: center;
+}
+.sf-stat .n {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  color: var(--gold);
+  font-weight: 500;
+  display: block;
+}
+.sf-stat .l {
+  font-size: 0.58rem;
   color: var(--text3);
   font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.sf-copy {
+  font-size: 0.62rem;
+  color: var(--text3);
+  font-family: var(--font-mono);
+  text-align: center;
 }
 
-/* MAIN */
-.main { flex: 1; min-height: 100vh; overflow-y: auto; }
-.page { display: none; padding: 40px 48px; max-width: 960px; }
+/* ═══════════════════ MAIN ═══════════════════ */
+.main { flex: 1; height: 100vh; overflow-y: auto; }
+.page { display: none; padding: 40px 48px 60px; max-width: 980px; }
 .page.active { display: block; }
 
-/* HEADERS */
-.page-header { margin-bottom: 36px; }
+/* PAGE HEADER */
+.page-header { margin-bottom: 32px; }
+.page-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+  border: 1px solid rgba(201,168,76,0.4);
+  padding: 2px 8px;
+  margin-bottom: 10px;
+  opacity: 0.8;
+}
 .page-header h2 {
   font-family: var(--font-serif);
-  font-size: 2rem;
+  font-size: 1.9rem;
   font-weight: 700;
   color: var(--text);
   line-height: 1.2;
 }
-.page-header p { font-size: 0.85rem; color: var(--text2); margin-top: 8px; }
-.tag {
-  display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--gold);
-  border: 1px solid var(--gold);
-  padding: 2px 8px;
-  margin-bottom: 10px;
-  opacity: 0.7;
-}
+.page-header p { font-size: 0.82rem; color: var(--text2); margin-top: 8px; line-height: 1.6; }
 
-/* CARDS */
+/* ═══════════════════ CARDS ═══════════════════ */
 .card {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 2px;
-  padding: 24px;
-  margin-bottom: 16px;
-  transition: border-color 0.15s;
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  margin-bottom: 14px;
+  transition: border-color 0.2s;
 }
-.card:hover { border-color: #3a3a3a; }
+.card:hover { border-color: var(--border2); }
 .card-gold { border-left: 3px solid var(--gold); }
+.card-green { border-left: 3px solid var(--green); }
+.card-red { border-left: 3px solid var(--red); }
 .card h3 {
   font-family: var(--font-serif);
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 700;
   color: var(--text);
   margin-bottom: 8px;
 }
-.card p { font-size: 0.83rem; color: var(--text2); line-height: 1.65; }
+.card p { font-size: 0.82rem; color: var(--text2); line-height: 1.65; }
 .card-meta {
   font-family: var(--font-mono);
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   color: var(--text3);
-  margin-bottom: 6px;
+  margin-bottom: 8px;
+}
+.card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
 }
 
-/* GRID */
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+/* ═══════════════════ GRID ═══════════════════ */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; }
 
-/* STAT CARDS */
+/* ═══════════════════ STAT CARDS ═══════════════════ */
 .stat-card {
   background: var(--card);
   border: 1px solid var(--border);
-  padding: 20px 24px;
-  border-radius: 2px;
+  padding: 18px 20px;
+  border-radius: var(--radius);
+  position: relative;
+  overflow: hidden;
+}
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--gold);
+  opacity: 0.4;
 }
 .stat-card .num {
   font-family: var(--font-mono);
-  font-size: 2rem;
+  font-size: 1.9rem;
   font-weight: 500;
   color: var(--gold);
+  line-height: 1;
 }
 .stat-card .lbl {
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   color: var(--text3);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-family: var(--font-mono);
+  margin-top: 5px;
+}
+.stat-card .trend {
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  color: var(--green);
   margin-top: 4px;
 }
 
-/* QUOTE BLOCK */
+/* ═══════════════════ QUOTE BLOCK ═══════════════════ */
 .quote-block {
-  background: var(--gold-dim);
+  background: var(--gold-dim2);
   border-left: 3px solid var(--gold);
-  padding: 20px 24px;
-  margin: 24px 0;
+  padding: 18px 22px;
+  margin: 20px 0;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 1.05rem;
+  font-size: 1rem;
   color: var(--text);
-  line-height: 1.6;
-  border-radius: 0 2px 2px 0;
+  line-height: 1.65;
+  border-radius: 0 var(--radius) var(--radius) 0;
 }
-
-/* PRINCIPLE LIST */
-.principle-section { margin-bottom: 32px; }
-.principle-section-title {
+.quote-source {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
+  font-size: 0.65rem;
   color: var(--gold);
-  margin-bottom: 16px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--gold-dim);
-}
-.principle-item {
-  background: var(--card);
-  border: 1px solid var(--border);
-  padding: 16px 20px;
-  margin-bottom: 8px;
-  cursor: pointer;
-  transition: all 0.15s;
-  border-radius: 2px;
-}
-.principle-item:hover { border-color: var(--gold); background: #1f1f1f; }
-.principle-item.expanded { border-color: var(--gold); }
-.pi-header { display: flex; align-items: flex-start; gap: 12px; }
-.pi-num {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  color: var(--gold);
-  min-width: 40px;
-  margin-top: 2px;
-  opacity: 0.8;
-}
-.pi-title {
-  font-size: 0.88rem;
-  color: var(--text);
-  font-weight: 500;
-  line-height: 1.4;
-  flex: 1;
-}
-.pi-toggle { color: var(--text3); font-size: 0.8rem; margin-left: auto; transition: transform 0.2s; }
-.pi-body {
-  display: none;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--border);
-  font-size: 0.81rem;
-  color: var(--text2);
-  line-height: 1.7;
-}
-.pi-body.show { display: block; }
-.pi-sub {
-  margin: 8px 0 4px 0;
-  display: flex;
-  gap: 8px;
-  align-items: flex-start;
-}
-.pi-sub-letter {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--gold);
+  margin-top: 8px;
+  font-style: normal;
   opacity: 0.7;
-  min-width: 16px;
-  margin-top: 1px;
 }
 
-/* FORMS & INPUTS */
+/* ═══════════════════ FORMS ═══════════════════ */
 input, textarea, select {
   background: var(--bg3);
   border: 1px solid var(--border);
   color: var(--text);
   font-family: var(--font-sans);
-  font-size: 0.85rem;
-  padding: 10px 14px;
-  border-radius: 2px;
+  font-size: 0.84rem;
+  padding: 10px 13px;
+  border-radius: var(--radius);
   outline: none;
   width: 100%;
-  transition: border-color 0.15s;
+  transition: border-color 0.2s, background 0.2s;
 }
-input:focus, textarea:focus, select:focus { border-color: var(--gold); }
+input:focus, textarea:focus, select:focus {
+  border-color: var(--gold);
+  background: var(--bg2);
+}
 textarea { resize: vertical; min-height: 80px; }
 label {
   display: block;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   font-family: var(--font-mono);
   color: var(--text3);
   margin-bottom: 6px;
 }
-.field { margin-bottom: 16px; }
+.field { margin-bottom: 14px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.field-hint {
+  font-size: 0.68rem;
+  color: var(--text3);
+  font-family: var(--font-mono);
+  margin-top: 4px;
+}
+select option { background: var(--bg3); }
 
-/* BUTTONS */
+/* ═══════════════════ BUTTONS ═══════════════════ */
 .btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 10px 20px;
+  padding: 9px 18px;
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border2);
   background: transparent;
-  color: var(--text);
+  color: var(--text2);
   cursor: pointer;
   transition: all 0.15s;
-  border-radius: 2px;
+  border-radius: var(--radius);
+  white-space: nowrap;
 }
-.btn:hover { border-color: var(--gold); color: var(--gold); }
+.btn:hover { border-color: var(--gold); color: var(--gold); background: var(--gold-dim2); }
 .btn-gold {
   background: var(--gold);
   color: var(--bg);
   border-color: var(--gold);
-  font-weight: 500;
+  font-weight: 600;
+  color: #000;
 }
-.btn-gold:hover { background: var(--gold2); border-color: var(--gold2); color: var(--bg); }
-.btn-danger { border-color: var(--red); color: var(--red); }
-.btn-danger:hover { background: var(--red); color: white; }
-.btn-sm { padding: 6px 12px; font-size: 0.68rem; }
+.btn-gold:hover { background: var(--gold2); border-color: var(--gold2); color: #000; }
+.btn-danger { border-color: rgba(196,92,76,0.4); color: var(--red); }
+.btn-danger:hover { background: var(--red); color: white; border-color: var(--red); }
+.btn-ghost { border-color: transparent; color: var(--text3); }
+.btn-ghost:hover { color: var(--text); border-color: var(--border2); background: var(--bg3); }
+.btn-sm { padding: 5px 10px; font-size: 0.62rem; }
+.btn-icon { padding: 7px 9px; }
+.btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
 
-/* STEP TRACKER */
-.step-card {
+/* ═══════════════════ PRINCIPLE LIST ═══════════════════ */
+.principle-section { margin-bottom: 28px; }
+.principle-section-title {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--gold);
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--gold-dim);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.principle-item {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 2px;
-  padding: 20px 24px;
-  margin-bottom: 12px;
+  padding: 14px 18px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+  border-radius: var(--radius);
+}
+.principle-item:hover { border-color: var(--border2); background: var(--card2); }
+.principle-item.expanded { border-color: rgba(201,168,76,0.4); background: var(--card2); }
+.pi-header { display: flex; align-items: flex-start; gap: 12px; }
+.pi-num {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--gold);
+  min-width: 36px;
+  margin-top: 2px;
+  opacity: 0.7;
+}
+.pi-title {
+  font-size: 0.86rem;
+  color: var(--text);
+  font-weight: 500;
+  line-height: 1.4;
+  flex: 1;
+}
+.pi-toggle { color: var(--text3); font-size: 0.75rem; margin-left: 8px; transition: transform 0.2s; flex-shrink: 0; }
+.pi-body {
+  display: none;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.pi-body.show { display: block; }
+.pi-sub {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+}
+.pi-sub:last-child { border-bottom: none; }
+.pi-sub-letter {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--gold);
+  opacity: 0.6;
+  min-width: 28px;
+  margin-top: 2px;
+}
+.pi-sub-text {
+  font-size: 0.81rem;
+  color: var(--text);
+  font-weight: 500;
+  line-height: 1.4;
+}
+.pi-sub-detail {
+  font-size: 0.76rem;
+  color: var(--text2);
+  line-height: 1.6;
+  margin-top: 3px;
+}
+.pi-bookmark {
+  margin-left: auto;
+  font-size: 0.8rem;
+  color: var(--text3);
+  cursor: pointer;
+  transition: color 0.15s;
+  padding: 2px;
+}
+.pi-bookmark.bookmarked { color: var(--gold); }
+.pi-bookmark:hover { color: var(--gold); }
+
+/* ═══════════════════ JOURNAL ENTRIES ═══════════════════ */
+.journal-entry {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  margin-bottom: 10px;
   transition: all 0.15s;
 }
-.step-card.done { border-color: var(--green); opacity: 0.7; }
-.step-card.active-step { border-color: var(--gold); }
-.step-header { display: flex; align-items: center; gap: 14px; }
+.journal-entry:hover { border-color: var(--border2); }
+.je-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; gap: 12px; }
+.je-meta { display: flex; flex-direction: column; gap: 2px; }
+.je-date { font-family: var(--font-mono); font-size: 0.64rem; color: var(--text3); }
+.je-pain { font-size: 0.9rem; font-weight: 600; color: var(--text); line-height: 1.3; }
+.je-root { font-size: 0.8rem; color: var(--text2); line-height: 1.6; margin-bottom: 8px; }
+.je-reflection { font-size: 0.82rem; color: var(--text2); line-height: 1.65; }
+.je-progress {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: var(--green-dim);
+  border-left: 2px solid var(--green);
+  font-size: 0.78rem;
+  color: var(--green);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+.je-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+.je-tag {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 2px 8px;
+  border: 1px solid var(--border2);
+  color: var(--text3);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.je-tag:hover { border-color: var(--gold); color: var(--gold); }
+.je-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.je-expandable { display: none; }
+.je-expandable.open { display: block; }
+.je-expand-btn {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  color: var(--text3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  transition: color 0.15s;
+}
+.je-expand-btn:hover { color: var(--gold); }
+
+/* ═══════════════════ GOAL / 5-STEP ═══════════════════ */
+.goal-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.goal-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.goal-header:hover { background: var(--card2); }
+.goal-status-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--text3);
+}
+.goal-status-dot.active { background: var(--gold); box-shadow: 0 0 6px rgba(201,168,76,0.4); }
+.goal-status-dot.done { background: var(--green); }
+.goal-title-wrap { flex: 1; }
+.goal-title { font-size: 0.9rem; font-weight: 600; color: var(--text); }
+.goal-sub { font-size: 0.72rem; color: var(--text3); font-family: var(--font-mono); margin-top: 2px; }
+.goal-progress-bar { height: 3px; background: var(--bg3); }
+.goal-progress-fill { height: 100%; background: var(--gold); transition: width 0.4s ease; }
+.goal-body { display: none; padding: 20px; border-top: 1px solid var(--border); }
+.goal-body.open { display: block; }
+.step-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  margin-bottom: 8px;
+  transition: all 0.15s;
+}
+.step-card.done { border-color: rgba(90,158,110,0.4); opacity: 0.75; }
+.step-card.step-active { border-color: rgba(201,168,76,0.4); }
+.step-header { display: flex; align-items: center; gap: 12px; }
 .step-num {
-  width: 32px; height: 32px;
-  border: 2px solid var(--border);
+  width: 28px; height: 28px;
+  border: 1.5px solid var(--border2);
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   font-family: var(--font-mono);
-  font-size: 0.8rem;
+  font-size: 0.72rem;
   font-weight: 500;
   color: var(--text2);
   flex-shrink: 0;
   transition: all 0.2s;
 }
-.step-card.done .step-num { border-color: var(--green); color: var(--green); background: rgba(90,158,110,0.1); }
-.step-card.active-step .step-num { border-color: var(--gold); color: var(--gold); background: var(--gold-dim); }
+.step-card.done .step-num { border-color: var(--green); color: var(--green); background: var(--green-dim); }
+.step-card.step-active .step-num { border-color: var(--gold); color: var(--gold); background: var(--gold-dim); }
 .step-info { flex: 1; }
-.step-title { font-weight: 500; font-size: 0.9rem; }
-.step-desc { font-size: 0.78rem; color: var(--text3); margin-top: 2px; }
-.step-body { display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+.step-title { font-weight: 500; font-size: 0.84rem; }
+.step-desc { font-size: 0.74rem; color: var(--text3); margin-top: 2px; }
+.step-body { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
 .step-body.show { display: block; }
 
-/* JOURNAL */
-.journal-entry {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  padding: 20px 24px;
-  margin-bottom: 12px;
-}
-.je-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
-.je-date { font-family: var(--font-mono); font-size: 0.68rem; color: var(--text3); }
-.je-pain { font-size: 0.85rem; font-weight: 600; color: var(--red); margin-bottom: 8px; }
-.je-reflection { font-size: 0.83rem; color: var(--text2); line-height: 1.6; }
-.je-progress {
-  margin-top: 10px;
-  padding: 8px 12px;
-  background: rgba(90,158,110,0.1);
-  border-left: 2px solid var(--green);
-  font-size: 0.8rem;
-  color: var(--green);
-}
-.je-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-.je-tag {
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 2px 8px;
-  border: 1px solid var(--border);
-  color: var(--text3);
-  border-radius: 20px;
-}
-
-/* DECISION TOOL */
+/* ═══════════════════ DECISION TOOL ═══════════════════ */
 .decision-option {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 2px;
-  padding: 20px;
-  margin-bottom: 12px;
+  border-radius: var(--radius);
+  padding: 18px;
+  margin-bottom: 10px;
   position: relative;
 }
-.decision-option h4 { font-size: 0.9rem; margin-bottom: 12px; }
-.pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.decision-option h4 { font-size: 0.88rem; margin-bottom: 12px; }
+.pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .pc-list { font-size: 0.78rem; color: var(--text2); }
-.pc-list .pc-title {
+.pc-title {
   font-family: var(--font-mono);
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   margin-bottom: 6px;
 }
-.pc-list.pros .pc-title { color: var(--green); }
-.pc-list.cons .pc-title { color: var(--red); }
-.pc-item { display: flex; gap: 6px; margin-bottom: 4px; align-items: flex-start; }
-.pc-dot { margin-top: 4px; width: 4px; height: 4px; border-radius: 50%; flex-shrink: 0; }
-.pros .pc-dot { background: var(--green); }
-.cons .pc-dot { background: var(--red); }
-
-/* METER */
-.meter-wrap { margin: 12px 0; }
-.meter-label { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text3); font-family: var(--font-mono); margin-bottom: 6px; }
-.meter {
-  height: 4px;
-  background: var(--bg3);
-  border-radius: 2px;
-  overflow: hidden;
+.pros .pc-title { color: var(--green); }
+.cons .pc-title { color: var(--red); }
+.ev-result-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
 }
-.meter-fill {
-  height: 100%;
+.ev-rank { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text3); width: 20px; }
+.ev-name { flex: 1; font-size: 0.84rem; }
+.ev-bar-wrap { width: 80px; height: 4px; background: var(--bg3); border-radius: 2px; }
+.ev-bar { height: 100%; background: var(--gold); border-radius: 2px; transition: width 0.4s; }
+.ev-value { font-family: var(--font-mono); font-size: 0.75rem; color: var(--gold); width: 50px; text-align: right; }
+
+/* ═══════════════════ HABITS ═══════════════════ */
+.habit-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.habit-card:hover { border-color: var(--border2); }
+.habit-card.done { border-color: rgba(201,168,76,0.3); background: var(--gold-dim2); }
+.habit-check {
+  width: 22px; height: 22px;
+  border: 1.5px solid var(--border2);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.72rem;
+  color: transparent;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.habit-card.done .habit-check {
+  border-color: var(--gold);
+  background: var(--gold-dim);
+  color: var(--gold);
+}
+.habit-text { font-size: 0.84rem; font-weight: 500; flex: 1; }
+.habit-detail { font-size: 0.72rem; color: var(--text3); margin-top: 2px; }
+.habit-streak { font-family: var(--font-mono); font-size: 0.65rem; color: var(--text3); flex-shrink: 0; }
+.habit-history-dots { display: flex; gap: 3px; }
+.hd { width: 6px; height: 6px; border-radius: 50%; background: var(--border2); }
+.hd.done { background: var(--gold); }
+
+/* ═══════════════════ MY PRINCIPLES ═══════════════════ */
+.my-principle {
+  display: flex;
+  gap: 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin-bottom: 8px;
+  transition: all 0.15s;
+}
+.my-principle:hover { border-color: var(--border2); }
+.mp-bullet { color: var(--gold); font-family: var(--font-mono); font-size: 0.8rem; flex-shrink: 0; margin-top: 2px; }
+.mp-body { flex: 1; min-width: 0; }
+.mp-text { font-size: 0.88rem; font-weight: 600; color: var(--text); line-height: 1.4; }
+.mp-desc { font-size: 0.78rem; color: var(--text2); line-height: 1.6; margin-top: 5px; }
+.mp-meta { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+.mp-date { font-family: var(--font-mono); font-size: 0.6rem; color: var(--text3); }
+.mp-cat-badge {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 1px 6px;
+  border: 1px solid var(--border2);
+  color: var(--text3);
+  border-radius: 10px;
+}
+.mp-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+/* ═══════════════════ HISTORY LOG ═══════════════════ */
+.history-item {
+  display: flex;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.history-item:last-child { border-bottom: none; }
+.hi-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
   background: var(--gold);
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+.hi-dot.journal { background: var(--blue); }
+.hi-dot.goal { background: var(--green); }
+.hi-dot.principle { background: var(--gold); }
+.hi-dot.decision { background: var(--red); }
+.hi-body { flex: 1; min-width: 0; }
+.hi-title { font-size: 0.82rem; color: var(--text); font-weight: 500; }
+.hi-meta { font-family: var(--font-mono); font-size: 0.62rem; color: var(--text3); margin-top: 2px; }
+.hi-type-badge {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 1px 6px;
   border-radius: 2px;
-  transition: width 0.4s ease;
+  flex-shrink: 0;
+}
+.hi-type-badge.journal { background: var(--blue-dim); color: var(--blue); }
+.hi-type-badge.goal { background: var(--green-dim); color: var(--green); }
+.hi-type-badge.principle { background: var(--gold-dim); color: var(--gold); }
+.hi-type-badge.decision { background: var(--red-dim); color: var(--red); }
+
+/* ═══════════════════ MODAL ═══════════════════ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.modal-header h3 {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.modal-body { padding: 20px 24px; }
+.modal-footer {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  padding: 14px 24px 20px;
+  border-top: 1px solid var(--border);
 }
 
-/* TOGGLE SWITCH */
+/* ═══════════════════ SEARCH BAR ═══════════════════ */
+.search-bar {
+  position: relative;
+  margin-bottom: 20px;
+}
+.search-bar input {
+  padding-left: 36px;
+}
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text3);
+  font-size: 0.85rem;
+}
+
+/* ═══════════════════ FILTER TABS ═══════════════════ */
+.filter-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.filter-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text3);
+  cursor: pointer;
+  transition: all 0.15s;
+  border-radius: 20px;
+}
+.filter-tab:hover { border-color: var(--border2); color: var(--text2); }
+.filter-tab.active { border-color: var(--gold); color: var(--gold); background: var(--gold-dim2); }
+.filter-count {
+  background: var(--bg3);
+  border-radius: 10px;
+  padding: 0 5px;
+  font-size: 0.6rem;
+}
+.filter-tab.active .filter-count { background: var(--gold-dim); }
+
+/* ═══════════════════ METER ═══════════════════ */
+.meter-wrap { margin: 10px 0; }
+.meter-label { display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--text3); font-family: var(--font-mono); margin-bottom: 6px; }
+.meter { height: 3px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
+.meter-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold2)); border-radius: 2px; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); }
+.meter-fill.green { background: var(--green); }
+
+/* ═══════════════════ CHECKLIST ═══════════════════ */
+.checklist-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.checklist-item:last-child { border-bottom: none; }
+.checklist-item:hover { padding-left: 4px; }
+.check-box {
+  width: 18px; height: 18px;
+  border: 1.5px solid var(--border2);
+  border-radius: 3px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.65rem;
+  color: transparent;
+  flex-shrink: 0;
+  margin-top: 1px;
+  transition: all 0.15s;
+}
+.checklist-item.checked .check-box {
+  background: var(--gold-dim);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.check-text { font-size: 0.81rem; color: var(--text2); line-height: 1.5; }
+.checklist-item.checked .check-text { color: var(--text3); text-decoration: line-through; }
+
+/* ═══════════════════ DIVIDER ═══════════════════ */
+.divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+.divider-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+}
+.divider-label span {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text3);
+  white-space: nowrap;
+}
+.divider-label::before, .divider-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ═══════════════════ TOAST ═══════════════════ */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--card2);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  padding: 11px 18px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+  border-radius: var(--radius);
+  z-index: 9999;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: all 0.25s ease;
+  pointer-events: none;
+  max-width: 300px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.success { border-color: rgba(90,158,110,0.5); }
+.toast.error { border-color: rgba(196,92,76,0.5); }
+
+/* ═══════════════════ EMPTY STATE ═══════════════════ */
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--text3);
+}
+.empty-icon { font-size: 2rem; margin-bottom: 12px; opacity: 0.4; }
+.empty-state p { font-size: 0.82rem; line-height: 1.6; }
+.empty-state .empty-hint {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text3);
+  margin-top: 8px;
+  opacity: 0.6;
+}
+
+/* ═══════════════════ BREADCRUMB ═══════════════════ */
+.breadcrumb {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  color: var(--text3);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ═══════════════════ INSIGHT CARDS ═══════════════════ */
+.insight-strip {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  margin-bottom: 20px;
+}
+.insight-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  flex-shrink: 0;
+  min-width: 200px;
+}
+.insight-label { font-family: var(--font-mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text3); margin-bottom: 4px; }
+.insight-value { font-family: var(--font-mono); font-size: 1.4rem; color: var(--gold); }
+.insight-sub { font-size: 0.72rem; color: var(--text3); margin-top: 3px; }
+
+/* ═══════════════════ TOGGLE ROW ═══════════════════ */
 .toggle-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 12px 0;
   border-bottom: 1px solid var(--border);
-  font-size: 0.83rem;
+  font-size: 0.82rem;
 }
 .toggle {
   position: relative;
-  width: 36px;
-  height: 20px;
+  width: 34px;
+  height: 18px;
   cursor: pointer;
 }
 .toggle input { display: none; }
@@ -442,348 +971,334 @@ label {
   left: 3px;
   top: 50%;
   transform: translateY(-50%);
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background: var(--text3);
   transition: all 0.2s;
 }
 .toggle input:checked + .toggle-slider { background: var(--gold-dim); border-color: var(--gold); }
-.toggle input:checked + .toggle-slider::after { left: 19px; background: var(--gold); }
+.toggle input:checked + .toggle-slider::after { left: 18px; background: var(--gold); }
 
-/* DIVIDER */
-.divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+/* ═══════════════════ RESPONSIVE ═══════════════════ */
+@media (max-width: 768px) {
+  :root { --sidebar: 200px; }
+  .page { padding: 24px 20px 48px; }
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .field-row { grid-template-columns: 1fr; }
+  .pros-cons { grid-template-columns: 1fr; }
+  .grid-2.keep-2 { grid-template-columns: 1fr 1fr; }
+}
 
-/* SCROLLBAR */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: #3a3a3a; }
-
-/* TOAST */
-.toast {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  background: var(--card);
-  border: 1px solid var(--gold);
-  padding: 12px 20px;
-  font-size: 0.82rem;
-  border-radius: 2px;
-  z-index: 999;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: all 0.3s;
-  font-family: var(--font-mono);
-  max-width: 300px;
-}
-.toast.show { opacity: 1; transform: translateY(0); }
-
-/* BADGES */
-.badge {
-  display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 2px 8px;
-  border-radius: 2px;
-  font-weight: 500;
-}
-.badge-life { background: rgba(201,168,76,0.15); color: var(--gold); }
-.badge-work { background: rgba(76,126,201,0.15); color: var(--blue); }
-
-/* CHECKLIST */
-.checklist-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--border);
-  font-size: 0.83rem;
-  cursor: pointer;
-  transition: color 0.15s;
-}
-.checklist-item:hover { color: var(--gold); }
-.check-box {
-  width: 18px; height: 18px;
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-  margin-top: 1px;
-  font-size: 0.7rem;
-  transition: all 0.15s;
-}
-.checklist-item.checked .check-box {
-  background: var(--gold-dim);
-  border-color: var(--gold);
-  color: var(--gold);
-}
-.checklist-item.checked .check-text { text-decoration: line-through; color: var(--text3); }
-
-/* DAILY PRINCIPLE */
-.daily-principle {
-  background: linear-gradient(135deg, #1a1a14, #1a1710);
-  border: 1px solid rgba(201,168,76,0.3);
-  border-radius: 2px;
-  padding: 32px 36px;
-  margin-bottom: 28px;
-  position: relative;
-  overflow: hidden;
-}
-.daily-principle::before {
-  content: '"';
-  position: absolute;
-  top: -10px;
-  left: 24px;
-  font-family: var(--font-serif);
-  font-size: 8rem;
-  color: var(--gold);
-  opacity: 0.08;
-  line-height: 1;
-}
-.dp-tag { font-family: var(--font-mono); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--gold); opacity: 0.7; margin-bottom: 14px; }
-.dp-text {
-  font-family: var(--font-serif);
-  font-size: 1.3rem;
-  line-height: 1.55;
-  font-style: italic;
-  color: var(--text);
-  position: relative;
-}
-.dp-source { margin-top: 14px; font-size: 0.75rem; color: var(--text3); font-family: var(--font-mono); }
-
-/* My principles custom */
-.my-principle {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  padding: 16px 20px;
-  margin-bottom: 8px;
-  display: flex;
-  gap: 14px;
-  align-items: flex-start;
-}
-.mp-body { flex: 1; }
-.mp-text { font-size: 0.85rem; font-weight: 500; margin-bottom: 4px; }
-.mp-desc { font-size: 0.78rem; color: var(--text3); line-height: 1.5; }
-.mp-actions { display: flex; gap: 6px; }
-
-/* ANIMATIONS */
+/* ═══════════════════ ANIMATIONS ═══════════════════ */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.page.active { animation: fadeIn 0.25s ease; }
+.page.active { animation: fadeIn 0.2s ease; }
 
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .sidebar { width: 60px; min-width: 60px; }
-  .sidebar-logo, .nav-item span, .sidebar-footer { display: none; }
-  .nav-item { justify-content: center; padding: 14px; }
-  .page { padding: 24px 20px; }
-  .grid-2, .grid-3 { grid-template-columns: 1fr; }
-}
+/* ═══════════════════ HIGHLIGHTS ═══════════════════ */
+.highlight { background: var(--gold-dim); border-radius: 2px; padding: 0 2px; }
+mark { background: var(--gold-dim); color: var(--gold); border-radius: 2px; padding: 0 1px; }
 </style>
 </head>
 <body>
 
-<!-- SIDEBAR -->
-<nav class="sidebar">
+<!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+<aside class="sidebar">
   <div class="sidebar-logo">
     <h1>Principles</h1>
-    <p>Ray Dalio · 2017</p>
+    <div class="sub">Ray Dalio Companion</div>
+    <div class="version">v2.0</div>
   </div>
-  <div class="nav">
+
+  <nav class="nav">
+    <div class="nav-section-label">Overview</div>
     <div class="nav-item active" onclick="goTo('dashboard')">
-      <span class="icon">◆</span>
-      <span>Dashboard</span>
+      <span class="icon">◈</span> Dashboard
     </div>
+    <div class="nav-item" onclick="goTo('history')">
+      <span class="icon">◷</span> Activity Log
+      <span class="nav-badge" id="badge-history">0</span>
+    </div>
+
+    <div class="nav-section-label">Reference</div>
     <div class="nav-item" onclick="goTo('principles')">
-      <span class="icon">§</span>
-      <span>All Principles</span>
+      <span class="icon">◆</span> All Principles
+    </div>
+
+    <div class="nav-section-label">Practice</div>
+    <div class="nav-item" onclick="goTo('journal')">
+      <span class="icon">✎</span> Reflection Journal
+      <span class="nav-badge" id="badge-journal">0</span>
     </div>
     <div class="nav-item" onclick="goTo('fivesteps')">
-      <span class="icon">↗</span>
-      <span>5-Step Process</span>
-    </div>
-    <div class="nav-item" onclick="goTo('journal')">
-      <span class="icon">✦</span>
-      <span>Pain → Progress</span>
+      <span class="icon">◎</span> 5-Step Goals
+      <span class="nav-badge" id="badge-goals">0</span>
     </div>
     <div class="nav-item" onclick="goTo('decisions')">
-      <span class="icon">⚖</span>
-      <span>Decision Maker</span>
+      <span class="icon">⊡</span> Decision Maker
     </div>
     <div class="nav-item" onclick="goTo('habits')">
-      <span class="icon">○</span>
-      <span>Daily Habits</span>
+      <span class="icon">◉</span> Daily Habits
     </div>
-    <div class="nav-item" onclick="goTo('myprinciples')">
-      <span class="icon">✎</span>
-      <span>My Principles</span>
-    </div>
-  </div>
-  <div class="sidebar-footer">v1.0 · Principles</div>
-</nav>
 
-<!-- MAIN CONTENT -->
+    <div class="nav-section-label">Personal</div>
+    <div class="nav-item" onclick="goTo('myprinciples')">
+      <span class="icon">✦</span> My Principles
+      <span class="nav-badge" id="badge-mp">0</span>
+    </div>
+    <div class="nav-item" onclick="goTo('bookmarks')">
+      <span class="icon">◇</span> Bookmarks
+      <span class="nav-badge" id="badge-bm">0</span>
+    </div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="sidebar-footer-stats">
+      <div class="sf-stat">
+        <span class="n" id="sf-journal">0</span>
+        <span class="l">Entries</span>
+      </div>
+      <div class="sf-stat">
+        <span class="n" id="sf-streak">0</span>
+        <span class="l">Streak</span>
+      </div>
+      <div class="sf-stat">
+        <span class="n" id="sf-goals">0</span>
+        <span class="l">Goals</span>
+      </div>
+    </div>
+    <div class="sf-copy">Principles App © 2025</div>
+  </div>
+</aside>
+
+<!-- ═══════════════════ MAIN CONTENT ═══════════════════ -->
 <main class="main">
 
-<!-- DASHBOARD -->
+<!-- ══════════ DASHBOARD ══════════ -->
 <div class="page active" id="page-dashboard">
   <div class="page-header">
-    <div class="tag">Daily Overview</div>
-    <h2>Good day — let's be principled.</h2>
-    <p id="dash-date"></p>
+    <div class="page-tag">Command Center</div>
+    <h2 id="dash-greeting">Good Morning</h2>
+    <p id="dash-date" style="font-family:var(--font-mono); font-size:0.72rem; color:var(--text3); margin-top:4px;"></p>
   </div>
 
-  <div class="daily-principle" id="daily-principle-card">
-    <div class="dp-tag">◆ Principle of the Day</div>
-    <div class="dp-text" id="daily-text">Loading...</div>
-    <div class="dp-source" id="daily-source"></div>
-  </div>
-
-  <div class="grid-3" style="margin-bottom:24px">
+  <div class="grid-4" style="margin-bottom:24px">
     <div class="stat-card">
       <div class="num" id="stat-journal">0</div>
-      <div class="lbl">Reflections Logged</div>
-    </div>
-    <div class="stat-card">
-      <div class="num" id="stat-goals">0</div>
-      <div class="lbl">Active Goals</div>
+      <div class="lbl">Journal Entries</div>
+      <div class="trend" id="stat-journal-trend"></div>
     </div>
     <div class="stat-card">
       <div class="num" id="stat-streak">0</div>
       <div class="lbl">Day Streak</div>
+      <div class="trend">Days journaled</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" id="stat-goals">0</div>
+      <div class="lbl">Active Goals</div>
+      <div class="trend" id="stat-goals-trend"></div>
+    </div>
+    <div class="stat-card">
+      <div class="num" id="stat-mp">0</div>
+      <div class="lbl">My Principles</div>
+      <div class="trend" id="stat-mp-trend"></div>
     </div>
   </div>
 
-  <div class="grid-2">
+  <div class="grid-2" style="margin-bottom:20px">
     <div class="card card-gold">
-      <div class="card-meta">Core Formula</div>
-      <h3>Dreams + Reality + Determination</h3>
-      <p style="margin:10px 0; font-size:1rem; font-family:var(--font-serif); color:var(--gold)">"= A Successful Life"</p>
-      <p>People who achieve success deeply understand the cause-effect relationships that govern reality and have principles for using them.</p>
+      <div class="card-meta">◆ Principle of the Day</div>
+      <div id="daily-text" style="font-family:var(--font-serif); font-style:italic; font-size:1rem; color:var(--text); line-height:1.65; margin:10px 0 6px"></div>
+      <div id="daily-source" style="font-family:var(--font-mono); font-size:0.62rem; color:var(--gold); opacity:0.7"></div>
     </div>
     <div class="card">
-      <div class="card-meta">The 5-Step Process</div>
-      <h3>Getting What You Want</h3>
-      <p style="margin-top:10px; line-height:1.8;">
-        <span style="color:var(--gold)">1.</span> Set clear goals<br>
-        <span style="color:var(--gold)">2.</span> Identify problems<br>
-        <span style="color:var(--gold)">3.</span> Diagnose root causes<br>
-        <span style="color:var(--gold)">4.</span> Design a plan<br>
-        <span style="color:var(--gold)">5.</span> Push to completion
-      </p>
-      <button class="btn btn-gold btn-sm" onclick="goTo('fivesteps')" style="margin-top:14px">Open Tracker →</button>
+      <div class="card-meta">◷ Recent Activity</div>
+      <div id="recent-activity" style="margin-top:8px"></div>
     </div>
-  </div>
-
-  <div class="quote-block">
-    "Pain + Reflection = Progress. Go to the pain rather than avoid it."
   </div>
 
   <div class="card">
-    <div class="card-meta">Quick Reflection Prompt</div>
-    <h3>What painful lesson did you encounter today?</h3>
-    <textarea id="quick-reflect" placeholder="Write freely. Radical honesty leads to radical growth..." style="margin-top:12px"></textarea>
-    <button class="btn btn-gold" onclick="saveQuickReflect()" style="margin-top:10px">Log Reflection →</button>
+    <div class="card-meta">Quick Reflection</div>
+    <div style="margin-top:10px">
+      <div class="field">
+        <label>What painful lesson did you encounter today?</label>
+        <textarea id="quick-reflect" placeholder="Write freely. Radical honesty leads to radical growth..." style="min-height:70px"></textarea>
+      </div>
+      <button class="btn btn-gold" onclick="saveQuickReflect()">Log Reflection →</button>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-top:16px">
+    <div class="card" style="cursor:pointer" onclick="goTo('fivesteps')">
+      <div class="card-meta">5-Step Process</div>
+      <div style="font-size:0.84rem; color:var(--text); margin:6px 0 4px">Track your goals through Dalio's framework</div>
+      <div style="font-size:0.75rem; color:var(--text3)">Goals → Problems → Diagnosis → Plan → Execute</div>
+    </div>
+    <div class="card" style="cursor:pointer" onclick="goTo('decisions')">
+      <div class="card-meta">Decision Maker</div>
+      <div style="font-size:0.84rem; color:var(--text); margin:6px 0 4px">Expected value framework for hard choices</div>
+      <div style="font-size:0.75rem; color:var(--text3)">Pros · Cons · Probability · Impact · EV</div>
+    </div>
   </div>
 </div>
 
-<!-- ALL PRINCIPLES -->
-<div class="page" id="page-principles">
+<!-- ══════════ HISTORY / ACTIVITY LOG ══════════ -->
+<div class="page" id="page-history">
   <div class="page-header">
-    <div class="tag">Reference</div>
-    <h2>All Principles</h2>
-    <p>Browse Life & Work Principles. Click any principle to expand the sub-principles.</p>
+    <div class="page-tag">Activity Log</div>
+    <h2>Full History</h2>
+    <p>Complete chronological record of all your journal entries, goals, principles, and decisions.</p>
   </div>
 
-  <div style="display:flex; gap:10px; margin-bottom:28px; flex-wrap:wrap">
-    <button class="btn" onclick="filterPrinciples('all')" id="filter-all" style="border-color:var(--gold);color:var(--gold)">All</button>
-    <button class="btn" onclick="filterPrinciples('life')" id="filter-life">Life Principles</button>
-    <button class="btn" onclick="filterPrinciples('work')" id="filter-work">Work Principles</button>
-    <input type="text" id="search-principles" placeholder="Search principles..." style="flex:1; max-width:280px" oninput="searchPrinciples()" />
+  <div class="filter-tabs" id="history-filters">
+    <button class="filter-tab active" onclick="filterHistory('all', this)">All <span class="filter-count" id="hf-all">0</span></button>
+    <button class="filter-tab" onclick="filterHistory('journal', this)">Journal <span class="filter-count" id="hf-journal">0</span></button>
+    <button class="filter-tab" onclick="filterHistory('goal', this)">Goals <span class="filter-count" id="hf-goal">0</span></button>
+    <button class="filter-tab" onclick="filterHistory('principle', this)">Principles <span class="filter-count" id="hf-principle">0</span></button>
+  </div>
+
+  <div class="search-bar">
+    <span class="search-icon">⌕</span>
+    <input type="text" id="history-search" placeholder="Search all activity..." oninput="renderHistory()">
+  </div>
+
+  <div id="history-list"></div>
+</div>
+
+<!-- ══════════ ALL PRINCIPLES ══════════ -->
+<div class="page" id="page-principles">
+  <div class="page-header">
+    <div class="page-tag">Reference</div>
+    <h2>All Principles</h2>
+    <p>Browse Life & Work Principles. Click to expand sub-principles. Bookmark favorites.</p>
+  </div>
+
+  <div class="filter-tabs">
+    <button class="filter-tab active" onclick="filterPrinciples('all', this)" id="filter-all">All</button>
+    <button class="filter-tab" onclick="filterPrinciples('life', this)" id="filter-life">Life</button>
+    <button class="filter-tab" onclick="filterPrinciples('work', this)" id="filter-work">Work</button>
+    <button class="filter-tab" onclick="filterPrinciples('bookmarked', this)" id="filter-bookmarked">Bookmarked</button>
+  </div>
+
+  <div class="search-bar">
+    <span class="search-icon">⌕</span>
+    <input type="text" id="search-principles" placeholder="Search principles..." oninput="searchPrinciples()">
   </div>
 
   <div id="principles-list"></div>
 </div>
 
-<!-- 5-STEP PROCESS -->
-<div class="page" id="page-fivesteps">
+<!-- ══════════ JOURNAL ══════════ -->
+<div class="page" id="page-journal">
   <div class="page-header">
-    <div class="tag">Goal Tracker</div>
-    <h2>The 5-Step Process</h2>
-    <p>Use the process to get what you want out of life. Create a goal, then work through each step.</p>
+    <div class="page-tag">Pain → Reflection → Progress</div>
+    <h2>Reflection Journal</h2>
+    <p>"The quality of your life will depend on the choices you make at those painful moments." — Ray Dalio</p>
   </div>
 
-  <div class="card" style="margin-bottom:24px">
-    <div class="card-meta">Create New Goal</div>
-    <div class="field" style="margin-top:12px">
+  <div class="card" style="margin-bottom:20px" id="journal-form-card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px">
+      <div class="card-meta" id="journal-form-title">New Entry</div>
+      <button class="btn btn-ghost btn-sm" id="journal-cancel-btn" onclick="cancelJournalEdit()" style="display:none">✕ Cancel</button>
+    </div>
+    <input type="hidden" id="journal-edit-id">
+    <div class="field">
+      <label>Pain / Problem Encountered</label>
+      <input type="text" id="entry-pain" placeholder="What went wrong? Be brutally honest." />
+    </div>
+    <div class="field-row">
+      <div>
+        <label>Root Cause (Why? × 3)</label>
+        <textarea id="entry-root" placeholder="Proximate: ...\nRoot: ..." style="min-height:70px"></textarea>
+      </div>
+      <div>
+        <label>Reflection & Insight</label>
+        <textarea id="entry-reflect" placeholder="What principle does this reveal?" style="min-height:70px"></textarea>
+      </div>
+    </div>
+    <div class="field">
+      <label>Progress / Next Action</label>
+      <input type="text" id="entry-progress" placeholder="Concrete next step or principle to adopt." />
+    </div>
+    <div class="field-row">
+      <div>
+        <label>Tags (comma-separated)</label>
+        <input type="text" id="entry-tags" placeholder="work, decision-making, emotions" />
+      </div>
+      <div>
+        <label>Mood / Intensity (1–10)</label>
+        <input type="number" id="entry-mood" min="1" max="10" placeholder="5" />
+      </div>
+    </div>
+    <div class="btn-group">
+      <button class="btn btn-gold" id="journal-save-btn" onclick="saveJournalEntry()">Save Entry →</button>
+    </div>
+  </div>
+
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; gap:12px; flex-wrap:wrap">
+    <div class="filter-tabs" id="journal-tag-filters" style="margin-bottom:0"></div>
+    <div class="search-bar" style="width:220px; margin-bottom:0">
+      <span class="search-icon">⌕</span>
+      <input type="text" id="journal-search" placeholder="Search entries..." oninput="renderJournal()">
+    </div>
+  </div>
+
+  <div id="journal-entries"></div>
+</div>
+
+<!-- ══════════ 5-STEP GOALS ══════════ -->
+<div class="page" id="page-fivesteps">
+  <div class="page-header">
+    <div class="page-tag">Goal Tracker</div>
+    <h2>The 5-Step Process</h2>
+    <p>Create a goal and work through Dalio's 5-step framework: Goals → Problems → Diagnosis → Design → Execute.</p>
+  </div>
+
+  <div class="card" style="margin-bottom:20px" id="goal-form-card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px">
+      <div class="card-meta" id="goal-form-title">Create New Goal</div>
+      <button class="btn btn-ghost btn-sm" id="goal-cancel-btn" onclick="cancelGoalEdit()" style="display:none">✕ Cancel</button>
+    </div>
+    <input type="hidden" id="goal-edit-id">
+    <div class="field">
       <label>Goal Title</label>
       <input type="text" id="goal-title" placeholder="What do you want to achieve?" />
     </div>
-    <div class="field">
-      <label>Why is this important?</label>
-      <textarea id="goal-why" placeholder="Dig deep. Connect to your core values."></textarea>
+    <div class="field-row">
+      <div>
+        <label>Why is this important?</label>
+        <textarea id="goal-why" placeholder="Connect to your core values." style="min-height:70px"></textarea>
+      </div>
+      <div>
+        <label>Deadline (optional)</label>
+        <input type="date" id="goal-deadline" />
+      </div>
     </div>
-    <button class="btn btn-gold" onclick="createGoal()">Create Goal →</button>
+    <button class="btn btn-gold" id="goal-save-btn" onclick="saveGoal()">Create Goal →</button>
+  </div>
+
+  <div class="filter-tabs" style="margin-bottom:16px">
+    <button class="filter-tab active" onclick="filterGoals('active', this)">Active</button>
+    <button class="filter-tab" onclick="filterGoals('all', this)">All Goals</button>
+    <button class="filter-tab" onclick="filterGoals('done', this)">Completed</button>
   </div>
 
   <div id="goals-container"></div>
 </div>
 
-<!-- JOURNAL -->
-<div class="page" id="page-journal">
-  <div class="page-header">
-    <div class="tag">Pain → Reflection → Progress</div>
-    <h2>Reflection Journal</h2>
-    <p>"The quality of your life will depend on the choices you make at those painful moments." — Ray Dalio</p>
-  </div>
-
-  <div class="card" style="margin-bottom:24px">
-    <div class="card-meta">New Entry</div>
-    <div class="field" style="margin-top:12px">
-      <label>Pain / Problem Encountered</label>
-      <input type="text" id="entry-pain" placeholder="What went wrong? Be brutally honest." />
-    </div>
-    <div class="field">
-      <label>Root Cause (Ask: Why? 3× deep)</label>
-      <textarea id="entry-root" placeholder="Proximate cause: ...\nRoot cause: ..."></textarea>
-    </div>
-    <div class="field">
-      <label>Reflection & Insight</label>
-      <textarea id="entry-reflect" placeholder="What principle does this reveal? What would you do differently?"></textarea>
-    </div>
-    <div class="field">
-      <label>Progress / Action to Take</label>
-      <input type="text" id="entry-progress" placeholder="Concrete next action or principle to adopt." />
-    </div>
-    <div class="field">
-      <label>Tags (comma-separated)</label>
-      <input type="text" id="entry-tags" placeholder="work, relationships, decision-making" />
-    </div>
-    <button class="btn btn-gold" onclick="saveJournalEntry()">Save Entry →</button>
-  </div>
-
-  <div class="divider"></div>
-  <h3 style="font-family:var(--font-mono); font-size:0.75rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--text3); margin-bottom:16px">Previous Entries</h3>
-  <div id="journal-entries"></div>
-</div>
-
-<!-- DECISION MAKER -->
+<!-- ══════════ DECISION MAKER ══════════ -->
 <div class="page" id="page-decisions">
   <div class="page-header">
-    <div class="tag">Decision Tool</div>
+    <div class="page-tag">Decision Tool</div>
     <h2>Make Decisions Effectively</h2>
     <p>"Make your decisions as expected value calculations." — Principle 5.6</p>
   </div>
 
-  <div class="card" style="margin-bottom:24px">
-    <div class="card-meta">Decision to Make</div>
-    <div class="field" style="margin-top:12px">
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-meta">The Decision</div>
+    <div class="field" style="margin-top:10px">
       <label>What is the decision?</label>
       <input type="text" id="dec-title" placeholder="State the decision clearly and specifically." />
     </div>
@@ -793,41 +1308,53 @@ label {
     </div>
   </div>
 
-  <div id="options-container">
-    <div class="grid-2" id="options-grid"></div>
-  </div>
+  <div class="divider-label"><span>Options</span></div>
 
+  <div id="options-grid" style="margin-bottom:12px"></div>
   <button class="btn" onclick="addOption()" style="margin-bottom:20px">+ Add Option</button>
 
-  <div class="card card-gold" id="decision-checklist-card">
-    <div class="card-meta">Dalio's Decision-Making Checklist</div>
-    <div id="dec-checklist" style="margin-top:12px"></div>
+  <div id="dec-result-card" style="display:none; margin-bottom:20px">
+    <div class="divider-label"><span>Recommendation</span></div>
+    <div class="card card-gold">
+      <div class="card-meta">Expected Value Analysis</div>
+      <div id="dec-result" style="margin-top:10px"></div>
+    </div>
   </div>
 
-  <div class="card" style="margin-top:16px" id="dec-result-card" style="display:none">
-    <div class="card-meta">Recommendation</div>
-    <div id="dec-result"></div>
+  <div class="divider-label"><span>Dalio's Checklist</span></div>
+  <div class="card">
+    <div id="dec-checklist"></div>
+    <div class="meter-wrap" style="margin-top:14px">
+      <div class="meter-label"><span>Checklist Progress</span><span id="dec-progress-pct">0%</span></div>
+      <div class="meter"><div class="meter-fill" id="dec-progress-fill" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <div class="btn-group" style="margin-top:16px">
+    <button class="btn btn-gold" onclick="saveDecision()">Save Decision →</button>
+    <button class="btn" onclick="clearDecision()">Clear</button>
   </div>
 </div>
 
-<!-- DAILY HABITS -->
+<!-- ══════════ DAILY HABITS ══════════ -->
 <div class="page" id="page-habits">
   <div class="page-header">
-    <div class="tag">Radical Open-Mindedness</div>
-    <h2>Daily Habits Tracker</h2>
+    <div class="page-tag">Radical Open-Mindedness</div>
+    <h2>Daily Habits</h2>
     <p>Practice these habits daily to internalize Dalio's principles.</p>
   </div>
 
-  <div style="display:flex; gap:10px; align-items:center; margin-bottom:24px; flex-wrap:wrap">
-    <span style="font-family:var(--font-mono); font-size:0.72rem; color:var(--text3)">Today:</span>
+  <div style="display:flex; gap:12px; align-items:center; margin-bottom:20px; flex-wrap:wrap">
     <span id="habits-date" style="font-family:var(--font-mono); font-size:0.72rem; color:var(--gold)"></span>
-    <button class="btn btn-sm" onclick="resetHabits()">Reset</button>
+    <div style="flex:1"></div>
+    <button class="btn btn-sm" onclick="resetHabits()">Reset Today</button>
+    <button class="btn btn-sm" onclick="goTo('history')">View History</button>
   </div>
 
   <div id="habits-list"></div>
 
   <div class="divider"></div>
-  <div class="card" style="margin-top:20px">
+  <div class="card" style="margin-top:16px">
     <div class="card-meta">Today's Score</div>
     <div class="meter-wrap">
       <div class="meter-label">
@@ -842,667 +1369,880 @@ label {
   </div>
 </div>
 
-<!-- MY PRINCIPLES -->
+<!-- ══════════ MY PRINCIPLES ══════════ -->
 <div class="page" id="page-myprinciples">
   <div class="page-header">
-    <div class="tag">Personal Growth</div>
+    <div class="page-tag">Personal Growth</div>
     <h2>My Principles</h2>
-    <p>"Having your own principles" — Discover and write down your own principles, inspired by Dalio.</p>
+    <p>"Think for yourself to decide what you want, what is true, and what you should do to achieve it."</p>
   </div>
 
-  <div class="card" style="margin-bottom:24px">
-    <div class="card-meta">Add New Principle</div>
-    <div class="field" style="margin-top:12px">
+  <div class="card" style="margin-bottom:20px" id="mp-form-card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px">
+      <div class="card-meta" id="mp-form-title">Add New Principle</div>
+      <button class="btn btn-ghost btn-sm" id="mp-cancel-btn" onclick="cancelMpEdit()" style="display:none">✕ Cancel</button>
+    </div>
+    <input type="hidden" id="mp-edit-id">
+    <div class="field">
       <label>Principle Statement</label>
       <input type="text" id="mp-title" placeholder="State it clearly and boldly." />
     </div>
     <div class="field">
-      <label>Why You Believe This (your experience/evidence)</label>
-      <textarea id="mp-desc" placeholder="What events or reflections led you to this principle?"></textarea>
+      <label>Why You Believe This</label>
+      <textarea id="mp-desc" placeholder="What experience or reflection led you here?"></textarea>
     </div>
-    <div class="field">
-      <label>Category</label>
-      <select id="mp-cat">
-        <option value="life">Life</option>
-        <option value="work">Work</option>
-        <option value="relationships">Relationships</option>
-        <option value="finance">Finance/Trading</option>
-        <option value="health">Health</option>
-        <option value="mindset">Mindset</option>
-      </select>
+    <div class="field-row">
+      <div>
+        <label>Category</label>
+        <select id="mp-cat">
+          <option value="life">Life</option>
+          <option value="work">Work</option>
+          <option value="relationships">Relationships</option>
+          <option value="finance">Finance / Trading</option>
+          <option value="health">Health</option>
+          <option value="mindset">Mindset</option>
+        </select>
+      </div>
+      <div>
+        <label>Confidence (1–10)</label>
+        <input type="number" id="mp-confidence" min="1" max="10" placeholder="7" />
+      </div>
     </div>
-    <button class="btn btn-gold" onclick="saveMyPrinciple()">Save Principle →</button>
+    <button class="btn btn-gold" id="mp-save-btn" onclick="saveMyPrinciple()">Save Principle →</button>
+  </div>
+
+  <div class="filter-tabs" id="mp-cat-filters" style="margin-bottom:16px">
+    <button class="filter-tab active" onclick="filterMp('all', this)">All</button>
+    <button class="filter-tab" onclick="filterMp('life', this)">Life</button>
+    <button class="filter-tab" onclick="filterMp('work', this)">Work</button>
+    <button class="filter-tab" onclick="filterMp('relationships', this)">Relationships</button>
+    <button class="filter-tab" onclick="filterMp('finance', this)">Finance</button>
+    <button class="filter-tab" onclick="filterMp('health', this)">Health</button>
+    <button class="filter-tab" onclick="filterMp('mindset', this)">Mindset</button>
   </div>
 
   <div id="my-principles-list"></div>
 </div>
 
+<!-- ══════════ BOOKMARKS ══════════ -->
+<div class="page" id="page-bookmarks">
+  <div class="page-header">
+    <div class="page-tag">Saved</div>
+    <h2>Bookmarks</h2>
+    <p>Principles you've bookmarked for quick reference.</p>
+  </div>
+  <div id="bookmarks-list"></div>
+</div>
+
 </main>
+
+<!-- ══════════ EDIT MODAL — JOURNAL ══════════ -->
+<div class="modal-overlay" id="modal-journal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Edit Journal Entry</h3>
+      <button class="btn btn-ghost btn-icon" onclick="closeModal('modal-journal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Pain / Problem</label>
+        <input type="text" id="modal-pain" />
+      </div>
+      <div class="field">
+        <label>Root Cause</label>
+        <textarea id="modal-root"></textarea>
+      </div>
+      <div class="field">
+        <label>Reflection & Insight</label>
+        <textarea id="modal-reflect"></textarea>
+      </div>
+      <div class="field">
+        <label>Progress / Next Action</label>
+        <input type="text" id="modal-progress" />
+      </div>
+      <div class="field-row">
+        <div>
+          <label>Tags</label>
+          <input type="text" id="modal-tags" />
+        </div>
+        <div>
+          <label>Mood (1–10)</label>
+          <input type="number" id="modal-mood" min="1" max="10" />
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-journal')">Cancel</button>
+      <button class="btn btn-gold" onclick="updateJournalEntry()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ EDIT MODAL — MY PRINCIPLE ══════════ -->
+<div class="modal-overlay" id="modal-mp">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Edit Principle</h3>
+      <button class="btn btn-ghost btn-icon" onclick="closeModal('modal-mp')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Principle Statement</label>
+        <input type="text" id="modal-mp-title" />
+      </div>
+      <div class="field">
+        <label>Why You Believe This</label>
+        <textarea id="modal-mp-desc"></textarea>
+      </div>
+      <div class="field-row">
+        <div>
+          <label>Category</label>
+          <select id="modal-mp-cat">
+            <option value="life">Life</option>
+            <option value="work">Work</option>
+            <option value="relationships">Relationships</option>
+            <option value="finance">Finance / Trading</option>
+            <option value="health">Health</option>
+            <option value="mindset">Mindset</option>
+          </select>
+        </div>
+        <div>
+          <label>Confidence (1–10)</label>
+          <input type="number" id="modal-mp-confidence" min="1" max="10" />
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-mp')">Cancel</button>
+      <button class="btn btn-gold" onclick="updateMyPrinciple()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ EDIT MODAL — GOAL ══════════ -->
+<div class="modal-overlay" id="modal-goal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Edit Goal</h3>
+      <button class="btn btn-ghost btn-icon" onclick="closeModal('modal-goal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Goal Title</label>
+        <input type="text" id="modal-goal-title" />
+      </div>
+      <div class="field">
+        <label>Why is this important?</label>
+        <textarea id="modal-goal-why"></textarea>
+      </div>
+      <div class="field">
+        <label>Deadline</label>
+        <input type="date" id="modal-goal-deadline" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-goal')">Cancel</button>
+      <button class="btn btn-gold" onclick="updateGoal()">Save Changes</button>
+    </div>
+  </div>
+</div>
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <script>
-// ============================================================
-// DATA
-// ============================================================
+// ═══════════════════════════════════════════════════════════════
+// DATA — PRINCIPLES
+// ═══════════════════════════════════════════════════════════════
 const LIFE_PRINCIPLES = [
-  {
-    id: '1', num: '1', type: 'life',
-    title: 'Embrace Reality and Deal with It',
-    subs: [
-      { letter: '1.1', text: 'Be a hyperrealist.', detail: 'Dreams + Reality + Determination = A Successful Life. People who create great things are totally grounded in reality.' },
-      { letter: '1.2', text: 'Truth is the essential foundation for any good outcome.', detail: 'Most people fight seeing what\'s true when it\'s not what they want it to be. That\'s bad — deal with the bad stuff first.' },
-      { letter: '1.3', text: 'Be radically open-minded and radically transparent.', detail: 'Radical open-mindedness and transparency are invaluable for rapid learning and effective change.' },
-      { letter: '1.4', text: 'Look to nature to learn how reality works.', detail: 'Don\'t get hung up on how things "should" be. Evolution is the single greatest force in the universe.' },
-      { letter: '1.5', text: 'Evolving is life\'s greatest accomplishment and its greatest reward.', detail: 'Adapt through rapid trial and error. Reality is optimizing for the whole—not for you.' },
-      { letter: '1.6', text: 'Understand nature\'s practical lessons.', detail: 'It is a fundamental law of nature that in order to gain strength one has to push one\'s limits, which is painful.' },
-      { letter: '1.7', text: 'Pain + Reflection = Progress.', detail: 'Go to the pain rather than avoid it. Embrace tough love.' },
-      { letter: '1.8', text: 'Weigh second- and third-order consequences.', detail: 'Avoid choices that feel good in the short-term but have terrible long-term consequences.' },
-      { letter: '1.9', text: 'Own your outcomes.', detail: 'Take personal responsibility. Blaming others prevents learning.' },
-      { letter: '1.10', text: 'Look at the machine from the higher level.', detail: 'Think of yourself as a machine operating within a machine. Distinguish between you as designer and you as worker.' }
+  { id:'1', num:'1', type:'life', title:'Embrace Reality and Deal with It',
+    subs:[
+      {letter:'1.1',text:'Be a hyperrealist.',detail:'Dreams + Reality + Determination = A Successful Life. People who create great things are totally grounded in reality.'},
+      {letter:'1.2',text:'Truth is the essential foundation for any good outcome.',detail:'Most people fight seeing what\'s true when it\'s not what they want it to be. Deal with the bad stuff first.'},
+      {letter:'1.3',text:'Be radically open-minded and radically transparent.',detail:'Radical open-mindedness and transparency are invaluable for rapid learning and effective change.'},
+      {letter:'1.4',text:'Look to nature to learn how reality works.',detail:'Don\'t get hung up on how things "should" be. Evolution is the single greatest force in the universe.'},
+      {letter:'1.5',text:'Evolving is life\'s greatest accomplishment and its greatest reward.',detail:'Adapt through rapid trial and error. Reality is optimizing for the whole—not for you.'},
+      {letter:'1.6',text:'Understand nature\'s practical lessons.',detail:'In order to gain strength one has to push one\'s limits, which is painful. This is fundamental law.'},
+      {letter:'1.7',text:'Pain + Reflection = Progress.',detail:'Go to the pain rather than avoid it. Embrace tough love.'},
+      {letter:'1.8',text:'Weigh second- and third-order consequences.',detail:'Avoid choices that feel good in the short-term but have terrible long-term consequences.'},
+      {letter:'1.9',text:'Own your outcomes.',detail:'Take personal responsibility. Blaming others prevents learning.'},
+      {letter:'1.10',text:'Look at the machine from the higher level.',detail:'Think of yourself as a machine operating within a machine. Distinguish between you as designer and you as worker.'},
     ]
   },
-  {
-    id: '2', num: '2', type: 'life',
-    title: 'Use the 5-Step Process to Get What You Want',
-    subs: [
-      { letter: '2.1', text: 'Have clear goals.', detail: 'Prioritize. While you can have virtually anything you want, you can\'t have everything. Never rule out a goal because you think it\'s unattainable.' },
-      { letter: '2.2', text: 'Identify and don\'t tolerate problems.', detail: 'View painful problems as potential improvements screaming at you. Be specific. Don\'t mistake a cause for the real problem.' },
-      { letter: '2.3', text: 'Diagnose problems to get at their root causes.', detail: 'Focus on "what is" before "what to do about it." Distinguish proximate from root causes.' },
-      { letter: '2.4', text: 'Design a plan.', detail: 'Think about your problem as a set of outcomes produced by a machine. Write your plan down for everyone to see.' },
-      { letter: '2.5', text: 'Push through to completion.', detail: 'Great planners who don\'t execute go nowhere. Good work habits are vastly underrated. Establish clear metrics.' },
-      { letter: '2.6', text: 'Remember that weaknesses don\'t matter if you find solutions.', detail: 'Look at the patterns of your mistakes and identify at which step you typically fail.' },
-      { letter: '2.7', text: 'Understand your own and others\' mental maps and humility.', detail: 'Know your limits and leverage others\' strengths.' }
+  { id:'2', num:'2', type:'life', title:'Use the 5-Step Process to Get What You Want',
+    subs:[
+      {letter:'2.1',text:'Have clear goals.',detail:'Prioritize. While you can have virtually anything you want, you can\'t have everything. Never rule out a goal because you think it\'s unattainable.'},
+      {letter:'2.2',text:'Identify and don\'t tolerate problems.',detail:'View painful problems as potential improvements screaming at you. Be specific. Don\'t mistake a cause for the real problem.'},
+      {letter:'2.3',text:'Diagnose problems to get at their root causes.',detail:'Focus on "what is" before "what to do about it." Distinguish proximate from root causes.'},
+      {letter:'2.4',text:'Design a plan.',detail:'Think about your problem as a set of outcomes produced by a machine. Write your plan down for everyone to see.'},
+      {letter:'2.5',text:'Push through to completion.',detail:'Great planners who don\'t execute go nowhere. Good work habits are vastly underrated. Establish clear metrics.'},
+      {letter:'2.6',text:'Remember that weaknesses don\'t matter if you find solutions.',detail:'Look at the patterns of your mistakes and identify at which step you typically fail.'},
+      {letter:'2.7',text:'Understand your own and others\' mental maps and humility.',detail:'Know your limits and leverage others\' strengths.'},
     ]
   },
-  {
-    id: '3', num: '3', type: 'life',
-    title: 'Be Radically Open-Minded',
-    subs: [
-      { letter: '3.1', text: 'Recognize your two barriers.', detail: 'Your ego barrier makes it hard to accept being wrong. Your blind spot barrier means you can\'t see what you can\'t see.' },
-      { letter: '3.2', text: 'Practice radical open-mindedness.', detail: 'Sincerely believe you might not know the best path. Don\'t worry about looking good — worry about achieving your goal.' },
-      { letter: '3.3', text: 'Appreciate the art of thoughtful disagreement.', detail: 'When two people disagree, you must explore why. The goal is not to win but to find the truth.' },
-      { letter: '3.4', text: 'Triangulate your view with believable people who disagree.', detail: 'Plan for the worst-case scenario to make it as good as possible.' },
-      { letter: '3.5', text: 'Recognize signs of closed- vs. open-mindedness.', detail: 'Closed: more interested in being right than learning. Open: more interested in finding truth than defending position.' },
-      { letter: '3.6', text: 'Understand how you can become radically open-minded.', detail: 'Use pain as guide. Meditate. Be evidence-based. Get to know your blind spots.' }
+  { id:'3', num:'3', type:'life', title:'Be Radically Open-Minded',
+    subs:[
+      {letter:'3.1',text:'Recognize your two barriers.',detail:'Your ego barrier makes it hard to accept being wrong. Your blind spot barrier means you can\'t see what you can\'t see.'},
+      {letter:'3.2',text:'Practice radical open-mindedness.',detail:'Sincerely believe you might not know the best path. Don\'t worry about looking good — worry about achieving your goal.'},
+      {letter:'3.3',text:'Appreciate the art of thoughtful disagreement.',detail:'When two people disagree, explore why. The goal is not to win but to find the truth.'},
+      {letter:'3.4',text:'Triangulate your view with believable people who disagree.',detail:'Plan for the worst-case scenario to make it as good as possible.'},
+      {letter:'3.5',text:'Recognize signs of closed- vs. open-mindedness.',detail:'Closed: more interested in being right than learning. Open: more interested in finding truth than defending position.'},
+      {letter:'3.6',text:'Understand how you can become radically open-minded.',detail:'Use pain as guide. Meditate. Be evidence-based. Get to know your blind spots.'},
     ]
   },
-  {
-    id: '4', num: '4', type: 'life',
-    title: 'Understand That People Are Wired Very Differently',
-    subs: [
-      { letter: '4.1', text: 'Understand the power of knowing how you and others are wired.', detail: 'We are born with attributes that can help or hurt us, depending on their application.' },
-      { letter: '4.2', text: 'Meaningful work and relationships aren\'t just nice — they\'re genetically programmed.', detail: 'These needs are deep and fundamental. Align your work with your nature.' },
-      { letter: '4.3', text: 'Understand the great brain battles — feeling vs. thinking.', detail: 'Reconcile your feelings and thinking. Choose your habits well. Train your lower-level self.' },
-      { letter: '4.4', text: 'Find out what you and others are like.', detail: 'Introvert/extrovert. Intuiting/sensing. Thinking/feeling. Planning/perceiving. Know your type.' },
-      { letter: '4.5', text: 'Getting the right people in the right roles is the key to success.', detail: 'Manage yourself and orchestrate others to get what you want.' }
+  { id:'4', num:'4', type:'life', title:'Understand That People Are Wired Very Differently',
+    subs:[
+      {letter:'4.1',text:'Understand the power of knowing how you and others are wired.',detail:'We are born with attributes that can help or hurt us, depending on their application.'},
+      {letter:'4.2',text:'Meaningful work and relationships are genetically programmed needs.',detail:'These needs are deep and fundamental. Align your work with your nature.'},
+      {letter:'4.3',text:'Understand the great brain battles — feeling vs. thinking.',detail:'Reconcile your feelings and thinking. Choose your habits well. Train your lower-level self.'},
+      {letter:'4.4',text:'Find out what you and others are like.',detail:'Introvert/extrovert. Intuiting/sensing. Thinking/feeling. Planning/perceiving. Know your type.'},
+      {letter:'4.5',text:'Getting the right people in the right roles is the key to success.',detail:'Manage yourself and orchestrate others to get what you want.'},
     ]
   },
-  {
-    id: '5', num: '5', type: 'life',
-    title: 'Learn How to Make Decisions Effectively',
-    subs: [
-      { letter: '5.1', text: 'Recognize that the biggest threat to good decisions is harmful emotions.', detail: 'Decision making is a two-step process: first learning, then deciding. Don\'t reverse them.' },
-      { letter: '5.2', text: 'Synthesize the situation at hand.', detail: 'New is overvalued relative to great. Everything looks bigger up close. Use the 80/20 Rule.' },
-      { letter: '5.3', text: 'Synthesize the situation through time.', detail: 'Keep in mind both the rates of change and the levels. Be imprecise. Be an imperfectionist.' },
-      { letter: '5.5', text: 'Logic, reason, and common sense are your best tools.', detail: 'Don\'t let emotions or unverified opinions drive decisions. Synthesize reality accurately.' },
-      { letter: '5.6', text: 'Make your decisions as expected value calculations.', detail: 'The best choices have more pros than cons, not zero cons. Raise the probability of being right.' },
-      { letter: '5.7', text: 'Prioritize by weighing info value against cost of not deciding.', detail: 'All must-dos must be above the bar before like-to-dos. Don\'t mistake possibilities for probabilities.' },
-      { letter: '5.8', text: 'Simplify!', detail: 'If you can\'t explain it simply, you don\'t understand it well enough.' },
-      { letter: '5.9', text: 'Use principles.', detail: 'Classify situations into types and apply the right principle to get better decisions faster.' },
-      { letter: '5.10', text: 'Believability-weight your decision making.', detail: 'Weight opinions by the track record of the person giving them, not by their enthusiasm.' }
+  { id:'5', num:'5', type:'life', title:'Learn How to Make Decisions Effectively',
+    subs:[
+      {letter:'5.1',text:'Recognize that the biggest threat to good decisions is harmful emotions.',detail:'Decision making is a two-step process: first learning, then deciding. Don\'t reverse them.'},
+      {letter:'5.2',text:'Synthesize the situation at hand.',detail:'New is overvalued relative to great. Everything looks bigger up close. Use the 80/20 Rule.'},
+      {letter:'5.3',text:'Synthesize the situation through time.',detail:'Keep in mind both the rates of change and the levels. Be imprecise. Be an imperfectionist.'},
+      {letter:'5.5',text:'Logic, reason, and common sense are your best tools.',detail:'Don\'t let emotions or unverified opinions drive decisions. Synthesize reality accurately.'},
+      {letter:'5.6',text:'Make your decisions as expected value calculations.',detail:'The best choices have more pros than cons, not zero cons. Raise the probability of being right.'},
+      {letter:'5.7',text:'Prioritize by weighing info value against cost of not deciding.',detail:'All must-dos must be above the bar before like-to-dos. Don\'t mistake possibilities for probabilities.'},
+      {letter:'5.8',text:'Simplify!',detail:'If you can\'t explain it simply, you don\'t understand it well enough.'},
+      {letter:'5.9',text:'Use principles.',detail:'Classify situations into types and apply the right principle to get better decisions faster.'},
+      {letter:'5.10',text:'Believability-weight your decision making.',detail:'Weight opinions by the track record of the person giving them, not by their enthusiasm.'},
     ]
-  }
+  },
 ];
 
 const WORK_PRINCIPLES = [
-  {
-    id: 'w1', num: '1', type: 'work',
-    title: 'Trust in Radical Truth and Radical Transparency',
-    subs: [
-      { letter: '1.1', text: 'Realize you have nothing to fear from knowing the truth.', detail: 'Truth — even painful — is always better than comfortable illusion for producing good outcomes.' },
-      { letter: '1.2', text: 'Have integrity and demand it from others.', detail: 'Never say anything about someone you wouldn\'t say to them directly.' },
-      { letter: '1.3', text: 'Create an environment where everyone can speak up.', detail: '"Speak up, own it, or get out." Be extremely open. Don\'t be naive about dishonesty.' },
-      { letter: '1.4', text: 'Be radically transparent.', detail: 'Use transparency to enforce justice. Share the things hardest to share.' }
+  { id:'w1', num:'1', type:'work', title:'Trust in Radical Truth and Radical Transparency',
+    subs:[
+      {letter:'1.1',text:'Realize you have nothing to fear from knowing the truth.',detail:'Truth — even painful — is always better than comfortable illusion for producing good outcomes.'},
+      {letter:'1.2',text:'Have integrity and demand it from others.',detail:'Never say anything about someone you wouldn\'t say to them directly.'},
+      {letter:'1.3',text:'Create an environment where everyone can speak up.',detail:'"Speak up, own it, or get out." Be extremely open. Don\'t be naive about dishonesty.'},
+      {letter:'1.4',text:'Be radically transparent.',detail:'Use transparency to enforce justice. Share the things hardest to share.'},
     ]
   },
-  {
-    id: 'w2', num: '2', type: 'work',
-    title: 'Cultivate Meaningful Work and Relationships',
-    subs: [
-      { letter: '2.1', text: 'Be loyal to the common mission, not to individuals.', detail: 'If someone isn\'t operating consistently with the mission, loyalty to them is misplaced.' },
-      { letter: '2.2', text: 'Be crystal clear on what the deal is.', detail: 'Make sure people understand fairness vs. generosity. Know where the line is.' },
-      { letter: '2.5', text: 'Treasure honorable people who treat you well even when you\'re not looking.', detail: 'Character is revealed in private moments. Value these people above all.' }
+  { id:'w2', num:'2', type:'work', title:'Cultivate Meaningful Work and Relationships',
+    subs:[
+      {letter:'2.1',text:'Be loyal to the common mission, not to individuals.',detail:'If someone isn\'t operating consistently with the mission, loyalty to them is misplaced.'},
+      {letter:'2.2',text:'Be crystal clear on what the deal is.',detail:'Make sure people understand fairness vs. generosity. Know where the line is.'},
+      {letter:'2.5',text:'Treasure honorable people who treat you well even when you\'re not looking.',detail:'Character is revealed in private moments. Value these people above all.'},
     ]
   },
-  {
-    id: 'w3', num: '3', type: 'work',
-    title: 'Create a Culture Where Mistakes are OK, Not Learning is Not',
-    subs: [
-      { letter: '3.1', text: 'Recognize that mistakes are a natural part of evolution.', detail: 'Fail well. Don\'t feel bad about mistakes — love them as learning opportunities.' },
-      { letter: '3.2', text: 'Don\'t worry about looking good — worry about achieving your goals.', detail: 'Get over blame and credit. Get on with accurate and inaccurate.' },
-      { letter: '3.3', text: 'Observe patterns of mistakes to see if they stem from weaknesses.', detail: 'Patterns reveal character. Address the source, not just the symptom.' },
-      { letter: '3.4', text: 'Remember to reflect when you experience pain.', detail: 'Be self-reflective. Nobody can see themselves objectively without help.' }
+  { id:'w3', num:'3', type:'work', title:'Create a Culture Where Mistakes are OK, Not Learning is Not',
+    subs:[
+      {letter:'3.1',text:'Recognize that mistakes are a natural part of evolution.',detail:'Fail well. Don\'t feel bad about mistakes — love them as learning opportunities.'},
+      {letter:'3.2',text:'Don\'t worry about looking good — worry about achieving your goals.',detail:'Get over blame and credit. Get on with accurate and inaccurate.'},
+      {letter:'3.3',text:'Observe patterns of mistakes to see if they stem from weaknesses.',detail:'Patterns reveal character. Address the source, not just the symptom.'},
+      {letter:'3.4',text:'Remember to reflect when you experience pain.',detail:'Be self-reflective. Nobody can see themselves objectively without help.'},
     ]
   },
-  {
-    id: 'w4', num: '4', type: 'work',
-    title: 'Get and Stay in Sync',
-    subs: [
-      { letter: '4.1', text: 'Conflicts are essential for great relationships.', detail: 'Spend lavishly on time devoted to getting in sync — it\'s the best investment you can make.' },
-      { letter: '4.2', text: 'Know how to get in sync and disagree well.', detail: 'Surface areas of possible out-of-syncness. Remember every story has another side.' },
-      { letter: '4.4', text: 'If it\'s your meeting to run, manage the conversation.', detail: 'Be clear who\'s directing. Enforce logic. Avoid topic slip. Use the 2-minute rule.' },
-      { letter: '4.5', text: 'Great collaboration feels like playing jazz.', detail: '1+1=3. 3 to 5 is more than 20.' }
+  { id:'w4', num:'4', type:'work', title:'Get and Stay in Sync',
+    subs:[
+      {letter:'4.1',text:'Conflicts are essential for great relationships.',detail:'Spend lavishly on time devoted to getting in sync — it\'s the best investment you can make.'},
+      {letter:'4.2',text:'Know how to get in sync and disagree well.',detail:'Surface areas of possible out-of-syncness. Remember every story has another side.'},
+      {letter:'4.4',text:'If it\'s your meeting to run, manage the conversation.',detail:'Be clear who\'s directing. Enforce logic. Avoid topic slip. Use the 2-minute rule.'},
+      {letter:'4.5',text:'Great collaboration feels like playing jazz.',detail:'1+1=3. 3 to 5 is more than 20.'},
     ]
   },
-  {
-    id: 'w5', num: '5', type: 'work',
-    title: 'Believability-Weight Your Decision Making',
-    subs: [
-      { letter: '5.1', text: 'Understand the merit of each person\'s ideas.', detail: 'If you can\'t successfully do something, don\'t think you can tell others how it should be done.' },
-      { letter: '5.2', text: 'Find the most believable people who disagree and understand their reasoning.', detail: 'Believable opinions come from people who\'ve successfully done it at least 3 times.' },
-      { letter: '5.5', text: 'Disagreeing must be done efficiently.', detail: 'Know when to stop debating and move on. Use believability weighting as a tool, not a substitute.' }
+  { id:'w5', num:'5', type:'work', title:'Believability-Weight Your Decision Making',
+    subs:[
+      {letter:'5.1',text:'Understand the merit of each person\'s ideas.',detail:'If you can\'t successfully do something, don\'t think you can tell others how it should be done.'},
+      {letter:'5.2',text:'Find the most believable people who disagree and understand their reasoning.',detail:'Believable opinions come from people who\'ve successfully done it at least 3 times.'},
+      {letter:'5.5',text:'Disagreeing must be done efficiently.',detail:'Know when to stop debating and move on. Use believability weighting as a tool, not a substitute.'},
     ]
   },
-  {
-    id: 'w6', num: '6', type: 'work',
-    title: 'Recognize How to Get Beyond Disagreements',
-    subs: [
-      { letter: '6.1', text: 'Principles can\'t be ignored by mutual agreement.', detail: 'The same standards of behavior apply to everyone. Rules are rules.' },
-      { letter: '6.3', text: 'Don\'t leave important conflicts unresolved.', detail: 'Don\'t get stuck — escalate or vote! Don\'t let small things divide you when agreement on big things should bind you.' },
-      { letter: '6.4', text: 'Once a decision is made, everyone should get behind it.', detail: 'Even if you disagree. See things from the higher level. Never allow meritocracy to slip into anarchy.' }
+  { id:'w6', num:'6', type:'work', title:'Recognize How to Get Beyond Disagreements',
+    subs:[
+      {letter:'6.1',text:'Principles can\'t be ignored by mutual agreement.',detail:'The same standards of behavior apply to everyone. Rules are rules.'},
+      {letter:'6.3',text:'Don\'t leave important conflicts unresolved.',detail:'Don\'t get stuck — escalate or vote! Don\'t let small things divide you.'},
+      {letter:'6.4',text:'Once a decision is made, everyone should get behind it.',detail:'Even if you disagree. See things from the higher level. Never allow meritocracy to slip into anarchy.'},
     ]
-  }
+  },
 ];
 
 const ALL_PRINCIPLES = [...LIFE_PRINCIPLES, ...WORK_PRINCIPLES];
 
 const DAILY_QUOTES = [
-  { text: "Dreams + Reality + Determination = A Successful Life.", source: "Life Principle 1.1" },
-  { text: "Pain + Reflection = Progress. Go to the pain rather than avoid it.", source: "Life Principle 1.7" },
-  { text: "Truth — or more precisely, an accurate understanding of reality — is the essential foundation for any good outcome.", source: "Life Principle 1.2" },
-  { text: "Evolving is life's greatest accomplishment and its greatest reward.", source: "Life Principle 1.5" },
-  { text: "Radical open-mindedness and radical transparency are invaluable for rapid learning and effective change.", source: "Life Principle 1.3" },
-  { text: "The biggest mistake most people make is to not see themselves and others objectively.", source: "Life Principle 1.10" },
-  { text: "Make believability-weighted decisions. Weight people's opinions by their track record.", source: "Work Principle 5.2" },
-  { text: "If you are open-minded enough and determined, you can get virtually anything you want.", source: "Life Principle 1.10h" },
-  { text: "Knowing how to deal well with your setbacks is as important as knowing how to move forward.", source: "Life Principle 2.1h" },
-  { text: "Almost nothing can stop you from succeeding if you have a) flexibility and b) self-accountability.", source: "Life Principle 2.1g" },
-  { text: "Don't worry about looking good — worry about achieving your goals.", source: "Work Principle 3.2" },
-  { text: "Fail well. Don't feel bad about your mistakes or those of others. Love them!", source: "Work Principle 3.1" },
-  { text: "The most constant struggle is between feeling and thinking. Reconcile them.", source: "Life Principle 4.3b" },
-  { text: "Be clear on whether you are arguing or seeking to understand.", source: "Life Principle 3.2g" },
-  { text: "Simplify! If you can't explain it simply, you don't understand it well enough.", source: "Life Principle 5.8" },
-  { text: "Great planners who don't execute their plans go nowhere.", source: "Life Principle 2.5a" },
-  { text: "Every story has another side. Remember that.", source: "Work Principle 4.2c" },
-  { text: "Meaningful relationships and meaningful work are mutually reinforcing.", source: "Work Principle 1.5" },
-  { text: "Evolve or die. This cycle applies to people, companies, and economies.", source: "Life Principle 1.4d" },
-  { text: "To be principled means to consistently operate with principles that can be clearly explained.", source: "Introduction" },
+  {text:"Dreams + Reality + Determination = A Successful Life.",source:"Life Principle 1.1"},
+  {text:"Pain + Reflection = Progress. Go to the pain rather than avoid it.",source:"Life Principle 1.7"},
+  {text:"Truth — or more precisely, an accurate understanding of reality — is the essential foundation for any good outcome.",source:"Life Principle 1.2"},
+  {text:"Evolving is life's greatest accomplishment and its greatest reward.",source:"Life Principle 1.5"},
+  {text:"Radical open-mindedness and radical transparency are invaluable for rapid learning and effective change.",source:"Life Principle 1.3"},
+  {text:"The biggest mistake most people make is to not see themselves and others objectively.",source:"Life Principle 1.10"},
+  {text:"Make believability-weighted decisions. Weight people's opinions by their track record.",source:"Work Principle 5.2"},
+  {text:"If you are open-minded enough and determined, you can get virtually anything you want.",source:"Life Principle 1.10h"},
+  {text:"Don't worry about looking good — worry about achieving your goals.",source:"Work Principle 3.2"},
+  {text:"Fail well. Don't feel bad about your mistakes or those of others. Love them!",source:"Work Principle 3.1"},
+  {text:"The most constant struggle is between feeling and thinking. Reconcile them.",source:"Life Principle 4.3b"},
+  {text:"Simplify! If you can't explain it simply, you don't understand it well enough.",source:"Life Principle 5.8"},
+  {text:"Great planners who don't execute their plans go nowhere.",source:"Life Principle 2.5a"},
+  {text:"Every story has another side. Remember that.",source:"Work Principle 4.2c"},
+  {text:"To be principled means to consistently operate with principles that can be clearly explained.",source:"Introduction"},
+  {text:"Almost nothing can stop you from succeeding if you have a) flexibility and b) self-accountability.",source:"Life Principle 2.1g"},
+  {text:"Knowing how to deal well with your setbacks is as important as knowing how to move forward.",source:"Life Principle 2.1h"},
 ];
 
 const DECISION_CHECKLIST_ITEMS = [
-  "Are my emotions influencing this decision? (identify them first)",
-  "Have I looked at this from multiple levels — both detail and big picture?",
-  "Have I consulted at least one believable person who disagrees with my current thinking?",
-  "Am I considering both the proximate AND root causes of the situation?",
-  "Have I weighed the second- and third-order consequences of each option?",
-  "Is this a decision I can reverse? Or is it irreversible (requires more caution)?",
-  "Am I prioritizing by expected value, not just probability of success?",
+  "Are my emotions influencing this decision?",
+  "Have I looked at this from multiple levels — detail and big picture?",
+  "Have I consulted a believable person who disagrees with me?",
+  "Am I considering both proximate AND root causes?",
+  "Have I weighed the second- and third-order consequences?",
+  "Is this decision reversible? (if not, require more caution)",
+  "Am I prioritizing by expected value, not just probability?",
   "Have I simplified the decision to its core trade-off?",
   "Am I deciding based on principles I can articulate clearly?",
-  "Would I be comfortable if everyone could see exactly what I'm doing and why?"
+  "Would I be comfortable if everyone could see exactly what I'm doing and why?",
 ];
 
 const HABITS = [
-  { id: 'h1', text: 'Practiced radical open-mindedness today', detail: 'Genuinely considered a view opposing your own' },
-  { id: 'h2', text: 'Spoke truth even when uncomfortable', detail: 'Said what you actually think, not what\'s easy' },
-  { id: 'h3', text: 'Reflected on a painful moment', detail: 'Applied Pain + Reflection = Progress' },
-  { id: 'h4', text: 'Made a decision based on expected value', detail: 'Weighed pros, cons, and probabilities consciously' },
-  { id: 'h5', text: 'Separated emotion from analysis', detail: 'Waited for emotional state to calm before deciding' },
-  { id: 'h6', text: 'Asked "what is true?" before "what to do?"', detail: 'Diagnosed before prescribing' },
-  { id: 'h7', text: 'Sought feedback from a believable person', detail: 'Someone with relevant track record, not just agreement' },
-  { id: 'h8', text: 'Owned a mistake without blame', detail: 'Full accountability, no excuses' },
+  {id:'h1',text:'Practiced radical open-mindedness',detail:'Genuinely considered a view opposing your own'},
+  {id:'h2',text:'Spoke truth even when uncomfortable',detail:'Said what you actually think, not what\'s easy'},
+  {id:'h3',text:'Reflected on a painful moment',detail:'Applied Pain + Reflection = Progress'},
+  {id:'h4',text:'Made a decision based on expected value',detail:'Weighed pros, cons, and probabilities consciously'},
+  {id:'h5',text:'Separated emotion from analysis',detail:'Waited for emotional state to calm before deciding'},
+  {id:'h6',text:'Asked "what is true?" before "what to do?"',detail:'Diagnosed before prescribing'},
+  {id:'h7',text:'Sought feedback from a believable person',detail:'Someone with relevant track record, not just agreement'},
+  {id:'h8',text:'Owned a mistake without blame',detail:'Full accountability, no excuses'},
 ];
 
-// ============================================================
-// STATE & STORAGE
-// ============================================================
+// ═══════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════
 let db;
-let currentFilter = 'all';
+let currentPrincipleFilter = 'all';
+let currentGoalFilter = 'active';
+let currentMpFilter = 'all';
+let currentHistoryFilter = 'all';
 let habitState = {};
 let decisionOptions = [];
+let bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
+let editingModalId = null;
 
+// ═══════════════════════════════════════════════════════════════
+// INDEXEDDB
+// ═══════════════════════════════════════════════════════════════
 function openDB() {
   return new Promise((res, rej) => {
-    const req = indexedDB.open('PrinciplesApp', 1);
+    const req = indexedDB.open('PrinciplesAppV2', 2);
     req.onupgradeneeded = e => {
       const d = e.target.result;
-      if (!d.objectStoreNames.contains('journal')) d.createObjectStore('journal', { keyPath: 'id', autoIncrement: true });
-      if (!d.objectStoreNames.contains('goals')) d.createObjectStore('goals', { keyPath: 'id', autoIncrement: true });
-      if (!d.objectStoreNames.contains('myprinciples')) d.createObjectStore('myprinciples', { keyPath: 'id', autoIncrement: true });
-      if (!d.objectStoreNames.contains('settings')) d.createObjectStore('settings', { keyPath: 'key' });
+      if (!d.objectStoreNames.contains('journal')) d.createObjectStore('journal', {keyPath:'id', autoIncrement:true});
+      if (!d.objectStoreNames.contains('goals')) d.createObjectStore('goals', {keyPath:'id', autoIncrement:true});
+      if (!d.objectStoreNames.contains('myprinciples')) d.createObjectStore('myprinciples', {keyPath:'id', autoIncrement:true});
+      if (!d.objectStoreNames.contains('decisions')) d.createObjectStore('decisions', {keyPath:'id', autoIncrement:true});
+      if (!d.objectStoreNames.contains('settings')) d.createObjectStore('settings', {keyPath:'key'});
     };
     req.onsuccess = e => { db = e.target.result; res(db); };
     req.onerror = () => rej(req.error);
   });
 }
+const dbGet = (s,k) => new Promise((r,j)=>{const t=db.transaction(s,'readonly');const q=t.objectStore(s).get(k);q.onsuccess=()=>r(q.result);q.onerror=()=>j(q.error);});
+const dbGetAll = s => new Promise((r,j)=>{const t=db.transaction(s,'readonly');const q=t.objectStore(s).getAll();q.onsuccess=()=>r(q.result);q.onerror=()=>j(q.error);});
+const dbAdd = (s,v) => new Promise((r,j)=>{const t=db.transaction(s,'readwrite');const q=t.objectStore(s).add(v);q.onsuccess=()=>r(q.result);q.onerror=()=>j(q.error);});
+const dbPut = (s,v) => new Promise((r,j)=>{const t=db.transaction(s,'readwrite');const q=t.objectStore(s).put(v);q.onsuccess=()=>r(q.result);q.onerror=()=>j(q.error);});
+const dbDelete = (s,k) => new Promise((r,j)=>{const t=db.transaction(s,'readwrite');const q=t.objectStore(s).delete(k);q.onsuccess=()=>r();q.onerror=()=>j(q.error);});
 
-function dbGet(store, key) {
-  return new Promise((res, rej) => {
-    const tx = db.transaction(store, 'readonly');
-    const req = tx.objectStore(store).get(key);
-    req.onsuccess = () => res(req.result);
-    req.onerror = () => rej(req.error);
-  });
-}
-
-function dbGetAll(store) {
-  return new Promise((res, rej) => {
-    const tx = db.transaction(store, 'readonly');
-    const req = tx.objectStore(store).getAll();
-    req.onsuccess = () => res(req.result);
-    req.onerror = () => rej(req.error);
-  });
-}
-
-function dbPut(store, value) {
-  return new Promise((res, rej) => {
-    const tx = db.transaction(store, 'readwrite');
-    const req = tx.objectStore(store).put(value);
-    req.onsuccess = () => res(req.result);
-    req.onerror = () => rej(req.error);
-  });
-}
-
-function dbAdd(store, value) {
-  return new Promise((res, rej) => {
-    const tx = db.transaction(store, 'readwrite');
-    const req = tx.objectStore(store).add(value);
-    req.onsuccess = () => res(req.result);
-    req.onerror = () => rej(req.error);
-  });
-}
-
-function dbDelete(store, key) {
-  return new Promise((res, rej) => {
-    const tx = db.transaction(store, 'readwrite');
-    const req = tx.objectStore(store).delete(key);
-    req.onsuccess = () => res();
-    req.onerror = () => rej(req.error);
-  });
-}
-
-// ============================================================
+// ═══════════════════════════════════════════════════════════════
 // NAVIGATION
-// ============================================================
+// ═══════════════════════════════════════════════════════════════
 function goTo(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
   document.querySelectorAll('.nav-item').forEach(n => {
-    if (n.getAttribute('onclick')?.includes(page)) n.classList.add('active');
+    if (n.getAttribute('onclick')?.includes(`'${page}'`)) n.classList.add('active');
   });
+  if (page === 'dashboard') updateDashboard();
   if (page === 'principles') renderPrinciples();
   if (page === 'journal') renderJournal();
   if (page === 'fivesteps') renderGoals();
   if (page === 'habits') renderHabits();
   if (page === 'myprinciples') renderMyPrinciples();
+  if (page === 'bookmarks') renderBookmarks();
+  if (page === 'history') renderHistory();
   if (page === 'decisions') renderDecisions();
-  if (page === 'dashboard') updateDashboard();
+  document.querySelector('.main').scrollTop = 0;
 }
 
-// ============================================================
+// ═══════════════════════════════════════════════════════════════
 // TOAST
-// ============================================================
-function showToast(msg) {
+// ═══════════════════════════════════════════════════════════════
+function showToast(msg, type = '') {
   const t = document.getElementById('toast');
   t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+  t.className = 'toast show ' + type;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3200);
 }
 
-// ============================================================
-// DASHBOARD
-// ============================================================
-function updateDashboard() {
-  const now = new Date();
-  document.getElementById('dash-date').textContent =
-    now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+// ═══════════════════════════════════════════════════════════════
+// MODAL
+// ═══════════════════════════════════════════════════════════════
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); editingModalId = null; }
 
-  // Daily principle (rotate by day of year)
-  const doy = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
+});
+
+// ═══════════════════════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════════════════════
+async function updateDashboard() {
+  const now = new Date();
+  const hour = now.getHours();
+  const greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
+  document.getElementById('dash-greeting').textContent = greeting;
+  document.getElementById('dash-date').textContent =
+    now.toLocaleDateString('en-US', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+
+  const doy = Math.floor((now - new Date(now.getFullYear(),0,0)) / 86400000);
   const q = DAILY_QUOTES[doy % DAILY_QUOTES.length];
   document.getElementById('daily-text').textContent = q.text;
   document.getElementById('daily-source').textContent = '— ' + q.source;
 
+  const [entries, goals, myp] = await Promise.all([
+    dbGetAll('journal'), dbGetAll('goals'), dbGetAll('myprinciples')
+  ]);
+
   // Stats
-  dbGetAll('journal').then(entries => {
-    document.getElementById('stat-journal').textContent = entries.length;
-    // Streak: count consecutive days
-    const days = [...new Set(entries.map(e => new Date(e.date).toDateString()))];
-    let streak = 0;
-    let d = new Date();
-    while (days.includes(d.toDateString())) {
-      streak++;
-      d.setDate(d.getDate() - 1);
-    }
-    document.getElementById('stat-streak').textContent = streak;
-  });
-  dbGetAll('goals').then(goals => {
-    document.getElementById('stat-goals').textContent = goals.filter(g => !g.completed).length;
-  });
+  document.getElementById('stat-journal').textContent = entries.length;
+  document.getElementById('stat-goals').textContent = goals.filter(g => !g.completed).length;
+  document.getElementById('stat-mp').textContent = myp.length;
+
+  // Streak
+  const days = [...new Set(entries.map(e => new Date(e.date).toDateString()))];
+  let streak = 0;
+  let d = new Date();
+  while (days.includes(d.toDateString())) { streak++; d.setDate(d.getDate()-1); }
+  document.getElementById('stat-streak').textContent = streak;
+
+  // Sidebar footer stats
+  document.getElementById('sf-journal').textContent = entries.length;
+  document.getElementById('sf-streak').textContent = streak;
+  document.getElementById('sf-goals').textContent = goals.filter(g => !g.completed).length;
+
+  // Badges
+  document.getElementById('badge-journal').textContent = entries.length;
+  document.getElementById('badge-goals').textContent = goals.filter(g => !g.completed).length;
+  document.getElementById('badge-mp').textContent = myp.length;
+  document.getElementById('badge-bm').textContent = bookmarks.length;
+  document.getElementById('badge-history').textContent = entries.length + goals.length + myp.length;
+
+  // Recent activity
+  const recent = document.getElementById('recent-activity');
+  const combined = [
+    ...entries.slice(-3).map(e => ({type:'journal', title:e.pain, date:e.date})),
+    ...myp.slice(-2).map(p => ({type:'principle', title:p.title, date:p.created})),
+  ].sort((a,b) => new Date(b.date)-new Date(a.date)).slice(0,5);
+
+  recent.innerHTML = combined.length ? combined.map(item => `
+    <div class="history-item" style="padding:8px 0">
+      <div class="hi-dot ${item.type}"></div>
+      <div class="hi-body">
+        <div class="hi-title" style="font-size:0.78rem">${truncate(item.title, 50)}</div>
+        <div class="hi-meta">${fmtDate(item.date)}</div>
+      </div>
+      <span class="hi-type-badge ${item.type}">${item.type}</span>
+    </div>
+  `).join('') : '<div style="font-size:0.78rem; color:var(--text3)">No activity yet. Start journaling.</div>';
 }
 
 async function saveQuickReflect() {
   const text = document.getElementById('quick-reflect').value.trim();
-  if (!text) { showToast('Write something first.'); return; }
+  if (!text) { showToast('Write something first.', 'error'); return; }
   await dbAdd('journal', {
-    date: new Date().toISOString(),
-    pain: 'Quick reflection',
-    root: '',
-    reflection: text,
-    progress: '',
-    tags: ['quick']
+    pain: text, root: '', reflection: '', progress: '',
+    tags: [], mood: null, date: new Date().toISOString()
   });
   document.getElementById('quick-reflect').value = '';
-  showToast('✦ Reflection saved.');
+  showToast('✦ Reflection logged.', 'success');
   updateDashboard();
 }
 
-// ============================================================
+// ═══════════════════════════════════════════════════════════════
 // PRINCIPLES
-// ============================================================
-function renderPrinciples(filter, search) {
-  filter = filter || currentFilter;
-  search = search || '';
+// ═══════════════════════════════════════════════════════════════
+function renderPrinciples() {
   const container = document.getElementById('principles-list');
-  let data = filter === 'life' ? LIFE_PRINCIPLES :
-             filter === 'work' ? WORK_PRINCIPLES : ALL_PRINCIPLES;
-
+  const search = document.getElementById('search-principles').value.toLowerCase();
+  let list = ALL_PRINCIPLES.filter(p => {
+    if (currentPrincipleFilter === 'life') return p.type === 'life';
+    if (currentPrincipleFilter === 'work') return p.type === 'work';
+    if (currentPrincipleFilter === 'bookmarked') return bookmarks.includes(p.id);
+    return true;
+  });
   if (search) {
-    data = data.filter(p =>
-      p.title.toLowerCase().includes(search) ||
-      p.subs.some(s => s.text.toLowerCase().includes(search))
-    );
+    list = list.filter(p => p.title.toLowerCase().includes(search) ||
+      p.subs.some(s => s.text.toLowerCase().includes(search) || s.detail.toLowerCase().includes(search)));
   }
 
-  container.innerHTML = '';
+  const lifeList = list.filter(p => p.type === 'life');
+  const workList = list.filter(p => p.type === 'work');
 
-  const lifeGroup = data.filter(p => p.type === 'life');
-  const workGroup = data.filter(p => p.type === 'work');
-
-  if (lifeGroup.length) {
-    const section = document.createElement('div');
-    section.className = 'principle-section';
-    section.innerHTML = `<div class="principle-section-title">◆ Life Principles</div>`;
-    lifeGroup.forEach(p => section.appendChild(createPrincipleItem(p)));
-    container.appendChild(section);
+  let html = '';
+  if (lifeList.length) {
+    html += `<div class="principle-section"><div class="principle-section-title">◆ Life Principles <span style="opacity:0.5">(${lifeList.length})</span></div>`;
+    html += lifeList.map(p => renderPrincipleItem(p, search)).join('');
+    html += '</div>';
   }
-  if (workGroup.length) {
-    const section = document.createElement('div');
-    section.className = 'principle-section';
-    section.innerHTML = `<div class="principle-section-title">◇ Work Principles</div>`;
-    workGroup.forEach(p => section.appendChild(createPrincipleItem(p)));
-    container.appendChild(section);
+  if (workList.length) {
+    html += `<div class="principle-section"><div class="principle-section-title">◆ Work Principles <span style="opacity:0.5">(${workList.length})</span></div>`;
+    html += workList.map(p => renderPrincipleItem(p, search)).join('');
+    html += '</div>';
   }
-
-  if (data.length === 0) {
-    container.innerHTML = '<p style="color:var(--text3); font-size:0.83rem;">No principles found.</p>';
-  }
+  if (!html) html = `<div class="empty-state"><div class="empty-icon">◇</div><p>No principles match your search.</p></div>`;
+  container.innerHTML = html;
 }
 
-function createPrincipleItem(p) {
-  const div = document.createElement('div');
-  div.className = 'principle-item';
-  div.innerHTML = `
-    <div class="pi-header" onclick="togglePrinciple('${p.id}')">
-      <span class="pi-num">${p.type === 'life' ? '' : '[W]'} ${p.num}</span>
-      <span class="pi-title">${p.title}</span>
-      <span class="badge ${p.type === 'life' ? 'badge-life' : 'badge-work'}" style="margin-right:8px">${p.type}</span>
-      <span class="pi-toggle" id="toggle-${p.id}">▼</span>
-    </div>
-    <div class="pi-body" id="body-${p.id}">
-      ${p.subs.map(s => `
-        <div class="pi-sub">
-          <span class="pi-sub-letter">${s.letter}</span>
-          <div>
-            <strong>${s.text}</strong>
-            <div style="color:var(--text3); margin-top:3px; font-size:0.78rem">${s.detail}</div>
+function renderPrincipleItem(p, search = '') {
+  const isBookmarked = bookmarks.includes(p.id);
+  const highlight = t => search ? t.replace(new RegExp(search, 'gi'), m => `<mark>${m}</mark>`) : t;
+  return `
+    <div class="principle-item" id="pi-${p.id}" onclick="togglePrinciple('${p.id}')">
+      <div class="pi-header">
+        <span class="pi-num">${p.num}.</span>
+        <span class="pi-title">${highlight(p.title)}</span>
+        <span class="pi-bookmark ${isBookmarked?'bookmarked':''}" onclick="event.stopPropagation(); toggleBookmark('${p.id}')">${isBookmarked ? '◆' : '◇'}</span>
+        <span class="pi-toggle" id="pit-${p.id}">▼</span>
+      </div>
+      <div class="pi-body" id="pib-${p.id}">
+        ${p.subs.map(s => `
+          <div class="pi-sub">
+            <span class="pi-sub-letter">${s.letter}</span>
+            <div>
+              <div class="pi-sub-text">${highlight(s.text)}</div>
+              <div class="pi-sub-detail">${highlight(s.detail)}</div>
+            </div>
           </div>
-        </div>
-      `).join('')}
+        `).join('')}
+      </div>
     </div>
   `;
-  return div;
 }
 
 function togglePrinciple(id) {
-  const body = document.getElementById('body-' + id);
-  const toggle = document.getElementById('toggle-' + id);
-  const item = body.closest('.principle-item');
+  const body = document.getElementById('pib-' + id);
+  const toggle = document.getElementById('pit-' + id);
+  const item = document.getElementById('pi-' + id);
   const isOpen = body.classList.contains('show');
   body.classList.toggle('show', !isOpen);
-  item.classList.toggle('expanded', !isOpen);
   toggle.style.transform = isOpen ? '' : 'rotate(180deg)';
+  item.classList.toggle('expanded', !isOpen);
 }
 
-function filterPrinciples(f) {
-  currentFilter = f;
-  ['all','life','work'].forEach(id => {
-    const btn = document.getElementById('filter-' + id);
-    if (btn) {
-      btn.style.borderColor = f === id ? 'var(--gold)' : '';
-      btn.style.color = f === id ? 'var(--gold)' : '';
-    }
-  });
-  renderPrinciples(f, document.getElementById('search-principles')?.value?.toLowerCase());
+function filterPrinciples(type, btn) {
+  currentPrincipleFilter = type;
+  document.querySelectorAll('#page-principles .filter-tab').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderPrinciples();
 }
 
-function searchPrinciples() {
-  renderPrinciples(currentFilter, document.getElementById('search-principles').value.toLowerCase());
+function searchPrinciples() { renderPrinciples(); }
+
+function toggleBookmark(id) {
+  const idx = bookmarks.indexOf(id);
+  if (idx === -1) { bookmarks.push(id); showToast('◆ Bookmarked.', 'success'); }
+  else { bookmarks.splice(idx, 1); showToast('Bookmark removed.'); }
+  localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+  document.getElementById('badge-bm').textContent = bookmarks.length;
+  renderPrinciples();
 }
 
-// ============================================================
-// 5-STEP PROCESS
-// ============================================================
-async function createGoal() {
+// ═══════════════════════════════════════════════════════════════
+// JOURNAL
+// ═══════════════════════════════════════════════════════════════
+async function saveJournalEntry() {
+  const pain = document.getElementById('entry-pain').value.trim();
+  if (!pain) { showToast('Describe the pain/problem first.', 'error'); return; }
+  const entry = {
+    pain,
+    root: document.getElementById('entry-root').value.trim(),
+    reflection: document.getElementById('entry-reflect').value.trim(),
+    progress: document.getElementById('entry-progress').value.trim(),
+    tags: document.getElementById('entry-tags').value.split(',').map(t=>t.trim()).filter(Boolean),
+    mood: parseInt(document.getElementById('entry-mood').value) || null,
+    date: new Date().toISOString(),
+  };
+  await dbAdd('journal', entry);
+  ['entry-pain','entry-root','entry-reflect','entry-progress','entry-tags','entry-mood'].forEach(id => document.getElementById(id).value = '');
+  showToast('✦ Entry saved.', 'success');
+  renderJournal();
+  updateDashboard();
+}
+
+async function renderJournal() {
+  const entries = await dbGetAll('journal');
+  const search = document.getElementById('journal-search').value.toLowerCase();
+  const container = document.getElementById('journal-entries');
+
+  // Build tag filter pills
+  const allTags = [...new Set(entries.flatMap(e => e.tags || []))];
+  const tagFilters = document.getElementById('journal-tag-filters');
+  const activeTag = tagFilters.dataset.active || '';
+  tagFilters.innerHTML = `<button class="filter-tab ${!activeTag?'active':''}" onclick="setJournalTagFilter('', this)">All</button>` +
+    allTags.map(t => `<button class="filter-tab ${activeTag===t?'active':''}" onclick="setJournalTagFilter('${t}', this)">${t}</button>`).join('');
+
+  let filtered = [...entries].reverse();
+  if (activeTag) filtered = filtered.filter(e => (e.tags||[]).includes(activeTag));
+  if (search) filtered = filtered.filter(e =>
+    (e.pain||'').toLowerCase().includes(search) ||
+    (e.reflection||'').toLowerCase().includes(search) ||
+    (e.root||'').toLowerCase().includes(search)
+  );
+
+  if (!filtered.length) {
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">✎</div><p>No entries yet. Write your first reflection above.</p></div>`;
+    return;
+  }
+  container.innerHTML = filtered.map(e => renderJournalCard(e)).join('');
+}
+
+function renderJournalCard(e) {
+  const hasExtra = e.root || e.reflection || e.progress;
+  return `
+    <div class="journal-entry" id="je-${e.id}">
+      <div class="je-header">
+        <div class="je-meta">
+          <div class="je-date">${fmtDate(e.date)} ${e.mood ? `· Mood: ${e.mood}/10` : ''}</div>
+          <div class="je-pain">${esc(e.pain)}</div>
+        </div>
+        <div class="je-actions">
+          <button class="btn btn-ghost btn-sm btn-icon" onclick="openEditJournal(${e.id})" title="Edit">✎</button>
+          <button class="btn btn-danger btn-sm btn-icon" onclick="deleteJournal(${e.id})" title="Delete">✕</button>
+        </div>
+      </div>
+      ${hasExtra ? `
+        <div class="je-expand-btn" onclick="toggleJeExpand(${e.id})">
+          <span id="je-expand-icon-${e.id}">▼</span> Show details
+        </div>
+        <div class="je-expandable" id="je-exp-${e.id}">
+          ${e.root ? `<div class="je-root"><strong style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text3);font-family:var(--font-mono)">Root Cause</strong><br>${esc(e.root)}</div>` : ''}
+          ${e.reflection ? `<div class="je-reflection"><strong style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text3);font-family:var(--font-mono)">Reflection</strong><br>${esc(e.reflection)}</div>` : ''}
+          ${e.progress ? `<div class="je-progress">${esc(e.progress)}</div>` : ''}
+        </div>
+      ` : ''}
+      ${e.tags && e.tags.length ? `<div class="je-tags">${e.tags.map(t=>`<span class="je-tag" onclick="setJournalTagFilter('${t}', null)">${t}</span>`).join('')}</div>` : ''}
+    </div>
+  `;
+}
+
+function toggleJeExpand(id) {
+  const exp = document.getElementById('je-exp-' + id);
+  const icon = document.getElementById('je-expand-icon-' + id);
+  const open = exp.classList.toggle('open');
+  icon.textContent = open ? '▲' : '▼';
+}
+
+function setJournalTagFilter(tag, btn) {
+  const tf = document.getElementById('journal-tag-filters');
+  tf.dataset.active = tag;
+  renderJournal();
+}
+
+async function openEditJournal(id) {
+  const e = await dbGet('journal', id);
+  if (!e) return;
+  editingModalId = id;
+  document.getElementById('modal-pain').value = e.pain || '';
+  document.getElementById('modal-root').value = e.root || '';
+  document.getElementById('modal-reflect').value = e.reflection || '';
+  document.getElementById('modal-progress').value = e.progress || '';
+  document.getElementById('modal-tags').value = (e.tags||[]).join(', ');
+  document.getElementById('modal-mood').value = e.mood || '';
+  openModal('modal-journal');
+}
+
+async function updateJournalEntry() {
+  if (!editingModalId) return;
+  const e = await dbGet('journal', editingModalId);
+  if (!e) return;
+  e.pain = document.getElementById('modal-pain').value.trim();
+  e.root = document.getElementById('modal-root').value.trim();
+  e.reflection = document.getElementById('modal-reflect').value.trim();
+  e.progress = document.getElementById('modal-progress').value.trim();
+  e.tags = document.getElementById('modal-tags').value.split(',').map(t=>t.trim()).filter(Boolean);
+  e.mood = parseInt(document.getElementById('modal-mood').value) || null;
+  e.edited = new Date().toISOString();
+  await dbPut('journal', e);
+  closeModal('modal-journal');
+  showToast('✦ Entry updated.', 'success');
+  renderJournal();
+}
+
+async function deleteJournal(id) {
+  if (!confirm('Delete this entry?')) return;
+  await dbDelete('journal', id);
+  renderJournal();
+  updateDashboard();
+  showToast('Entry deleted.');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// GOALS / 5-STEP
+// ═══════════════════════════════════════════════════════════════
+const FIVE_STEPS = [
+  {num:1, title:'Have Clear Goals', desc:'Be specific. Prioritize. Write them down.'},
+  {num:2, title:'Identify Problems', desc:'View painful problems as potential improvements screaming at you.'},
+  {num:3, title:'Diagnose Root Causes', desc:'Focus on "what is" before "what to do about it."'},
+  {num:4, title:'Design a Plan', desc:'Write your plan down. Think about the machine that produces outcomes.'},
+  {num:5, title:'Push to Completion', desc:'Execute! Great planners who don\'t execute go nowhere.'},
+];
+
+async function saveGoal() {
   const title = document.getElementById('goal-title').value.trim();
-  const why = document.getElementById('goal-why').value.trim();
-  if (!title) { showToast('Enter a goal title.'); return; }
-
-  await dbAdd('goals', {
-    title, why,
-    created: new Date().toISOString(),
+  if (!title) { showToast('Give your goal a title.', 'error'); return; }
+  const goal = {
+    title,
+    why: document.getElementById('goal-why').value.trim(),
+    deadline: document.getElementById('goal-deadline').value || null,
+    steps: FIVE_STEPS.map(s => ({...s, notes:'', done:false})),
     completed: false,
-    steps: {
-      1: { done: false, notes: '' },
-      2: { done: false, notes: '' },
-      3: { done: false, notes: '' },
-      4: { done: false, notes: '' },
-      5: { done: false, notes: '' }
-    }
-  });
+    created: new Date().toISOString(),
+  };
+  await dbAdd('goals', goal);
   document.getElementById('goal-title').value = '';
   document.getElementById('goal-why').value = '';
-  showToast('Goal created.');
+  document.getElementById('goal-deadline').value = '';
+  showToast('✦ Goal created.', 'success');
   renderGoals();
+  updateDashboard();
 }
 
 async function renderGoals() {
   const goals = await dbGetAll('goals');
   const container = document.getElementById('goals-container');
-  container.innerHTML = '';
+  let filtered = goals;
+  if (currentGoalFilter === 'active') filtered = goals.filter(g => !g.completed);
+  if (currentGoalFilter === 'done') filtered = goals.filter(g => g.completed);
 
-  if (!goals.length) {
-    container.innerHTML = '<p style="color:var(--text3); font-size:0.83rem; padding:20px 0">No goals yet. Create one above.</p>';
+  if (!filtered.length) {
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">◎</div><p>No ${currentGoalFilter === 'done' ? 'completed' : 'active'} goals. Create one above.</p></div>`;
     return;
   }
+  container.innerHTML = filtered.reverse().map(g => renderGoalCard(g)).join('');
+}
 
-  goals.reverse().forEach(goal => {
-    const stepsConfig = [
-      { label: 'Set Clear Goals', desc: 'What exactly do you want? Be specific. Write your goal clearly.', field: 'goalStatement' },
-      { label: 'Identify Problems', desc: 'What stands in your way? List all obstacles.', field: 'problems' },
-      { label: 'Diagnose Root Causes', desc: 'Why do these problems exist? Dig past the surface.', field: 'rootCauses' },
-      { label: 'Design a Plan', desc: 'List the specific actions to get from where you are to where you want to be.', field: 'plan' },
-      { label: 'Push to Completion', desc: 'What metrics will you track? What is your deadline?', field: 'metrics' }
-    ];
-    const completedSteps = Object.values(goal.steps || {}).filter(s => s.done).length;
-    const pct = Math.round((completedSteps / 5) * 100);
-
-    const div = document.createElement('div');
-    div.className = 'card';
-    div.style.marginBottom = '20px';
-    div.innerHTML = `
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; flex-wrap:wrap; gap:8px">
-        <div>
-          <div class="card-meta">Goal ${goal.completed ? '— Completed ✓' : ''}</div>
-          <h3>${goal.title}</h3>
-          ${goal.why ? `<p style="margin-top:6px; font-size:0.78rem; color:var(--text3); font-style:italic">"${goal.why}"</p>` : ''}
+function renderGoalCard(g) {
+  const done = g.steps.filter(s=>s.done).length;
+  const pct = Math.round((done / g.steps.length) * 100);
+  const activeStep = g.steps.findIndex(s=>!s.done);
+  return `
+    <div class="goal-card" id="gc-${g.id}">
+      <div class="goal-header" onclick="toggleGoal(${g.id})">
+        <div class="goal-status-dot ${g.completed?'done':done>0?'active':''}"></div>
+        <div class="goal-title-wrap">
+          <div class="goal-title">${esc(g.title)}</div>
+          <div class="goal-sub">${done}/${g.steps.length} steps · ${pct}% complete ${g.deadline?'· Due '+fmtDateShort(g.deadline):''}</div>
         </div>
-        <div style="display:flex; gap:8px; flex-shrink:0">
-          ${!goal.completed ? `<button class="btn btn-gold btn-sm" onclick="completeGoal(${goal.id})">Mark Complete</button>` : ''}
-          <button class="btn btn-danger btn-sm" onclick="deleteGoal(${goal.id})">Delete</button>
+        <div style="display:flex; gap:6px">
+          <button class="btn btn-ghost btn-sm btn-icon" onclick="event.stopPropagation(); openEditGoal(${g.id})" title="Edit">✎</button>
+          <button class="btn btn-danger btn-sm btn-icon" onclick="event.stopPropagation(); deleteGoal(${g.id})" title="Delete">✕</button>
         </div>
       </div>
-      <div class="meter-wrap" style="margin-bottom:16px">
-        <div class="meter-label"><span>Progress through 5 steps</span><span>${pct}%</span></div>
-        <div class="meter"><div class="meter-fill" style="width:${pct}%"></div></div>
-      </div>
-      ${stepsConfig.map((step, i) => {
-        const stepNum = i + 1;
-        const stepData = (goal.steps || {})[stepNum] || {};
-        const isDone = stepData.done;
-        return `
-          <div class="step-card ${isDone ? 'done' : ''}" id="step-${goal.id}-${stepNum}">
-            <div class="step-header" onclick="toggleStep(${goal.id}, ${stepNum})">
-              <div class="step-num">${isDone ? '✓' : stepNum}</div>
+      <div class="goal-progress-bar"><div class="goal-progress-fill" style="width:${pct}%"></div></div>
+      <div class="goal-body" id="gb-${g.id}">
+        ${g.why ? `<div style="font-size:0.8rem; color:var(--text2); margin-bottom:14px; line-height:1.6; font-style:italic">"${esc(g.why)}"</div>` : ''}
+        ${g.steps.map((s, i) => `
+          <div class="step-card ${s.done?'done':''}  ${i===activeStep&&!g.completed?'step-active':''}">
+            <div class="step-header">
+              <div class="step-num">${s.done?'✓':s.num}</div>
               <div class="step-info">
-                <div class="step-title">${step.label}</div>
-                <div class="step-desc">${step.desc}</div>
+                <div class="step-title">${s.title}</div>
+                <div class="step-desc">${s.desc}</div>
               </div>
+              <button class="btn btn-sm btn-ghost" onclick="toggleStep(${g.id}, ${i})">${s.done?'Undo':'Done'}</button>
             </div>
-            <div class="step-body" id="stepbody-${goal.id}-${stepNum}">
-              <textarea id="stepnotes-${goal.id}-${stepNum}" placeholder="Your notes...">${stepData.notes || ''}</textarea>
-              <div style="display:flex; gap:8px; margin-top:10px">
-                <button class="btn ${isDone ? '' : 'btn-gold'} btn-sm" onclick="toggleStepDone(${goal.id}, ${stepNum})">
-                  ${isDone ? 'Mark Incomplete' : 'Mark Complete ✓'}
-                </button>
-                <button class="btn btn-sm" onclick="saveStepNotes(${goal.id}, ${stepNum})">Save Notes</button>
-              </div>
+            <div class="step-body show">
+              <textarea
+                placeholder="Notes for this step..."
+                style="min-height:55px; font-size:0.78rem; margin-top:0"
+                onchange="updateStepNotes(${g.id}, ${i}, this.value)"
+              >${esc(s.notes||'')}</textarea>
             </div>
           </div>
-        `;
-      }).join('')}
-    `;
-    container.appendChild(div);
-  });
+        `).join('')}
+        ${g.completed ? '' : `
+          <button class="btn btn-sm" style="margin-top:8px" onclick="completeGoal(${g.id})">Mark as Completed ✓</button>
+        `}
+      </div>
+    </div>
+  `;
 }
 
-function toggleStep(goalId, stepNum) {
-  const body = document.getElementById(`stepbody-${goalId}-${stepNum}`);
-  body.classList.toggle('show');
+function toggleGoal(id) {
+  const body = document.getElementById('gb-' + id);
+  body.classList.toggle('open');
 }
 
-async function toggleStepDone(goalId, stepNum) {
-  const goals = await dbGetAll('goals');
-  const goal = goals.find(g => g.id === goalId);
-  if (!goal) return;
-  goal.steps[stepNum].done = !goal.steps[stepNum].done;
-  const notes = document.getElementById(`stepnotes-${goalId}-${stepNum}`)?.value || '';
-  goal.steps[stepNum].notes = notes;
-  await dbPut('goals', goal);
+async function toggleStep(goalId, stepIdx) {
+  const g = await dbGet('goals', goalId);
+  g.steps[stepIdx].done = !g.steps[stepIdx].done;
+  await dbPut('goals', g);
   renderGoals();
 }
 
-async function saveStepNotes(goalId, stepNum) {
-  const notes = document.getElementById(`stepnotes-${goalId}-${stepNum}`)?.value || '';
-  const goals = await dbGetAll('goals');
-  const goal = goals.find(g => g.id === goalId);
-  if (!goal) return;
-  goal.steps[stepNum].notes = notes;
-  await dbPut('goals', goal);
-  showToast('Notes saved.');
+async function updateStepNotes(goalId, stepIdx, notes) {
+  const g = await dbGet('goals', goalId);
+  g.steps[stepIdx].notes = notes;
+  await dbPut('goals', g);
 }
 
-async function completeGoal(goalId) {
-  const goals = await dbGetAll('goals');
-  const goal = goals.find(g => g.id === goalId);
-  if (!goal) return;
-  goal.completed = true;
-  await dbPut('goals', goal);
-  showToast('✦ Goal completed!');
+async function completeGoal(id) {
+  const g = await dbGet('goals', id);
+  g.completed = true;
+  g.completedDate = new Date().toISOString();
+  await dbPut('goals', g);
+  showToast('✦ Goal completed!', 'success');
   renderGoals();
+  updateDashboard();
 }
 
-async function deleteGoal(goalId) {
+async function deleteGoal(id) {
   if (!confirm('Delete this goal?')) return;
-  await dbDelete('goals', goalId);
+  await dbDelete('goals', id);
   renderGoals();
+  updateDashboard();
   showToast('Goal deleted.');
 }
 
-// ============================================================
-// JOURNAL
-// ============================================================
-async function saveJournalEntry() {
-  const pain = document.getElementById('entry-pain').value.trim();
-  const root = document.getElementById('entry-root').value.trim();
-  const reflection = document.getElementById('entry-reflect').value.trim();
-  const progress = document.getElementById('entry-progress').value.trim();
-  const tagsRaw = document.getElementById('entry-tags').value;
-  const tags = tagsRaw.split(',').map(t => t.trim()).filter(Boolean);
-
-  if (!pain) { showToast('Describe the pain/problem first.'); return; }
-  if (!reflection) { showToast('Add your reflection.'); return; }
-
-  await dbAdd('journal', { date: new Date().toISOString(), pain, root, reflection, progress, tags });
-  document.getElementById('entry-pain').value = '';
-  document.getElementById('entry-root').value = '';
-  document.getElementById('entry-reflect').value = '';
-  document.getElementById('entry-progress').value = '';
-  document.getElementById('entry-tags').value = '';
-  showToast('✦ Reflection logged.');
-  renderJournal();
+async function openEditGoal(id) {
+  const g = await dbGet('goals', id);
+  editingModalId = id;
+  document.getElementById('modal-goal-title').value = g.title || '';
+  document.getElementById('modal-goal-why').value = g.why || '';
+  document.getElementById('modal-goal-deadline').value = g.deadline || '';
+  openModal('modal-goal');
 }
 
-async function renderJournal() {
-  const entries = await dbGetAll('journal');
-  const container = document.getElementById('journal-entries');
-  container.innerHTML = '';
-
-  if (!entries.length) {
-    container.innerHTML = '<p style="color:var(--text3); font-size:0.83rem;">No entries yet. Log your first reflection.</p>';
-    return;
-  }
-
-  entries.reverse().forEach(entry => {
-    const div = document.createElement('div');
-    div.className = 'journal-entry';
-    div.innerHTML = `
-      <div class="je-header">
-        <span class="je-date">${new Date(entry.date).toLocaleString('en-US', {month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'})}</span>
-        <button class="btn btn-danger btn-sm" onclick="deleteJournal(${entry.id})">✕</button>
-      </div>
-      <div class="je-pain">⚡ ${entry.pain}</div>
-      ${entry.root ? `<div style="font-size:0.78rem; color:var(--text3); margin-bottom:8px"><strong>Root cause:</strong> ${entry.root}</div>` : ''}
-      <div class="je-reflection">${entry.reflection}</div>
-      ${entry.progress ? `<div class="je-progress">→ ${entry.progress}</div>` : ''}
-      ${entry.tags?.length ? `<div class="je-tags">${entry.tags.map(t => `<span class="je-tag">${t}</span>`).join('')}</div>` : ''}
-    `;
-    container.appendChild(div);
-  });
+async function updateGoal() {
+  if (!editingModalId) return;
+  const g = await dbGet('goals', editingModalId);
+  g.title = document.getElementById('modal-goal-title').value.trim();
+  g.why = document.getElementById('modal-goal-why').value.trim();
+  g.deadline = document.getElementById('modal-goal-deadline').value || null;
+  await dbPut('goals', g);
+  closeModal('modal-goal');
+  showToast('✦ Goal updated.', 'success');
+  renderGoals();
 }
 
-async function deleteJournal(id) {
-  await dbDelete('journal', id);
-  renderJournal();
-  showToast('Entry deleted.');
+function cancelGoalEdit() {}
+
+function filterGoals(type, btn) {
+  currentGoalFilter = type;
+  document.querySelectorAll('#page-fivesteps .filter-tab').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderGoals();
 }
 
-// ============================================================
+// ═══════════════════════════════════════════════════════════════
 // DECISION MAKER
-// ============================================================
+// ═══════════════════════════════════════════════════════════════
 function renderDecisions() {
   renderDecisionOptions();
   renderDecisionChecklist();
@@ -1510,78 +2250,84 @@ function renderDecisions() {
 
 function renderDecisionOptions() {
   const grid = document.getElementById('options-grid');
-  grid.innerHTML = '';
-  if (decisionOptions.length === 0) {
-    addOption();
-    addOption();
-  }
-  decisionOptions.forEach((opt, i) => {
-    const div = document.createElement('div');
-    div.className = 'decision-option';
-    div.innerHTML = `
+  if (decisionOptions.length === 0) { addOption(); addOption(); return; }
+  grid.innerHTML = decisionOptions.map((opt, i) => `
+    <div class="decision-option">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px">
-        <div class="card-meta">Option ${i + 1}</div>
+        <div class="card-meta">Option ${i+1}</div>
         <button class="btn btn-danger btn-sm" onclick="removeOption(${i})">✕</button>
       </div>
       <div class="field">
         <label>Option Name</label>
-        <input type="text" value="${opt.name || ''}" onchange="decisionOptions[${i}].name=this.value" placeholder="e.g. Accept the job offer" />
+        <input type="text" value="${esc(opt.name||'')}" oninput="decisionOptions[${i}].name=this.value; updateEV()" placeholder="e.g. Accept the offer" />
       </div>
-      <div class="pros-cons" style="margin-top:12px">
+      <div class="pros-cons" style="margin-top:10px">
         <div class="pc-list pros">
           <div class="pc-title">Pros</div>
-          <textarea onchange="decisionOptions[${i}].pros=this.value" placeholder="One per line" style="min-height:80px; font-size:0.78rem">${opt.pros || ''}</textarea>
+          <textarea onchange="decisionOptions[${i}].pros=this.value" placeholder="One per line" style="min-height:70px; font-size:0.76rem">${esc(opt.pros||'')}</textarea>
         </div>
         <div class="pc-list cons">
           <div class="pc-title">Cons</div>
-          <textarea onchange="decisionOptions[${i}].cons=this.value" placeholder="One per line" style="min-height:80px; font-size:0.78rem">${opt.cons || ''}</textarea>
+          <textarea onchange="decisionOptions[${i}].cons=this.value" placeholder="One per line" style="min-height:70px; font-size:0.76rem">${esc(opt.cons||'')}</textarea>
         </div>
       </div>
       <div class="field" style="margin-top:12px">
-        <label>Probability of Success (0–100)</label>
-        <input type="range" min="0" max="100" value="${opt.prob || 50}" oninput="decisionOptions[${i}].prob=+this.value; document.getElementById('probval-${i}').textContent=this.value+'%'" style="padding:0; border:none; background:transparent" />
-        <span id="probval-${i}" style="font-family:var(--font-mono); font-size:0.72rem; color:var(--gold)">${opt.prob || 50}%</span>
+        <label>Probability of Success: <span id="probval-${i}" style="color:var(--gold)">${opt.prob||50}%</span></label>
+        <input type="range" min="0" max="100" value="${opt.prob||50}" oninput="decisionOptions[${i}].prob=+this.value; document.getElementById('probval-${i}').textContent=this.value+'%'; updateEV()" style="padding:4px 0; border:none; background:transparent" />
       </div>
       <div class="field">
-        <label>Impact if Successful (1–10)</label>
-        <input type="range" min="1" max="10" value="${opt.impact || 5}" oninput="decisionOptions[${i}].impact=+this.value; document.getElementById('impactval-${i}').textContent=this.value" style="padding:0; border:none; background:transparent" />
-        <span id="impactval-${i}" style="font-family:var(--font-mono); font-size:0.72rem; color:var(--gold)">${opt.impact || 5}</span>
+        <label>Impact if Successful: <span id="impactval-${i}" style="color:var(--gold)">${opt.impact||5}</span>/10</label>
+        <input type="range" min="1" max="10" value="${opt.impact||5}" oninput="decisionOptions[${i}].impact=+this.value; document.getElementById('impactval-${i}').textContent=this.value; updateEV()" style="padding:4px 0; border:none; background:transparent" />
       </div>
-    `;
-    grid.appendChild(div);
-  });
+    </div>
+  `).join('');
+  updateEV();
+}
 
-  // Show result
-  if (decisionOptions.length >= 2) {
-    const scored = decisionOptions.map((o, i) => ({
-      name: o.name || `Option ${i+1}`,
-      ev: ((o.prob || 50) / 100) * (o.impact || 5)
-    })).sort((a, b) => b.ev - a.ev);
-    const result = document.getElementById('dec-result');
-    if (result) {
-      result.innerHTML = `
-        <div style="font-size:0.85rem; margin-bottom:12px">Based on your expected value inputs:</div>
-        ${scored.map((s, i) => `
-          <div style="display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid var(--border)">
-            <span style="font-family:var(--font-mono); font-size:0.85rem; color:${i===0?'var(--gold)':'var(--text2)'}; width:20px">${i+1}.</span>
-            <span style="flex:1">${s.name}</span>
-            <span style="font-family:var(--font-mono); color:var(--gold)">${s.ev.toFixed(2)} EV</span>
-          </div>
-        `).join('')}
-        <p style="font-size:0.75rem; color:var(--text3); margin-top:12px">EV = (probability × impact). Use as guidance, not gospel. Consult believable advisors.</p>
-      `;
-    }
-  }
+function updateEV() {
+  const resultCard = document.getElementById('dec-result-card');
+  if (decisionOptions.length < 2) { resultCard.style.display='none'; return; }
+  const scored = decisionOptions.map((o, i) => ({
+    name: o.name || `Option ${i+1}`,
+    ev: ((o.prob||50)/100) * (o.impact||5)
+  })).sort((a,b) => b.ev - a.ev);
+  const maxEV = scored[0].ev;
+  resultCard.style.display = 'block';
+  document.getElementById('dec-result').innerHTML = scored.map((s, i) => `
+    <div class="ev-result-row">
+      <span class="ev-rank" style="color:${i===0?'var(--gold)':'var(--text3)'}">${i+1}.</span>
+      <span class="ev-name" style="color:${i===0?'var(--text)':'var(--text2)'}">${esc(s.name)}</span>
+      <div class="ev-bar-wrap"><div class="ev-bar" style="width:${maxEV?((s.ev/maxEV)*100)+'%':'0%'}"></div></div>
+      <span class="ev-value">${s.ev.toFixed(2)}</span>
+    </div>
+  `).join('') + `<p style="font-size:0.7rem; color:var(--text3); margin-top:10px; font-family:var(--font-mono)">EV = probability × impact. Use as guidance. Consult believable advisors.</p>`;
 }
 
 function addOption() {
-  decisionOptions.push({ name: '', pros: '', cons: '', prob: 50, impact: 5 });
+  decisionOptions.push({name:'', pros:'', cons:'', prob:50, impact:5});
   renderDecisionOptions();
 }
-
 function removeOption(i) {
-  decisionOptions.splice(i, 1);
+  decisionOptions.splice(i,1);
   renderDecisionOptions();
+}
+function clearDecision() {
+  decisionOptions = [];
+  document.getElementById('dec-title').value = '';
+  document.getElementById('dec-context').value = '';
+  renderDecisions();
+}
+
+async function saveDecision() {
+  const title = document.getElementById('dec-title').value.trim();
+  if (!title) { showToast('State the decision first.', 'error'); return; }
+  await dbAdd('decisions', {
+    title,
+    context: document.getElementById('dec-context').value.trim(),
+    options: decisionOptions,
+    date: new Date().toISOString(),
+  });
+  showToast('✦ Decision saved to history.', 'success');
 }
 
 function renderDecisionChecklist() {
@@ -1592,144 +2338,278 @@ function renderDecisionChecklist() {
       <span class="check-text">${item}</span>
     </div>
   `).join('');
+  updateDecProgress();
 }
 
 function toggleDecCheck(i) {
-  const item = document.getElementById('dci-' + i);
-  item.classList.toggle('checked');
-  const checked = document.querySelectorAll('#dec-checklist .checklist-item.checked').length;
-  const total = DECISION_CHECKLIST_ITEMS.length;
-  if (checked === total) showToast('✦ Decision framework complete. Now decide.');
+  document.getElementById('dci-'+i).classList.toggle('checked');
+  document.getElementById('dcbox-'+i).textContent = document.getElementById('dci-'+i).classList.contains('checked') ? '✓' : '';
+  updateDecProgress();
 }
 
-// ============================================================
+function updateDecProgress() {
+  const checked = document.querySelectorAll('#dec-checklist .checklist-item.checked').length;
+  const total = DECISION_CHECKLIST_ITEMS.length;
+  const pct = Math.round((checked/total)*100);
+  document.getElementById('dec-progress-pct').textContent = pct + '%';
+  document.getElementById('dec-progress-fill').style.width = pct + '%';
+  if (checked === total) showToast('✦ Decision framework complete. Now decide.', 'success');
+}
+
+// ═══════════════════════════════════════════════════════════════
 // HABITS
-// ============================================================
+// ═══════════════════════════════════════════════════════════════
 function renderHabits() {
   const today = new Date().toDateString();
   document.getElementById('habits-date').textContent = today;
   const container = document.getElementById('habits-list');
-  container.innerHTML = HABITS.map((h, i) => `
-    <div class="card" style="margin-bottom:8px; cursor:pointer" onclick="toggleHabit('${h.id}')" id="hcard-${h.id}">
-      <div style="display:flex; gap:14px; align-items:center">
-        <div class="check-box" id="hbox-${h.id}" style="width:22px;height:22px">${habitState[h.id] ? '✓' : ''}</div>
-        <div style="flex:1">
-          <div style="font-size:0.85rem; font-weight:500">${h.text}</div>
-          <div style="font-size:0.75rem; color:var(--text3); margin-top:2px">${h.detail}</div>
-        </div>
+  container.innerHTML = HABITS.map(h => `
+    <div class="habit-card ${habitState[h.id]?'done':''}" id="hcard-${h.id}" onclick="toggleHabit('${h.id}')">
+      <div class="habit-check" id="hbox-${h.id}">${habitState[h.id]?'✓':''}</div>
+      <div style="flex:1">
+        <div class="habit-text">${h.text}</div>
+        <div class="habit-detail">${h.detail}</div>
       </div>
     </div>
   `).join('');
-
   updateHabitsScore();
 }
 
 function toggleHabit(id) {
   habitState[id] = !habitState[id];
-  const box = document.getElementById('hbox-' + id);
-  const card = document.getElementById('hcard-' + id);
-  if (habitState[id]) {
-    box.textContent = '✓';
-    box.style.background = 'var(--gold-dim)';
-    box.style.borderColor = 'var(--gold)';
-    box.style.color = 'var(--gold)';
-    card.style.borderColor = 'var(--gold)';
-  } else {
-    box.textContent = '';
-    box.style.background = '';
-    box.style.borderColor = '';
-    box.style.color = '';
-    card.style.borderColor = '';
-  }
+  document.getElementById('hcard-'+id).classList.toggle('done', habitState[id]);
+  document.getElementById('hbox-'+id).textContent = habitState[id] ? '✓' : '';
   updateHabitsScore();
 }
 
 function updateHabitsScore() {
   const done = Object.values(habitState).filter(Boolean).length;
   const total = HABITS.length;
-  const pct = Math.round((done / total) * 100);
+  const pct = Math.round((done/total)*100);
   document.getElementById('habits-score').textContent = pct + '%';
   document.getElementById('habits-fill').style.width = pct + '%';
   const msgs = [
     'Start somewhere. One honest action today.',
     'Getting there. Every step matters.',
-    'You\'re building the habit of radical honesty.',
-    'Strong day. This is how principles are internalized.',
+    'Building the habit of radical honesty.',
+    'Strong day. Principles are being internalized.',
     'Exceptional. This is what Bridgewater was built on.',
-    '✦ Perfect score. A fully principled day.'
+    '✦ Perfect score. A fully principled day.',
   ];
-  const idx = Math.floor((pct / 100) * (msgs.length - 1));
-  document.getElementById('habits-message').textContent = msgs[Math.min(idx, msgs.length - 1)];
+  const idx = Math.min(Math.floor((pct/100)*(msgs.length)), msgs.length-1);
+  document.getElementById('habits-message').textContent = msgs[idx];
 }
 
-function resetHabits() {
-  habitState = {};
-  renderHabits();
-}
+function resetHabits() { habitState = {}; renderHabits(); }
 
-// ============================================================
+// ═══════════════════════════════════════════════════════════════
 // MY PRINCIPLES
-// ============================================================
+// ═══════════════════════════════════════════════════════════════
 async function saveMyPrinciple() {
   const title = document.getElementById('mp-title').value.trim();
-  const desc = document.getElementById('mp-desc').value.trim();
-  const cat = document.getElementById('mp-cat').value;
-  if (!title) { showToast('Write your principle first.'); return; }
-  await dbAdd('myprinciples', { title, desc, cat, created: new Date().toISOString() });
+  if (!title) { showToast('Write your principle first.', 'error'); return; }
+  await dbAdd('myprinciples', {
+    title,
+    desc: document.getElementById('mp-desc').value.trim(),
+    cat: document.getElementById('mp-cat').value,
+    confidence: parseInt(document.getElementById('mp-confidence').value) || null,
+    created: new Date().toISOString(),
+  });
   document.getElementById('mp-title').value = '';
   document.getElementById('mp-desc').value = '';
-  showToast('✦ Principle saved.');
+  document.getElementById('mp-confidence').value = '';
+  showToast('✦ Principle saved.', 'success');
   renderMyPrinciples();
+  updateDashboard();
 }
 
 async function renderMyPrinciples() {
-  const principles = await dbGetAll('myprinciples');
+  const all = await dbGetAll('myprinciples');
   const container = document.getElementById('my-principles-list');
-  container.innerHTML = '';
+  let list = [...all].reverse();
+  if (currentMpFilter !== 'all') list = list.filter(p => p.cat === currentMpFilter);
 
-  if (!principles.length) {
-    container.innerHTML = `
-      <div class="quote-block">"Think for yourself to decide what you want, what is true, and what you should do to achieve it." — Ray Dalio. <br><br>Start by writing your first personal principle above.</div>
-    `;
+  if (!list.length) {
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">✦</div><p>No principles yet ${currentMpFilter!=='all'?'in this category':''}. Start writing above.</p></div>`;
     return;
   }
 
-  const cats = [...new Set(principles.map(p => p.cat))];
-  const catLabels = { life:'Life', work:'Work', relationships:'Relationships', finance:'Finance/Trading', health:'Health', mindset:'Mindset' };
-
-  cats.forEach(cat => {
-    const group = principles.filter(p => p.cat === cat);
-    const section = document.createElement('div');
-    section.className = 'principle-section';
-    section.innerHTML = `<div class="principle-section-title">◆ ${catLabels[cat] || cat}</div>`;
-    group.reverse().forEach(p => {
-      const div = document.createElement('div');
-      div.className = 'my-principle';
-      div.innerHTML = `
-        <div style="color:var(--gold); font-family:var(--font-mono); font-size:0.8rem; margin-top:2px">✦</div>
-        <div class="mp-body">
-          <div class="mp-text">${p.title}</div>
-          ${p.desc ? `<div class="mp-desc">${p.desc}</div>` : ''}
-          <div style="margin-top:6px; font-family:var(--font-mono); font-size:0.62rem; color:var(--text3)">${new Date(p.created).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</div>
+  const catLabels = {life:'Life',work:'Work',relationships:'Relationships',finance:'Finance/Trading',health:'Health',mindset:'Mindset'};
+  container.innerHTML = list.map(p => `
+    <div class="my-principle">
+      <div class="mp-bullet">✦</div>
+      <div class="mp-body">
+        <div class="mp-text">${esc(p.title)}</div>
+        ${p.desc ? `<div class="mp-desc">${esc(p.desc)}</div>` : ''}
+        <div class="mp-meta">
+          <span class="mp-date">${fmtDate(p.created)}</span>
+          <span class="mp-cat-badge">${catLabels[p.cat]||p.cat}</span>
+          ${p.confidence ? `<span class="mp-cat-badge" style="border-color:var(--gold); color:var(--gold)">confidence ${p.confidence}/10</span>` : ''}
+          ${p.edited ? `<span class="mp-cat-badge" style="color:var(--text3)">edited</span>` : ''}
         </div>
-        <div class="mp-actions">
-          <button class="btn btn-danger btn-sm" onclick="deleteMyPrinciple(${p.id})">✕</button>
-        </div>
-      `;
-      section.appendChild(div);
-    });
-    container.appendChild(section);
-  });
+      </div>
+      <div class="mp-actions">
+        <button class="btn btn-ghost btn-sm btn-icon" onclick="openEditMp(${p.id})" title="Edit">✎</button>
+        <button class="btn btn-danger btn-sm btn-icon" onclick="deleteMyPrinciple(${p.id})" title="Delete">✕</button>
+      </div>
+    </div>
+  `).join('');
 }
 
-async function deleteMyPrinciple(id) {
-  await dbDelete('myprinciples', id);
+function filterMp(cat, btn) {
+  currentMpFilter = cat;
+  document.querySelectorAll('#page-myprinciples .filter-tab').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
   renderMyPrinciples();
 }
 
-// ============================================================
+async function openEditMp(id) {
+  const p = await dbGet('myprinciples', id);
+  editingModalId = id;
+  document.getElementById('modal-mp-title').value = p.title || '';
+  document.getElementById('modal-mp-desc').value = p.desc || '';
+  document.getElementById('modal-mp-cat').value = p.cat || 'life';
+  document.getElementById('modal-mp-confidence').value = p.confidence || '';
+  openModal('modal-mp');
+}
+
+async function updateMyPrinciple() {
+  if (!editingModalId) return;
+  const p = await dbGet('myprinciples', editingModalId);
+  p.title = document.getElementById('modal-mp-title').value.trim();
+  p.desc = document.getElementById('modal-mp-desc').value.trim();
+  p.cat = document.getElementById('modal-mp-cat').value;
+  p.confidence = parseInt(document.getElementById('modal-mp-confidence').value) || null;
+  p.edited = new Date().toISOString();
+  await dbPut('myprinciples', p);
+  closeModal('modal-mp');
+  showToast('✦ Principle updated.', 'success');
+  renderMyPrinciples();
+  updateDashboard();
+}
+
+async function deleteMyPrinciple(id) {
+  if (!confirm('Delete this principle?')) return;
+  await dbDelete('myprinciples', id);
+  renderMyPrinciples();
+  updateDashboard();
+  showToast('Principle deleted.');
+}
+
+function cancelMpEdit() {}
+
+// ═══════════════════════════════════════════════════════════════
+// BOOKMARKS
+// ═══════════════════════════════════════════════════════════════
+function renderBookmarks() {
+  const container = document.getElementById('bookmarks-list');
+  const bm = ALL_PRINCIPLES.filter(p => bookmarks.includes(p.id));
+  if (!bm.length) {
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">◇</div><p>No bookmarks yet. Go to <strong>All Principles</strong> and bookmark favorites with ◇.</p></div>`;
+    return;
+  }
+  container.innerHTML = bm.map(p => renderPrincipleItem(p)).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// HISTORY / ACTIVITY LOG
+// ═══════════════════════════════════════════════════════════════
+async function renderHistory() {
+  const [entries, goals, myp] = await Promise.all([
+    dbGetAll('journal'), dbGetAll('goals'), dbGetAll('myprinciples')
+  ]);
+
+  const search = document.getElementById('history-search').value.toLowerCase();
+
+  const all = [
+    ...entries.map(e => ({type:'journal', title:e.pain, subtitle:`${e.reflection ? e.reflection.slice(0,60)+'…' : ''}`, date:e.date, id:e.id})),
+    ...goals.map(g => ({type:'goal', title:g.title, subtitle:`${g.steps.filter(s=>s.done).length}/${g.steps.length} steps`, date:g.created, id:g.id, completed:g.completed})),
+    ...myp.map(p => ({type:'principle', title:p.title, subtitle:(p.cat||''), date:p.created, id:p.id})),
+  ].sort((a,b) => new Date(b.date)-new Date(a.date));
+
+  const counts = {
+    all: all.length,
+    journal: entries.length,
+    goal: goals.length,
+    principle: myp.length,
+  };
+  ['all','journal','goal','principle'].forEach(k => {
+    const el = document.getElementById('hf-'+k);
+    if (el) el.textContent = counts[k];
+  });
+  document.getElementById('badge-history').textContent = all.length;
+
+  let filtered = all;
+  if (currentHistoryFilter !== 'all') filtered = all.filter(i => i.type === currentHistoryFilter);
+  if (search) filtered = filtered.filter(i => i.title.toLowerCase().includes(search));
+
+  const container = document.getElementById('history-list');
+  if (!filtered.length) {
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">◷</div><p>No activity recorded yet.</p></div>`;
+    return;
+  }
+
+  // Group by date
+  const byDate = {};
+  filtered.forEach(item => {
+    const d = new Date(item.date).toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'});
+    if (!byDate[d]) byDate[d] = [];
+    byDate[d].push(item);
+  });
+
+  container.innerHTML = Object.entries(byDate).map(([date, items]) => `
+    <div style="margin-bottom:20px">
+      <div style="font-family:var(--font-mono); font-size:0.66rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--text3); margin-bottom:10px; padding-bottom:6px; border-bottom:1px solid var(--border)">${date}</div>
+      ${items.map(item => `
+        <div class="history-item">
+          <div class="hi-dot ${item.type}"></div>
+          <div class="hi-body">
+            <div class="hi-title">${esc(item.title)}</div>
+            <div class="hi-meta">${item.subtitle || ''}</div>
+          </div>
+          <span class="hi-type-badge ${item.type}">${item.type}${item.completed?' · done':''}</span>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
+function filterHistory(type, btn) {
+  currentHistoryFilter = type;
+  document.querySelectorAll('#history-filters .filter-tab').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderHistory();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════════════
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function truncate(s, n) { return s && s.length > n ? s.slice(0,n)+'…' : s||''; }
+function fmtDate(d) {
+  if (!d) return '';
+  return new Date(d).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+}
+function fmtDateShort(d) {
+  if (!d) return '';
+  return new Date(d).toLocaleDateString('en-US', {month:'short', day:'numeric'});
+}
+
+// ═══════════════════════════════════════════════════════════════
+// KEYBOARD SHORTCUTS
+// ═══════════════════════════════════════════════════════════════
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════
 // INIT
-// ============================================================
+// ═══════════════════════════════════════════════════════════════
 openDB().then(() => {
   updateDashboard();
 });
