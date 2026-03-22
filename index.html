@@ -1,1999 +1,1738 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GUNGDE — Life OS · Billionaire Journey</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=JetBrains+Mono:wght@300;400;500&family=Outfit:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<title>Principles — Ray Dalio Companion</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #060810;
-  --bg2: #0c0e1a;
-  --bg3: #111425;
-  --bg4: #181c2e;
-  --accent: #00d4ff;
-  --accent2: #0099cc;
-  --gold: #f0c040;
-  --gold2: #c8952a;
-  --green: #00e676;
-  --red: #ff4444;
-  --purple: #b388ff;
-  --text: #e8eaf6;
-  --text2: #8892b0;
-  --text3: #3d4468;
-  --border: rgba(0,212,255,0.12);
-  --border2: rgba(0,212,255,0.06);
-  --glow: 0 0 20px rgba(0,212,255,0.15);
-  --glow-gold: 0 0 20px rgba(240,192,64,0.2);
+  --bg: #0d0d0d;
+  --bg2: #141414;
+  --bg3: #1c1c1c;
+  --card: #1a1a1a;
+  --border: #2a2a2a;
+  --gold: #c9a84c;
+  --gold2: #e8c472;
+  --gold-dim: rgba(201,168,76,0.15);
+  --text: #e8e4dc;
+  --text2: #a09890;
+  --text3: #5a5550;
+  --red: #c45c4c;
+  --green: #5a9e6e;
+  --blue: #4c7ec9;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'IBM Plex Sans', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
 }
-*{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:'Outfit',sans-serif;
-  font-weight:300;
-  min-height:100vh;
-  overflow-x:hidden;
+* { margin:0; padding:0; box-sizing:border-box; }
+html { font-size:16px; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  display: flex;
 }
-
-/* ANIMATED BG */
-body::before{
-  content:'';
-  position:fixed;inset:0;
-  background:
-    radial-gradient(ellipse 80% 50% at 20% 10%, rgba(0,212,255,0.04) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(240,192,64,0.03) 0%, transparent 60%);
-  pointer-events:none;z-index:0;
-}
-
-/* GRID BG */
-body::after{
-  content:'';
-  position:fixed;inset:0;
-  background-image:
-    linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
-  background-size:60px 60px;
-  pointer-events:none;z-index:0;
-}
-
-/* LAYOUT */
-.app{display:flex;min-height:100vh;position:relative;z-index:1;}
-
 /* SIDEBAR */
-.sidebar{
-  width:220px;flex-shrink:0;
-  background:rgba(12,14,26,0.95);
-  border-right:1px solid var(--border);
-  display:flex;flex-direction:column;
-  position:fixed;top:0;bottom:0;left:0;
-  backdrop-filter:blur(20px);
-  z-index:100;
+.sidebar {
+  width: 220px;
+  min-width: 220px;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  overflow-y: auto;
 }
-
-.brand{
-  padding:24px 20px 20px;
-  border-bottom:1px solid var(--border2);
+.sidebar-logo {
+  padding: 28px 24px 20px;
+  border-bottom: 1px solid var(--border);
 }
-.brand-name{
-  font-family:'Playfair Display',serif;
-  font-size:22px;font-weight:900;
-  background:linear-gradient(135deg,var(--accent),var(--gold));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  letter-spacing:2px;
+.sidebar-logo h1 {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0.02em;
 }
-.brand-sub{font-size:9px;letter-spacing:3px;color:var(--text3);text-transform:uppercase;margin-top:3px;}
-
-.nav-section{padding:0 12px;margin-top:16px;}
-.nav-label{font-size:8px;letter-spacing:3px;color:var(--text3);text-transform:uppercase;padding:0 8px 8px;}
-.nav-btn{
-  display:flex;align-items:center;gap:10px;
-  padding:9px 10px;border-radius:8px;
-  cursor:pointer;font-size:11.5px;
-  color:var(--text2);letter-spacing:.5px;
-  transition:all .2s;margin-bottom:2px;
-  background:none;border:none;width:100%;text-align:left;
-  font-family:'Outfit',sans-serif;font-weight:300;
+.sidebar-logo p {
+  font-size: 0.7rem;
+  color: var(--text3);
+  font-family: var(--font-mono);
+  margin-top: 3px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
-.nav-btn:hover{background:rgba(0,212,255,0.06);color:var(--text);}
-.nav-btn.active{background:rgba(0,212,255,0.1);color:var(--accent);border-left:2px solid var(--accent);}
-.nav-icon{font-size:14px;width:18px;text-align:center;flex-shrink:0;}
-
-.sidebar-bottom{
-  margin-top:auto;
-  padding:16px;
-  border-top:1px solid var(--border2);
+.nav { padding: 12px 0; flex: 1; }
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 24px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-size: 0.82rem;
+  color: var(--text2);
+  border-left: 2px solid transparent;
+  letter-spacing: 0.01em;
 }
-.score-box{
-  background:linear-gradient(135deg,rgba(0,212,255,0.08),rgba(240,192,64,0.05));
-  border:1px solid var(--border);
-  border-radius:10px;padding:12px;text-align:center;
-  cursor:pointer;
+.nav-item:hover { background: var(--bg3); color: var(--text); }
+.nav-item.active { color: var(--gold); border-left-color: var(--gold); background: var(--gold-dim); }
+.nav-item .icon { font-size: 1rem; width: 18px; text-align: center; }
+.sidebar-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  font-size: 0.68rem;
+  color: var(--text3);
+  font-family: var(--font-mono);
 }
-.score-num{
-  font-family:'Playfair Display',serif;
-  font-size:34px;font-weight:900;
-  background:linear-gradient(135deg,var(--accent),var(--gold));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  line-height:1;
-}
-.score-lbl{font-size:8px;letter-spacing:3px;color:var(--text3);text-transform:uppercase;margin-top:4px;}
-.score-streak{font-size:10px;color:var(--gold);margin-top:6px;font-family:'JetBrains Mono',monospace;}
 
 /* MAIN */
-.main{margin-left:220px;flex:1;display:flex;flex-direction:column;}
+.main { flex: 1; min-height: 100vh; overflow-y: auto; }
+.page { display: none; padding: 40px 48px; max-width: 960px; }
+.page.active { display: block; }
 
-/* TOPBAR */
-.topbar{
-  position:sticky;top:0;z-index:50;
-  background:rgba(6,8,16,0.9);
-  backdrop-filter:blur(24px);
-  border-bottom:1px solid var(--border2);
-  padding:14px 32px;
-  display:flex;align-items:center;justify-content:space-between;
+/* HEADERS */
+.page-header { margin-bottom: 36px; }
+.page-header h2 {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
 }
-.page-title{
-  font-family:'Playfair Display',serif;
-  font-size:20px;font-weight:700;color:var(--text);
-}
-.page-title em{color:var(--accent);font-style:italic;}
-.topbar-right{display:flex;align-items:center;gap:10px;}
-.live-date{
-  font-family:'JetBrains Mono',monospace;
-  font-size:10px;color:var(--text3);
-  padding:6px 12px;
-  border:1px solid var(--border2);
-  border-radius:6px;
+.page-header p { font-size: 0.85rem; color: var(--text2); margin-top: 8px; }
+.tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  border: 1px solid var(--gold);
+  padding: 2px 8px;
+  margin-bottom: 10px;
+  opacity: 0.7;
 }
 
-/* BUTTONS */
-.btn{
-  padding:7px 16px;font-size:10px;
-  font-family:'Outfit',sans-serif;font-weight:500;
-  letter-spacing:1.5px;text-transform:uppercase;
-  border-radius:6px;cursor:pointer;border:none;
-  transition:all .2s;
+/* CARDS */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 24px;
+  margin-bottom: 16px;
+  transition: border-color 0.15s;
 }
-.btn-primary{
-  background:linear-gradient(135deg,var(--accent2),var(--accent));
-  color:var(--bg);
+.card:hover { border-color: #3a3a3a; }
+.card-gold { border-left: 3px solid var(--gold); }
+.card h3 {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
 }
-.btn-primary:hover{transform:translateY(-1px);box-shadow:var(--glow);}
-.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text2);}
-.btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
-.btn-gold{
-  background:linear-gradient(135deg,var(--gold2),var(--gold));
-  color:var(--bg);
+.card p { font-size: 0.83rem; color: var(--text2); line-height: 1.65; }
+.card-meta {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text3);
+  margin-bottom: 6px;
 }
-.btn-gold:hover{transform:translateY(-1px);box-shadow:var(--glow-gold);}
-.btn-danger{background:rgba(255,68,68,0.15);border:1px solid rgba(255,68,68,0.3);color:var(--red);}
-.btn-sm{padding:5px 12px;font-size:9px;}
-
-/* CONTENT */
-.content{padding:28px 32px;flex:1;}
-.page{display:none;animation:fadeUp .35s ease both;}
-.page.active{display:block;}
-
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
 
 /* GRID */
-.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
-.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
-.g-auto{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-bottom:20px;}
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
 
-/* CARD */
-.card{
-  background:var(--bg2);
-  border:1px solid var(--border2);
-  border-radius:12px;padding:18px;
-  transition:border-color .2s,transform .2s;
-  position:relative;overflow:hidden;
+/* STAT CARDS */
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 20px 24px;
+  border-radius: 2px;
 }
-.card:hover{border-color:var(--border);}
-.card-accent{border-color:rgba(0,212,255,0.25);}
-.card-gold{border-color:rgba(240,192,64,0.25);background:linear-gradient(135deg,rgba(240,192,64,0.05),var(--bg2));}
-
-.card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--border),transparent);
+.stat-card .num {
+  font-family: var(--font-mono);
+  font-size: 2rem;
+  font-weight: 500;
+  color: var(--gold);
 }
-
-.ctitle{
-  font-size:9px;letter-spacing:3px;
-  text-transform:uppercase;color:var(--text3);
-  margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;
-}
-.ctitle-action{
-  font-size:9px;letter-spacing:1px;
-  color:var(--accent);cursor:pointer;
-  background:none;border:none;
-  font-family:'Outfit',sans-serif;
-  text-transform:uppercase;
+.stat-card .lbl {
+  font-size: 0.72rem;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: var(--font-mono);
+  margin-top: 4px;
 }
 
-.big-num{
-  font-family:'Playfair Display',serif;
-  font-size:38px;font-weight:700;
-  color:var(--text);line-height:1;
+/* QUOTE BLOCK */
+.quote-block {
+  background: var(--gold-dim);
+  border-left: 3px solid var(--gold);
+  padding: 20px 24px;
+  margin: 24px 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--text);
+  line-height: 1.6;
+  border-radius: 0 2px 2px 0;
 }
-.big-unit{font-size:16px;color:var(--text2);}
-.sub-text{font-size:10px;color:var(--text3);margin-top:4px;letter-spacing:.5px;}
-.delta{
-  display:inline-flex;align-items:center;gap:4px;
-  font-family:'JetBrains Mono',monospace;
-  font-size:10px;margin-top:8px;
-  padding:3px 8px;border-radius:4px;
-}
-.up{background:rgba(0,230,118,0.1);color:var(--green);}
-.dn{background:rgba(255,68,68,0.1);color:var(--red);}
-.neu{background:rgba(0,212,255,0.1);color:var(--accent);}
 
-/* INPUT */
-.inp{
-  background:rgba(255,255,255,0.03);
-  border:1px solid var(--border);
-  border-radius:8px;padding:9px 12px;
-  color:var(--text);font-family:'Outfit',sans-serif;
-  font-size:12px;font-weight:300;
-  outline:none;transition:border-color .2s;width:100%;
+/* PRINCIPLE LIST */
+.principle-section { margin-bottom: 32px; }
+.principle-section-title {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--gold-dim);
 }
-.inp:focus{border-color:var(--accent);}
-.inp::placeholder{color:var(--text3);}
-select.inp{cursor:pointer;}
-select.inp option{background:var(--bg3);}
-textarea.inp{resize:vertical;line-height:1.6;}
+.principle-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 16px 20px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  border-radius: 2px;
+}
+.principle-item:hover { border-color: var(--gold); background: #1f1f1f; }
+.principle-item.expanded { border-color: var(--gold); }
+.pi-header { display: flex; align-items: flex-start; gap: 12px; }
+.pi-num {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--gold);
+  min-width: 40px;
+  margin-top: 2px;
+  opacity: 0.8;
+}
+.pi-title {
+  font-size: 0.88rem;
+  color: var(--text);
+  font-weight: 500;
+  line-height: 1.4;
+  flex: 1;
+}
+.pi-toggle { color: var(--text3); font-size: 0.8rem; margin-left: auto; transition: transform 0.2s; }
+.pi-body {
+  display: none;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 0.81rem;
+  color: var(--text2);
+  line-height: 1.7;
+}
+.pi-body.show { display: block; }
+.pi-sub {
+  margin: 8px 0 4px 0;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+.pi-sub-letter {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--gold);
+  opacity: 0.7;
+  min-width: 16px;
+  margin-top: 1px;
+}
 
-.flabel{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:5px;display:block;}
+/* FORMS & INPUTS */
+input, textarea, select {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  padding: 10px 14px;
+  border-radius: 2px;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.15s;
+}
+input:focus, textarea:focus, select:focus { border-color: var(--gold); }
+textarea { resize: vertical; min-height: 80px; }
+label {
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: var(--font-mono);
+  color: var(--text3);
+  margin-bottom: 6px;
+}
+.field { margin-bottom: 16px; }
 
-/* SECTION HEADER */
-.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-.sh-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:400;color:var(--text);}
+/* BUTTONS */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s;
+  border-radius: 2px;
+}
+.btn:hover { border-color: var(--gold); color: var(--gold); }
+.btn-gold {
+  background: var(--gold);
+  color: var(--bg);
+  border-color: var(--gold);
+  font-weight: 500;
+}
+.btn-gold:hover { background: var(--gold2); border-color: var(--gold2); color: var(--bg); }
+.btn-danger { border-color: var(--red); color: var(--red); }
+.btn-danger:hover { background: var(--red); color: white; }
+.btn-sm { padding: 6px 12px; font-size: 0.68rem; }
 
-/* TABLE */
-.tbl{width:100%;border-collapse:collapse;}
-.tbl th{
-  font-size:8px;letter-spacing:2px;text-transform:uppercase;
-  color:var(--text3);padding:8px 10px;
-  text-align:left;border-bottom:1px solid var(--border2);
+/* STEP TRACKER */
+.step-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 20px 24px;
+  margin-bottom: 12px;
+  transition: all 0.15s;
 }
-.tbl td{
-  padding:10px;font-size:11px;
-  border-bottom:1px solid rgba(255,255,255,0.03);
-  color:var(--text2);vertical-align:middle;
+.step-card.done { border-color: var(--green); opacity: 0.7; }
+.step-card.active-step { border-color: var(--gold); }
+.step-header { display: flex; align-items: center; gap: 14px; }
+.step-num {
+  width: 32px; height: 32px;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text2);
+  flex-shrink: 0;
+  transition: all 0.2s;
 }
-.tbl tr:hover td{background:rgba(0,212,255,0.03);}
-.tbl .tdl{color:var(--text);}
+.step-card.done .step-num { border-color: var(--green); color: var(--green); background: rgba(90,158,110,0.1); }
+.step-card.active-step .step-num { border-color: var(--gold); color: var(--gold); background: var(--gold-dim); }
+.step-info { flex: 1; }
+.step-title { font-weight: 500; font-size: 0.9rem; }
+.step-desc { font-size: 0.78rem; color: var(--text3); margin-top: 2px; }
+.step-body { display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+.step-body.show { display: block; }
 
-/* HABIT */
-.hrow{
-  display:flex;align-items:center;gap:12px;
-  padding:10px 0;border-bottom:1px solid var(--border2);
+/* JOURNAL */
+.journal-entry {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 20px 24px;
+  margin-bottom: 12px;
 }
-.hrow:last-child{border-bottom:none;}
-.hicon{font-size:16px;width:24px;text-align:center;flex-shrink:0;}
-.hinfo{flex:1;}
-.hname{font-size:12px;color:var(--text);margin-bottom:2px;}
-.htgt{font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;}
-.hbar-w{width:80px;height:2px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;flex-shrink:0;}
-.hbar{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:2px;transition:width 1s ease;}
-.hcheck{
-  width:22px;height:22px;border-radius:50%;
-  border:1.5px solid var(--border);
-  cursor:pointer;display:flex;align-items:center;justify-content:center;
-  font-size:9px;transition:all .2s;
-  background:transparent;color:transparent;flex-shrink:0;
+.je-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
+.je-date { font-family: var(--font-mono); font-size: 0.68rem; color: var(--text3); }
+.je-pain { font-size: 0.85rem; font-weight: 600; color: var(--red); margin-bottom: 8px; }
+.je-reflection { font-size: 0.83rem; color: var(--text2); line-height: 1.6; }
+.je-progress {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: rgba(90,158,110,0.1);
+  border-left: 2px solid var(--green);
+  font-size: 0.8rem;
+  color: var(--green);
 }
-.hcheck.done{background:var(--green);border-color:var(--green);color:var(--bg);}
+.je-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.je-tag {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  color: var(--text3);
+  border-radius: 20px;
+}
 
-/* GOAL CARD */
-.gcard{
-  border:1px solid var(--border2);
-  border-radius:10px;padding:16px;
-  margin-bottom:12px;
-  background:rgba(255,255,255,0.01);
-  transition:all .2s;cursor:pointer;
-  position:relative;
+/* DECISION TOOL */
+.decision-option {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 20px;
+  margin-bottom: 12px;
+  position: relative;
 }
-.gcard:hover{border-color:var(--border);background:rgba(0,212,255,0.02);}
-.gcard-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
-.gcard-emoji{font-size:20px;}
-.gcard-title{font-size:13px;color:var(--text);flex:1;}
-.gcard-target{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);}
-.progress-bar{height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;margin-bottom:6px;}
-.progress-fill{height:100%;border-radius:2px;transition:width 1s ease;}
-.gcard-meta{display:flex;justify-content:space-between;font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;}
-.edit-btn{
-  position:absolute;top:12px;right:12px;
-  background:none;border:none;color:var(--text3);
-  cursor:pointer;font-size:13px;
-  transition:color .2s;
+.decision-option h4 { font-size: 0.9rem; margin-bottom: 12px; }
+.pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.pc-list { font-size: 0.78rem; color: var(--text2); }
+.pc-list .pc-title {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
 }
-.edit-btn:hover{color:var(--accent);}
+.pc-list.pros .pc-title { color: var(--green); }
+.pc-list.cons .pc-title { color: var(--red); }
+.pc-item { display: flex; gap: 6px; margin-bottom: 4px; align-items: flex-start; }
+.pc-dot { margin-top: 4px; width: 4px; height: 4px; border-radius: 50%; flex-shrink: 0; }
+.pros .pc-dot { background: var(--green); }
+.cons .pc-dot { background: var(--red); }
 
-/* HISTORY */
-.hist-item{
-  display:flex;align-items:flex-start;gap:12px;
-  padding:12px 0;border-bottom:1px solid var(--border2);
+/* METER */
+.meter-wrap { margin: 12px 0; }
+.meter-label { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text3); font-family: var(--font-mono); margin-bottom: 6px; }
+.meter {
+  height: 4px;
+  background: var(--bg3);
+  border-radius: 2px;
+  overflow: hidden;
 }
-.hist-dot{
-  width:8px;height:8px;border-radius:50%;
-  flex-shrink:0;margin-top:4px;
+.meter-fill {
+  height: 100%;
+  background: var(--gold);
+  border-radius: 2px;
+  transition: width 0.4s ease;
 }
-.hist-content{flex:1;}
-.hist-title{font-size:12px;color:var(--text);margin-bottom:3px;}
-.hist-meta{font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace;}
-.hist-val{font-family:'JetBrains Mono',monospace;font-size:11px;flex-shrink:0;}
 
-/* PORTFOLIO */
-.port-row{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 0;border-bottom:1px solid var(--border2);
+/* TOGGLE SWITCH */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.83rem;
 }
-.port-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
-.port-info{flex:1;}
-.port-name{font-size:12px;color:var(--text);}
-.port-market{font-size:9px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;}
-.port-val{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text);text-align:right;}
-.port-pnl{font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right;}
+.toggle {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  cursor: pointer;
+}
+.toggle input { display: none; }
+.toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  transition: all 0.2s;
+}
+.toggle-slider::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--text3);
+  transition: all 0.2s;
+}
+.toggle input:checked + .toggle-slider { background: var(--gold-dim); border-color: var(--gold); }
+.toggle input:checked + .toggle-slider::after { left: 19px; background: var(--gold); }
 
-/* TAG */
-.tag{
-  font-size:8px;padding:2px 7px;border-radius:3px;
-  letter-spacing:1px;text-transform:uppercase;font-weight:500;
-}
-.tag-forex{background:rgba(0,212,255,0.1);color:var(--accent);}
-.tag-crypto{background:rgba(179,136,255,0.1);color:var(--purple);}
-.tag-gold{background:rgba(240,192,64,0.1);color:var(--gold);}
-.tag-habit{background:rgba(0,230,118,0.1);color:var(--green);}
-.tag-goal{background:rgba(240,192,64,0.1);color:var(--gold);}
-.tag-wealth{background:rgba(0,212,255,0.1);color:var(--accent);}
+/* DIVIDER */
+.divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
 
-/* MODAL */
-.overlay{
-  display:none;position:fixed;inset:0;
-  background:rgba(0,0,0,0.85);
-  backdrop-filter:blur(12px);
-  z-index:500;align-items:center;justify-content:center;
-}
-.overlay.open{display:flex;}
-.modal{
-  background:var(--bg3);
-  border:1px solid var(--border);
-  border-radius:16px;padding:28px;
-  width:520px;max-width:92vw;
-  max-height:88vh;overflow-y:auto;
-  position:relative;
-}
-.modal-title{
-  font-family:'Playfair Display',serif;
-  font-size:20px;font-weight:700;
-  margin-bottom:4px;color:var(--text);
-}
-.modal-sub{font-size:10px;color:var(--text3);letter-spacing:1px;margin-bottom:22px;}
-.mclose{
-  position:absolute;top:16px;right:16px;
-  background:none;border:none;color:var(--text3);
-  font-size:18px;cursor:pointer;
-  transition:color .2s;
-}
-.mclose:hover{color:var(--text);}
-.frow{margin-bottom:14px;}
-.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
-.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:4px;}
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #3a3a3a; }
 
 /* TOAST */
-.toast{
-  position:fixed;bottom:28px;right:28px;
-  background:var(--bg3);border:1px solid var(--accent);
-  border-radius:10px;padding:12px 18px;
-  font-size:12px;color:var(--text);
-  transform:translateY(60px);opacity:0;
-  transition:all .3s;z-index:9999;
-  display:flex;align-items:center;gap:8px;
-  font-family:'JetBrains Mono',monospace;
-  box-shadow:var(--glow);
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--card);
+  border: 1px solid var(--gold);
+  padding: 12px 20px;
+  font-size: 0.82rem;
+  border-radius: 2px;
+  z-index: 999;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s;
+  font-family: var(--font-mono);
+  max-width: 300px;
 }
-.toast.show{transform:translateY(0);opacity:1;}
+.toast.show { opacity: 1; transform: translateY(0); }
 
-/* SETTINGS */
-.setting-row{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:14px 0;border-bottom:1px solid var(--border2);
+/* BADGES */
+.badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 2px 8px;
+  border-radius: 2px;
+  font-weight: 500;
 }
-.setting-label{font-size:12px;color:var(--text);}
-.setting-sub{font-size:10px;color:var(--text3);margin-top:2px;}
+.badge-life { background: rgba(201,168,76,0.15); color: var(--gold); }
+.badge-work { background: rgba(76,126,201,0.15); color: var(--blue); }
 
-/* TOGGLE */
-.toggle{
-  position:relative;width:40px;height:22px;cursor:pointer;
+/* CHECKLIST */
+.checklist-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.83rem;
+  cursor: pointer;
+  transition: color 0.15s;
 }
-.toggle input{opacity:0;width:0;height:0;}
-.toggle-slider{
-  position:absolute;inset:0;
-  background:var(--bg4);border-radius:22px;
-  border:1px solid var(--border);
-  transition:all .2s;
+.checklist-item:hover { color: var(--gold); }
+.check-box {
+  width: 18px; height: 18px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+  font-size: 0.7rem;
+  transition: all 0.15s;
 }
-.toggle-slider::before{
-  content:'';position:absolute;
-  width:16px;height:16px;border-radius:50%;
-  background:var(--text3);
-  top:2px;left:2px;transition:all .2s;
+.checklist-item.checked .check-box {
+  background: var(--gold-dim);
+  border-color: var(--gold);
+  color: var(--gold);
 }
-.toggle input:checked + .toggle-slider{background:rgba(0,212,255,0.2);border-color:var(--accent);}
-.toggle input:checked + .toggle-slider::before{transform:translateX(18px);background:var(--accent);}
+.checklist-item.checked .check-text { text-decoration: line-through; color: var(--text3); }
 
-/* QUOTE */
-.quote-box{
-  border-left:2px solid var(--accent);
-  padding:14px 18px;
-  background:rgba(0,212,255,0.03);
-  border-radius:0 8px 8px 0;
-  margin-bottom:16px;
+/* DAILY PRINCIPLE */
+.daily-principle {
+  background: linear-gradient(135deg, #1a1a14, #1a1710);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 2px;
+  padding: 32px 36px;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
 }
-.quote-text{font-family:'Playfair Display',serif;font-style:italic;font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:6px;}
-.quote-author{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);}
+.daily-principle::before {
+  content: '"';
+  position: absolute;
+  top: -10px;
+  left: 24px;
+  font-family: var(--font-serif);
+  font-size: 8rem;
+  color: var(--gold);
+  opacity: 0.08;
+  line-height: 1;
+}
+.dp-tag { font-family: var(--font-mono); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--gold); opacity: 0.7; margin-bottom: 14px; }
+.dp-text {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  line-height: 1.55;
+  font-style: italic;
+  color: var(--text);
+  position: relative;
+}
+.dp-source { margin-top: 14px; font-size: 0.75rem; color: var(--text3); font-family: var(--font-mono); }
 
-/* MILESTONE TIMELINE */
-.timeline{position:relative;padding-left:24px;}
-.timeline::before{
-  content:'';position:absolute;left:7px;top:0;bottom:0;
-  width:1px;background:linear-gradient(to bottom,var(--accent),transparent);
+/* My principles custom */
+.my-principle {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 16px 20px;
+  margin-bottom: 8px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
 }
-.tl-item{position:relative;margin-bottom:20px;}
-.tl-dot{
-  position:absolute;left:-20px;top:3px;
-  width:14px;height:14px;border-radius:50%;
-  border:2px solid var(--bg3);
-}
-.tl-date{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text3);margin-bottom:4px;}
-.tl-title{font-size:12px;color:var(--text);margin-bottom:2px;}
-.tl-desc{font-size:10px;color:var(--text3);line-height:1.5;}
+.mp-body { flex: 1; }
+.mp-text { font-size: 0.85rem; font-weight: 500; margin-bottom: 4px; }
+.mp-desc { font-size: 0.78rem; color: var(--text3); line-height: 1.5; }
+.mp-actions { display: flex; gap: 6px; }
 
-/* SCROLL */
-::-webkit-scrollbar{width:4px;}
-::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px;}
-::-webkit-scrollbar-thumb:hover{background:var(--text3);}
-
-/* CHART BARS */
-.chart-bars{display:flex;align-items:flex-end;gap:4px;height:60px;padding-top:4px;}
-.cbar{
-  flex:1;border-radius:3px 3px 0 0;
-  min-height:3px;transition:height .5s ease;cursor:pointer;
-  position:relative;
+/* ANIMATIONS */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-.cbar:hover::after{
-  content:attr(data-val);
-  position:absolute;bottom:calc(100% + 4px);left:50%;
-  transform:translateX(-50%);
-  background:var(--bg4);border:1px solid var(--border);
-  border-radius:4px;padding:2px 6px;
-  font-size:9px;color:var(--text);white-space:nowrap;
-  font-family:'JetBrains Mono',monospace;
-}
-.cbar-labels{display:flex;gap:4px;margin-top:4px;}
-.cbar-label{flex:1;text-align:center;font-size:8px;color:var(--text3);font-family:'JetBrains Mono',monospace;}
+.page.active { animation: fadeIn 0.25s ease; }
 
-@media(max-width:900px){
-  .sidebar{width:52px;}
-  .brand-name,.brand-sub,.nav-label,.nav-btn span{display:none;}
-  .nav-btn{justify-content:center;padding:9px;}
-  .main{margin-left:52px;}
-  .g4{grid-template-columns:1fr 1fr;}
-  .g3{grid-template-columns:1fr 1fr;}
-  .content{padding:18px 16px;}
-  .topbar{padding:12px 16px;}
-  .modal{padding:20px;}
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .sidebar { width: 60px; min-width: 60px; }
+  .sidebar-logo, .nav-item span, .sidebar-footer { display: none; }
+  .nav-item { justify-content: center; padding: 14px; }
+  .page { padding: 24px 20px; }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
-<div class="app">
 
 <!-- SIDEBAR -->
-<aside class="sidebar">
-  <div class="brand">
-    <div class="brand-name">GUNGDE</div>
-    <div class="brand-sub">Life OS · Billionaire Path</div>
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <h1>Principles</h1>
+    <p>Ray Dalio · 2017</p>
   </div>
-  <nav>
-    <div class="nav-section">
-      <div class="nav-label">Overview</div>
-      <button class="nav-btn active" onclick="nav('dashboard')">
-        <span class="nav-icon">⬡</span><span>Dashboard</span>
-      </button>
+  <div class="nav">
+    <div class="nav-item active" onclick="goTo('dashboard')">
+      <span class="icon">◆</span>
+      <span>Dashboard</span>
     </div>
-    <div class="nav-section">
-      <div class="nav-label">Trading</div>
-      <button class="nav-btn" onclick="nav('portfolio')">
-        <span class="nav-icon">◈</span><span>Portfolio</span>
-      </button>
-      <button class="nav-btn" onclick="nav('history')">
-        <span class="nav-icon">◎</span><span>History</span>
-      </button>
+    <div class="nav-item" onclick="goTo('principles')">
+      <span class="icon">§</span>
+      <span>All Principles</span>
     </div>
-    <div class="nav-section">
-      <div class="nav-label">Lifestyle</div>
-      <button class="nav-btn" onclick="nav('habits')">
-        <span class="nav-icon">◉</span><span>Daily Habits</span>
-      </button>
-      <button class="nav-btn" onclick="nav('goals')">
-        <span class="nav-icon">◐</span><span>Goals & Milestone</span>
-      </button>
+    <div class="nav-item" onclick="goTo('fivesteps')">
+      <span class="icon">↗</span>
+      <span>5-Step Process</span>
     </div>
-    <div class="nav-section">
-      <div class="nav-label">System</div>
-      <button class="nav-btn" onclick="nav('settings')">
-        <span class="nav-icon">✦</span><span>Settings & Profile</span>
-      </button>
+    <div class="nav-item" onclick="goTo('journal')">
+      <span class="icon">✦</span>
+      <span>Pain → Progress</span>
     </div>
-  </nav>
-  <div class="sidebar-bottom">
-    <div class="score-box" onclick="nav('dashboard')">
-      <div class="score-num" id="eliteScore">--</div>
-      <div class="score-lbl">Elite Score</div>
-      <div class="score-streak" id="streakDisplay">🔥 0 days</div>
+    <div class="nav-item" onclick="goTo('decisions')">
+      <span class="icon">⚖</span>
+      <span>Decision Maker</span>
+    </div>
+    <div class="nav-item" onclick="goTo('habits')">
+      <span class="icon">○</span>
+      <span>Daily Habits</span>
+    </div>
+    <div class="nav-item" onclick="goTo('myprinciples')">
+      <span class="icon">✎</span>
+      <span>My Principles</span>
     </div>
   </div>
-</aside>
+  <div class="sidebar-footer">v1.0 · Principles</div>
+</nav>
 
-<!-- MAIN -->
+<!-- MAIN CONTENT -->
 <main class="main">
-  <div class="topbar">
-    <div class="page-title" id="pageTitle">Selamat Datang, <em>Gungde</em></div>
-    <div class="topbar-right">
-      <div class="live-date" id="liveDate"></div>
-      <button class="btn btn-ghost btn-sm" onclick="openAddModal()">+ Tambah</button>
-      <button class="btn btn-primary btn-sm" onclick="saveAll()">Simpan</button>
+
+<!-- DASHBOARD -->
+<div class="page active" id="page-dashboard">
+  <div class="page-header">
+    <div class="tag">Daily Overview</div>
+    <h2>Good day — let's be principled.</h2>
+    <p id="dash-date"></p>
+  </div>
+
+  <div class="daily-principle" id="daily-principle-card">
+    <div class="dp-tag">◆ Principle of the Day</div>
+    <div class="dp-text" id="daily-text">Loading...</div>
+    <div class="dp-source" id="daily-source"></div>
+  </div>
+
+  <div class="grid-3" style="margin-bottom:24px">
+    <div class="stat-card">
+      <div class="num" id="stat-journal">0</div>
+      <div class="lbl">Reflections Logged</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" id="stat-goals">0</div>
+      <div class="lbl">Active Goals</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" id="stat-streak">0</div>
+      <div class="lbl">Day Streak</div>
     </div>
   </div>
 
-  <div class="content">
+  <div class="grid-2">
+    <div class="card card-gold">
+      <div class="card-meta">Core Formula</div>
+      <h3>Dreams + Reality + Determination</h3>
+      <p style="margin:10px 0; font-size:1rem; font-family:var(--font-serif); color:var(--gold)">"= A Successful Life"</p>
+      <p>People who achieve success deeply understand the cause-effect relationships that govern reality and have principles for using them.</p>
+    </div>
+    <div class="card">
+      <div class="card-meta">The 5-Step Process</div>
+      <h3>Getting What You Want</h3>
+      <p style="margin-top:10px; line-height:1.8;">
+        <span style="color:var(--gold)">1.</span> Set clear goals<br>
+        <span style="color:var(--gold)">2.</span> Identify problems<br>
+        <span style="color:var(--gold)">3.</span> Diagnose root causes<br>
+        <span style="color:var(--gold)">4.</span> Design a plan<br>
+        <span style="color:var(--gold)">5.</span> Push to completion
+      </p>
+      <button class="btn btn-gold btn-sm" onclick="goTo('fivesteps')" style="margin-top:14px">Open Tracker →</button>
+    </div>
+  </div>
 
-    <!-- ========== DASHBOARD ========== -->
-    <div class="page active" id="page-dashboard">
-      <div class="quote-box" id="dashQuote">
-        <div class="quote-text" id="quoteText">Loading...</div>
-        <div class="quote-author" id="quoteAuthor">—</div>
+  <div class="quote-block">
+    "Pain + Reflection = Progress. Go to the pain rather than avoid it."
+  </div>
+
+  <div class="card">
+    <div class="card-meta">Quick Reflection Prompt</div>
+    <h3>What painful lesson did you encounter today?</h3>
+    <textarea id="quick-reflect" placeholder="Write freely. Radical honesty leads to radical growth..." style="margin-top:12px"></textarea>
+    <button class="btn btn-gold" onclick="saveQuickReflect()" style="margin-top:10px">Log Reflection →</button>
+  </div>
+</div>
+
+<!-- ALL PRINCIPLES -->
+<div class="page" id="page-principles">
+  <div class="page-header">
+    <div class="tag">Reference</div>
+    <h2>All Principles</h2>
+    <p>Browse Life & Work Principles. Click any principle to expand the sub-principles.</p>
+  </div>
+
+  <div style="display:flex; gap:10px; margin-bottom:28px; flex-wrap:wrap">
+    <button class="btn" onclick="filterPrinciples('all')" id="filter-all" style="border-color:var(--gold);color:var(--gold)">All</button>
+    <button class="btn" onclick="filterPrinciples('life')" id="filter-life">Life Principles</button>
+    <button class="btn" onclick="filterPrinciples('work')" id="filter-work">Work Principles</button>
+    <input type="text" id="search-principles" placeholder="Search principles..." style="flex:1; max-width:280px" oninput="searchPrinciples()" />
+  </div>
+
+  <div id="principles-list"></div>
+</div>
+
+<!-- 5-STEP PROCESS -->
+<div class="page" id="page-fivesteps">
+  <div class="page-header">
+    <div class="tag">Goal Tracker</div>
+    <h2>The 5-Step Process</h2>
+    <p>Use the process to get what you want out of life. Create a goal, then work through each step.</p>
+  </div>
+
+  <div class="card" style="margin-bottom:24px">
+    <div class="card-meta">Create New Goal</div>
+    <div class="field" style="margin-top:12px">
+      <label>Goal Title</label>
+      <input type="text" id="goal-title" placeholder="What do you want to achieve?" />
+    </div>
+    <div class="field">
+      <label>Why is this important?</label>
+      <textarea id="goal-why" placeholder="Dig deep. Connect to your core values."></textarea>
+    </div>
+    <button class="btn btn-gold" onclick="createGoal()">Create Goal →</button>
+  </div>
+
+  <div id="goals-container"></div>
+</div>
+
+<!-- JOURNAL -->
+<div class="page" id="page-journal">
+  <div class="page-header">
+    <div class="tag">Pain → Reflection → Progress</div>
+    <h2>Reflection Journal</h2>
+    <p>"The quality of your life will depend on the choices you make at those painful moments." — Ray Dalio</p>
+  </div>
+
+  <div class="card" style="margin-bottom:24px">
+    <div class="card-meta">New Entry</div>
+    <div class="field" style="margin-top:12px">
+      <label>Pain / Problem Encountered</label>
+      <input type="text" id="entry-pain" placeholder="What went wrong? Be brutally honest." />
+    </div>
+    <div class="field">
+      <label>Root Cause (Ask: Why? 3× deep)</label>
+      <textarea id="entry-root" placeholder="Proximate cause: ...\nRoot cause: ..."></textarea>
+    </div>
+    <div class="field">
+      <label>Reflection & Insight</label>
+      <textarea id="entry-reflect" placeholder="What principle does this reveal? What would you do differently?"></textarea>
+    </div>
+    <div class="field">
+      <label>Progress / Action to Take</label>
+      <input type="text" id="entry-progress" placeholder="Concrete next action or principle to adopt." />
+    </div>
+    <div class="field">
+      <label>Tags (comma-separated)</label>
+      <input type="text" id="entry-tags" placeholder="work, relationships, decision-making" />
+    </div>
+    <button class="btn btn-gold" onclick="saveJournalEntry()">Save Entry →</button>
+  </div>
+
+  <div class="divider"></div>
+  <h3 style="font-family:var(--font-mono); font-size:0.75rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--text3); margin-bottom:16px">Previous Entries</h3>
+  <div id="journal-entries"></div>
+</div>
+
+<!-- DECISION MAKER -->
+<div class="page" id="page-decisions">
+  <div class="page-header">
+    <div class="tag">Decision Tool</div>
+    <h2>Make Decisions Effectively</h2>
+    <p>"Make your decisions as expected value calculations." — Principle 5.6</p>
+  </div>
+
+  <div class="card" style="margin-bottom:24px">
+    <div class="card-meta">Decision to Make</div>
+    <div class="field" style="margin-top:12px">
+      <label>What is the decision?</label>
+      <input type="text" id="dec-title" placeholder="State the decision clearly and specifically." />
+    </div>
+    <div class="field">
+      <label>Context & Stakes</label>
+      <textarea id="dec-context" placeholder="What's the situation? What are the consequences?" style="min-height:60px"></textarea>
+    </div>
+  </div>
+
+  <div id="options-container">
+    <div class="grid-2" id="options-grid"></div>
+  </div>
+
+  <button class="btn" onclick="addOption()" style="margin-bottom:20px">+ Add Option</button>
+
+  <div class="card card-gold" id="decision-checklist-card">
+    <div class="card-meta">Dalio's Decision-Making Checklist</div>
+    <div id="dec-checklist" style="margin-top:12px"></div>
+  </div>
+
+  <div class="card" style="margin-top:16px" id="dec-result-card" style="display:none">
+    <div class="card-meta">Recommendation</div>
+    <div id="dec-result"></div>
+  </div>
+</div>
+
+<!-- DAILY HABITS -->
+<div class="page" id="page-habits">
+  <div class="page-header">
+    <div class="tag">Radical Open-Mindedness</div>
+    <h2>Daily Habits Tracker</h2>
+    <p>Practice these habits daily to internalize Dalio's principles.</p>
+  </div>
+
+  <div style="display:flex; gap:10px; align-items:center; margin-bottom:24px; flex-wrap:wrap">
+    <span style="font-family:var(--font-mono); font-size:0.72rem; color:var(--text3)">Today:</span>
+    <span id="habits-date" style="font-family:var(--font-mono); font-size:0.72rem; color:var(--gold)"></span>
+    <button class="btn btn-sm" onclick="resetHabits()">Reset</button>
+  </div>
+
+  <div id="habits-list"></div>
+
+  <div class="divider"></div>
+  <div class="card" style="margin-top:20px">
+    <div class="card-meta">Today's Score</div>
+    <div class="meter-wrap">
+      <div class="meter-label">
+        <span>Radically Open-Minded</span>
+        <span id="habits-score">0%</span>
       </div>
-
-      <div class="g4">
-        <div class="card card-gold">
-          <div class="ctitle">Net Worth</div>
-          <div class="big-num" id="d-networth">$0<span class="big-unit">K</span></div>
-          <div class="sub-text">Total Portfolio + Aset</div>
-          <div class="delta neu" id="d-nw-delta">→ Update data</div>
-        </div>
-        <div class="card">
-          <div class="ctitle">Habit Score Hari Ini</div>
-          <div class="big-num" id="d-habitscore">0<span class="big-unit">%</span></div>
-          <div class="sub-text">Kebiasaan terlaksana</div>
-          <div class="delta" id="d-habit-delta"></div>
-        </div>
-        <div class="card">
-          <div class="ctitle">Total P&L Bulan Ini</div>
-          <div class="big-num" id="d-pnl">$0</div>
-          <div class="sub-text">Forex · Crypto · Gold</div>
-          <div class="delta" id="d-pnl-delta"></div>
-        </div>
-        <div class="card">
-          <div class="ctitle">Goals Progress</div>
-          <div class="big-num" id="d-goals">0<span class="big-unit">%</span></div>
-          <div class="sub-text">Avg semua milestone</div>
-          <div class="delta" id="d-goal-delta"></div>
-        </div>
-      </div>
-
-      <div class="g2">
-        <!-- CHART P&L -->
-        <div class="card">
-          <div class="sh">
-            <div class="sh-title">P&L 7 Hari Terakhir</div>
-            <span class="tag tag-forex">LIVE</span>
-          </div>
-          <div class="chart-bars" id="pnlChart"></div>
-          <div class="cbar-labels" id="pnlLabels"></div>
-        </div>
-
-        <!-- HABITS SNAPSHOT -->
-        <div class="card">
-          <div class="sh">
-            <div class="sh-title">Habits Hari Ini</div>
-            <button class="ctitle-action" onclick="nav('habits')">Lihat Semua →</button>
-          </div>
-          <div id="dashHabits"></div>
-        </div>
-      </div>
-
-      <div class="g2">
-        <!-- PORTFOLIO SNAPSHOT -->
-        <div class="card">
-          <div class="sh">
-            <div class="sh-title">Portfolio Snapshot</div>
-            <button class="ctitle-action" onclick="nav('portfolio')">Detail →</button>
-          </div>
-          <div id="dashPort"></div>
-        </div>
-
-        <!-- GOALS SNAPSHOT -->
-        <div class="card">
-          <div class="sh">
-            <div class="sh-title">Top Goals</div>
-            <button class="ctitle-action" onclick="nav('goals')">Semua →</button>
-          </div>
-          <div id="dashGoals"></div>
-        </div>
-      </div>
-
-      <!-- RECENT HISTORY -->
-      <div class="card">
-        <div class="sh">
-          <div class="sh-title">Riwayat Terbaru</div>
-          <button class="ctitle-action" onclick="nav('history')">Semua →</button>
-        </div>
-        <div id="dashHistory"></div>
+      <div class="meter">
+        <div class="meter-fill" id="habits-fill" style="width:0%"></div>
       </div>
     </div>
+    <p id="habits-message" style="font-size:0.78rem; color:var(--text3); margin-top:10px; font-style:italic;"></p>
+  </div>
+</div>
 
-    <!-- ========== PORTFOLIO ========== -->
-    <div class="page" id="page-portfolio">
-      <div class="g4">
-        <div class="card card-gold">
-          <div class="ctitle">Total Portfolio</div>
-          <div class="big-num" id="p-total">$0</div>
-          <div class="sub-text">Semua aset</div>
-        </div>
-        <div class="card">
-          <div class="ctitle">P&L Total</div>
-          <div class="big-num" id="p-pnl">$0</div>
-          <div class="sub-text">Unrealized + Realized</div>
-        </div>
-        <div class="card">
-          <div class="ctitle">Best Performer</div>
-          <div class="big-num" id="p-best" style="font-size:22px;">--</div>
-          <div class="sub-text" id="p-best-val">--</div>
-        </div>
-        <div class="card">
-          <div class="ctitle">Jumlah Posisi</div>
-          <div class="big-num" id="p-count">0</div>
-          <div class="sub-text">Aset aktif</div>
-        </div>
-      </div>
+<!-- MY PRINCIPLES -->
+<div class="page" id="page-myprinciples">
+  <div class="page-header">
+    <div class="tag">Personal Growth</div>
+    <h2>My Principles</h2>
+    <p>"Having your own principles" — Discover and write down your own principles, inspired by Dalio.</p>
+  </div>
 
-      <div class="card">
-        <div class="sh">
-          <div class="sh-title">Portofolio Saya</div>
-          <button class="btn btn-primary btn-sm" onclick="openPortModal()">+ Tambah Aset</button>
-        </div>
-        <table class="tbl">
-          <thead>
-            <tr>
-              <th>Aset</th><th>Market</th><th>Modal (Harga Beli)</th>
-              <th>Nilai Sekarang</th><th>P&L</th><th>%</th><th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody id="portTable"></tbody>
-        </table>
-        <div id="portEmpty" style="text-align:center;padding:40px;color:var(--text3);font-size:12px;display:none;">
-          Belum ada aset. Klik <strong style="color:var(--accent)">+ Tambah Aset</strong> untuk mulai.
-        </div>
-      </div>
-
-      <!-- ALLOCATION -->
-      <div class="card">
-        <div class="ctitle">Alokasi per Market</div>
-        <div id="allocation" style="display:flex;gap:20px;flex-wrap:wrap;margin-top:4px;"></div>
-      </div>
+  <div class="card" style="margin-bottom:24px">
+    <div class="card-meta">Add New Principle</div>
+    <div class="field" style="margin-top:12px">
+      <label>Principle Statement</label>
+      <input type="text" id="mp-title" placeholder="State it clearly and boldly." />
     </div>
-
-    <!-- ========== HISTORY ========== -->
-    <div class="page" id="page-history">
-      <div class="g3">
-        <div class="card">
-          <div class="ctitle">Total Entri</div>
-          <div class="big-num" id="h-total">0</div>
-          <div class="sub-text">Semua riwayat</div>
-        </div>
-        <div class="card">
-          <div class="ctitle">Net Worth Growth</div>
-          <div class="big-num" id="h-growth">--</div>
-          <div class="sub-text">Dari awal tracking</div>
-        </div>
-        <div class="card">
-          <div class="ctitle">Habit Consistency</div>
-          <div class="big-num" id="h-consistency">0<span class="big-unit">%</span></div>
-          <div class="sub-text">30 hari terakhir</div>
-        </div>
-      </div>
-
-      <!-- FILTER -->
-      <div class="card" style="margin-bottom:14px;">
-        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-          <select class="inp" id="histFilter" style="width:160px;" onchange="renderHistory()">
-            <option value="all">Semua Tipe</option>
-            <option value="portfolio">Portfolio</option>
-            <option value="habit">Habit</option>
-            <option value="goal">Goal</option>
-            <option value="networth">Net Worth</option>
-            <option value="note">Catatan</option>
-          </select>
-          <select class="inp" id="histMarket" style="width:140px;" onchange="renderHistory()">
-            <option value="all">Semua Market</option>
-            <option value="Forex">Forex</option>
-            <option value="Crypto">Crypto</option>
-            <option value="Gold">Gold/Komoditas</option>
-          </select>
-          <input class="inp" id="histSearch" style="width:200px;" placeholder="Cari..." oninput="renderHistory()">
-          <button class="btn btn-ghost btn-sm" onclick="exportHistory()">Export CSV</button>
-          <button class="btn btn-primary btn-sm" onclick="openAddModal()">+ Tambah Catatan</button>
-        </div>
-      </div>
-
-      <div class="card">
-        <div id="historyList"></div>
-        <div id="histEmpty" style="text-align:center;padding:40px;color:var(--text3);font-size:12px;display:none;">
-          Belum ada riwayat tersimpan.
-        </div>
-      </div>
+    <div class="field">
+      <label>Why You Believe This (your experience/evidence)</label>
+      <textarea id="mp-desc" placeholder="What events or reflections led you to this principle?"></textarea>
     </div>
-
-    <!-- ========== HABITS ========== -->
-    <div class="page" id="page-habits">
-      <div class="g3" style="margin-bottom:20px;">
-        <div class="card card-accent">
-          <div class="ctitle">Streak Saat Ini</div>
-          <div class="big-num" id="hab-streak">0<span class="big-unit">d</span></div>
-          <div class="sub-text">Hari berturut-turut</div>
-        </div>
-        <div class="card">
-          <div class="ctitle">Score Hari Ini</div>
-          <div class="big-num" id="hab-today">0<span class="big-unit">%</span></div>
-          <div class="sub-text">Habits selesai hari ini</div>
-        </div>
-        <div class="card">
-          <div class="ctitle">30-Day Average</div>
-          <div class="big-num" id="hab-avg">0<span class="big-unit">%</span></div>
-          <div class="sub-text">Konsistensi bulanan</div>
-        </div>
-      </div>
-
-      <div class="g2">
-        <div class="card">
-          <div class="sh">
-            <div class="sh-title">Habit Tracker Hari Ini</div>
-            <button class="btn btn-ghost btn-sm" onclick="openHabitModal()">+ Habit Baru</button>
-          </div>
-          <div id="habitList"></div>
-          <div id="habitEmpty" style="text-align:center;padding:20px;color:var(--text3);font-size:11px;display:none;">
-            Belum ada habit. Tambahkan habit pertamamu!
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="sh"><div class="sh-title">Heatmap Mingguan</div></div>
-          <div id="habitHeatmap"></div>
-          <div style="margin-top:16px;">
-            <div class="sh"><div class="sh-title" style="font-size:13px;">Filosofi Billionaire</div></div>
-            <div style="font-size:11px;color:var(--text3);line-height:1.8;margin-bottom:8px;">
-              <div>🌅 <strong style="color:var(--text)">Bangun 05:00–05:30</strong> — Buffett, Gates, Bezos</div>
-              <div>🧘 <strong style="color:var(--text)">Meditasi pagi</strong> — Ray Dalio, Jeff Weiner</div>
-              <div>💪 <strong style="color:var(--text)">Olahraga harian</strong> — Zuckerberg, Richard Branson</div>
-              <div>📖 <strong style="color:var(--text)">Baca 30+ menit</strong> — Warren Buffett (500 hal/hari)</div>
-              <div>📓 <strong style="color:var(--text)">Journal malam</strong> — Dalio "Pain + Reflection = Progress"</div>
-              <div>📵 <strong style="color:var(--text)">No HP pagi</strong> — Elon Musk, Tim Cook</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ========== GOALS ========== -->
-    <div class="page" id="page-goals">
-      <div class="g3">
-        <div class="card card-gold">
-          <div class="ctitle">Target Utama</div>
-          <div class="big-num" id="g-main" style="font-size:22px;">Billionaire</div>
-          <div class="sub-text">Via Trading & Investing</div>
-        </div>
-        <div class="card">
-          <div class="ctitle">Goals Aktif</div>
-          <div class="big-num" id="g-count">0</div>
-          <div class="sub-text">Milestone berjalan</div>
-        </div>
-        <div class="card">
-          <div class="ctitle">Avg Progress</div>
-          <div class="big-num" id="g-avg">0<span class="big-unit">%</span></div>
-          <div class="sub-text">Semua goals</div>
-        </div>
-      </div>
-
-      <div class="g2">
-        <div>
-          <div class="sh" style="margin-bottom:14px;">
-            <div class="sh-title">Milestone & Goals</div>
-            <button class="btn btn-primary btn-sm" onclick="openGoalModal()">+ Goal Baru</button>
-          </div>
-          <div id="goalList"></div>
-          <div id="goalEmpty" style="text-align:center;padding:30px;color:var(--text3);font-size:11px;display:none;">
-            Belum ada goal. Mulai dengan 1-year vision kamu!
-          </div>
-        </div>
-
-        <div>
-          <div class="card" style="margin-bottom:14px;">
-            <div class="sh"><div class="sh-title">Timeline Billionaire Path</div></div>
-            <div class="timeline" id="goalTimeline"></div>
-          </div>
-          <div class="quote-box">
-            <div class="quote-text">"The biggest risk is not taking any risk. In a world that's changing really quickly, the only strategy that is guaranteed to fail is not taking risks."</div>
-            <div class="quote-author">— Mark Zuckerberg</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ========== SETTINGS ========== -->
-    <div class="page" id="page-settings">
-      <div class="g2">
-        <div class="card">
-          <div class="sh"><div class="sh-title">Profil Saya</div></div>
-
-          <div class="frow">
-            <label class="flabel">Nama</label>
-            <input class="inp" id="cfg-name" placeholder="Nama kamu...">
-          </div>
-          <div class="frow">
-            <label class="flabel">Target Net Worth (USD)</label>
-            <input class="inp" id="cfg-target" type="number" placeholder="1000000">
-          </div>
-          <div class="frow">
-            <label class="flabel">Modal Awal Trading (USD)</label>
-            <input class="inp" id="cfg-capital" type="number" placeholder="10000">
-          </div>
-          <div class="frow">
-            <label class="flabel">Tahun Target Billionaire</label>
-            <input class="inp" id="cfg-year" type="number" placeholder="2040">
-          </div>
-          <div class="frow">
-            <label class="flabel">Market Fokus</label>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;">
-              <label style="display:flex;align-items:center;gap:6px;font-size:11px;cursor:pointer;">
-                <input type="checkbox" id="cfg-forex" checked> <span class="tag tag-forex">Forex</span>
-              </label>
-              <label style="display:flex;align-items:center;gap:6px;font-size:11px;cursor:pointer;">
-                <input type="checkbox" id="cfg-crypto" checked> <span class="tag tag-crypto">Crypto</span>
-              </label>
-              <label style="display:flex;align-items:center;gap:6px;font-size:11px;cursor:pointer;">
-                <input type="checkbox" id="cfg-gold" checked> <span class="tag tag-gold">Gold/Komoditas</span>
-              </label>
-            </div>
-          </div>
-          <div class="frow">
-            <label class="flabel">Kutipan Motivasi Personal</label>
-            <textarea class="inp" id="cfg-quote" rows="3" placeholder="Masukkan kutipan favorit kamu..."></textarea>
-          </div>
-          <button class="btn btn-gold" style="width:100%;margin-top:8px;" onclick="saveSettings()">Simpan Profil</button>
-        </div>
-
-        <div>
-          <div class="card" style="margin-bottom:14px;">
-            <div class="sh"><div class="sh-title">Preferensi App</div></div>
-            <div class="setting-row">
-              <div>
-                <div class="setting-label">Auto-save setiap 30 detik</div>
-                <div class="setting-sub">Data tersimpan otomatis ke localStorage</div>
-              </div>
-              <label class="toggle"><input type="checkbox" id="cfg-autosave" checked><div class="toggle-slider"></div></label>
-            </div>
-            <div class="setting-row">
-              <div>
-                <div class="setting-label">Reset habit setiap hari</div>
-                <div class="setting-sub">Centang habit otomatis reset tengah malam</div>
-              </div>
-              <label class="toggle"><input type="checkbox" id="cfg-resethabit" checked><div class="toggle-slider"></div></label>
-            </div>
-          </div>
-
-          <div class="card" style="margin-bottom:14px;">
-            <div class="sh"><div class="sh-title">Data Management</div></div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;">
-              <button class="btn btn-ghost btn-sm" onclick="exportAll()">Export Semua Data</button>
-              <button class="btn btn-ghost btn-sm" onclick="importData()">Import Data</button>
-              <button class="btn btn-danger btn-sm" onclick="confirmReset()">Reset Semua</button>
-            </div>
-            <div style="margin-top:12px;font-size:10px;color:var(--text3);line-height:1.6;">
-              Data tersimpan di browser (localStorage). Export secara berkala sebagai backup.
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="sh"><div class="sh-title">Journey Stats</div></div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;" id="journeyStats"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /content -->
-</main>
-</div><!-- /app -->
-
-<!-- TOAST -->
-<div class="toast" id="toast"><span id="toastMsg"></span></div>
-
-<!-- ===== MODALS ===== -->
-
-<!-- ADD NOTE MODAL -->
-<div class="overlay" id="addModal">
-  <div class="modal">
-    <button class="mclose" onclick="closeModal('addModal')">✕</button>
-    <div class="modal-title">Tambah Catatan</div>
-    <div class="modal-sub">Catat progress, insight, atau event penting</div>
-    <div class="frow">
-      <label class="flabel">Tipe</label>
-      <select class="inp" id="add-type">
-        <option value="note">📝 Catatan Umum</option>
-        <option value="networth">💰 Update Net Worth</option>
-        <option value="goal">🎯 Progress Goal</option>
-        <option value="habit">✅ Catatan Habit</option>
+    <div class="field">
+      <label>Category</label>
+      <select id="mp-cat">
+        <option value="life">Life</option>
+        <option value="work">Work</option>
+        <option value="relationships">Relationships</option>
+        <option value="finance">Finance/Trading</option>
+        <option value="health">Health</option>
+        <option value="mindset">Mindset</option>
       </select>
     </div>
-    <div class="fgrid">
-      <div>
-        <label class="flabel">Judul</label>
-        <input class="inp" id="add-title" placeholder="Judul singkat...">
-      </div>
-      <div>
-        <label class="flabel">Market (opsional)</label>
-        <select class="inp" id="add-market">
-          <option value="">Umum</option>
-          <option value="Forex">Forex</option>
-          <option value="Crypto">Crypto</option>
-          <option value="Gold">Gold</option>
-        </select>
-      </div>
-    </div>
-    <div class="frow">
-      <label class="flabel">Nilai / Angka (opsional)</label>
-      <input class="inp" id="add-value" type="text" placeholder="Contoh: +$500, 75%, dll">
-    </div>
-    <div class="frow">
-      <label class="flabel">Catatan Detail</label>
-      <textarea class="inp" id="add-note" rows="3" placeholder="Tulis insight, pelajaran, atau detail..."></textarea>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost btn-sm" onclick="closeModal('addModal')">Batal</button>
-      <button class="btn btn-primary btn-sm" onclick="addNote()">Simpan</button>
-    </div>
+    <button class="btn btn-gold" onclick="saveMyPrinciple()">Save Principle →</button>
   </div>
+
+  <div id="my-principles-list"></div>
 </div>
 
-<!-- PORTFOLIO MODAL -->
-<div class="overlay" id="portModal">
-  <div class="modal">
-    <button class="mclose" onclick="closeModal('portModal')">✕</button>
-    <div class="modal-title">Tambah Aset</div>
-    <div class="modal-sub">Tambahkan posisi ke portfolio kamu</div>
-    <div class="fgrid">
-      <div>
-        <label class="flabel">Nama Aset</label>
-        <input class="inp" id="pa-name" placeholder="BTC, EUR/USD, XAU/USD...">
-      </div>
-      <div>
-        <label class="flabel">Market</label>
-        <select class="inp" id="pa-market">
-          <option value="Forex">Forex</option>
-          <option value="Crypto">Crypto</option>
-          <option value="Gold">Gold/Komoditas</option>
-          <option value="Saham">Saham</option>
-        </select>
-      </div>
-    </div>
-    <div class="fgrid">
-      <div>
-        <label class="flabel">Modal / Nilai Beli ($)</label>
-        <input class="inp" id="pa-cost" type="number" placeholder="1000">
-      </div>
-      <div>
-        <label class="flabel">Nilai Sekarang ($)</label>
-        <input class="inp" id="pa-current" type="number" placeholder="1200">
-      </div>
-    </div>
-    <div class="frow">
-      <label class="flabel">Catatan (opsional)</label>
-      <input class="inp" id="pa-note" placeholder="Strategi, entry reason, dll...">
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost btn-sm" onclick="closeModal('portModal')">Batal</button>
-      <button class="btn btn-primary btn-sm" onclick="addPortfolio()">Tambah Aset</button>
-    </div>
-  </div>
-</div>
+</main>
 
-<!-- HABIT MODAL -->
-<div class="overlay" id="habitModal">
-  <div class="modal">
-    <button class="mclose" onclick="closeModal('habitModal')">✕</button>
-    <div class="modal-title">Tambah Habit Baru</div>
-    <div class="modal-sub">Bangun rutinitas billionaire kamu</div>
-    <div class="fgrid">
-      <div>
-        <label class="flabel">Nama Habit</label>
-        <input class="inp" id="h-name" placeholder="Meditasi pagi...">
-      </div>
-      <div>
-        <label class="flabel">Emoji</label>
-        <input class="inp" id="h-emoji" placeholder="🧘" maxlength="2">
-      </div>
-    </div>
-    <div class="fgrid">
-      <div>
-        <label class="flabel">Target / Durasi</label>
-        <input class="inp" id="h-target" placeholder="20 menit, 1 sesi...">
-      </div>
-      <div>
-        <label class="flabel">Waktu</label>
-        <select class="inp" id="h-time">
-          <option value="Pagi">Pagi (05:00–10:00)</option>
-          <option value="Siang">Siang (10:00–14:00)</option>
-          <option value="Sore">Sore (14:00–18:00)</option>
-          <option value="Malam">Malam (18:00–22:00)</option>
-        </select>
-      </div>
-    </div>
-    <div class="frow">
-      <label class="flabel">Referensi Billionaire</label>
-      <input class="inp" id="h-ref" placeholder="Siapa yang melakukan ini? Contoh: Ray Dalio">
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost btn-sm" onclick="closeModal('habitModal')">Batal</button>
-      <button class="btn btn-primary btn-sm" onclick="addHabit()">Tambah Habit</button>
-    </div>
-  </div>
-</div>
-
-<!-- GOAL MODAL -->
-<div class="overlay" id="goalModal">
-  <div class="modal">
-    <button class="mclose" onclick="closeModal('goalModal')">✕</button>
-    <div class="modal-title" id="gModalTitle">Tambah Goal Baru</div>
-    <div class="modal-sub">Set milestone perjalanan billionaire-mu</div>
-    <div class="frow">
-      <label class="flabel">Judul Goal</label>
-      <input class="inp" id="g-title" placeholder="Net Worth $1M, Profit konsisten $5K/bulan...">
-    </div>
-    <div class="fgrid">
-      <div>
-        <label class="flabel">Target (angka/deskripsi)</label>
-        <input class="inp" id="g-target" placeholder="$1,000,000 atau 100%">
-      </div>
-      <div>
-        <label class="flabel">Deadline</label>
-        <input class="inp" id="g-deadline" type="date">
-      </div>
-    </div>
-    <div class="fgrid">
-      <div>
-        <label class="flabel">Progress Saat Ini (%)</label>
-        <input class="inp" id="g-progress" type="number" min="0" max="100" placeholder="0">
-      </div>
-      <div>
-        <label class="flabel">Kategori</label>
-        <select class="inp" id="g-category">
-          <option value="wealth">💰 Wealth / Finansial</option>
-          <option value="trading">📈 Trading Mastery</option>
-          <option value="lifestyle">🌟 Lifestyle</option>
-          <option value="health">💪 Health</option>
-          <option value="skill">🧠 Skills / Learning</option>
-        </select>
-      </div>
-    </div>
-    <div class="frow">
-      <label class="flabel">Catatan / Rencana Aksi</label>
-      <textarea class="inp" id="g-note" rows="2" placeholder="Langkah konkret untuk mencapai goal ini..."></textarea>
-    </div>
-    <input type="hidden" id="g-edit-id">
-    <div class="modal-actions">
-      <button class="btn btn-ghost btn-sm" onclick="closeModal('goalModal')">Batal</button>
-      <button class="btn btn-primary btn-sm" onclick="saveGoal()">Simpan Goal</button>
-    </div>
-  </div>
-</div>
-
-<!-- EDIT PORTFOLIO MODAL -->
-<div class="overlay" id="portEditModal">
-  <div class="modal">
-    <button class="mclose" onclick="closeModal('portEditModal')">✕</button>
-    <div class="modal-title">Update Aset</div>
-    <div class="modal-sub">Update nilai sekarang atau hapus posisi</div>
-    <input type="hidden" id="pe-id">
-    <div class="fgrid">
-      <div>
-        <label class="flabel">Nama Aset</label>
-        <input class="inp" id="pe-name" readonly style="opacity:.5;">
-      </div>
-      <div>
-        <label class="flabel">Market</label>
-        <input class="inp" id="pe-market" readonly style="opacity:.5;">
-      </div>
-    </div>
-    <div class="fgrid">
-      <div>
-        <label class="flabel">Modal Awal ($)</label>
-        <input class="inp" id="pe-cost" type="number">
-      </div>
-      <div>
-        <label class="flabel">Nilai Sekarang ($)</label>
-        <input class="inp" id="pe-current" type="number">
-      </div>
-    </div>
-    <div class="frow">
-      <label class="flabel">Catatan</label>
-      <input class="inp" id="pe-note" placeholder="Update catatan...">
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-danger btn-sm" onclick="deletePortfolio()">Hapus</button>
-      <button class="btn btn-ghost btn-sm" onclick="closeModal('portEditModal')">Batal</button>
-      <button class="btn btn-primary btn-sm" onclick="updatePortfolio()">Update</button>
-    </div>
-  </div>
-</div>
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
 
 <script>
-// ==================== DATA STORE ====================
-const KEY = 'gungde_life_os_v1';
-
-const defaultData = {
-  profile: {
-    name: 'Gungde',
-    target: 1000000000,
-    capital: 10000,
-    year: 2040,
-    quote: 'Perjalanan seribu mil dimulai dari satu langkah. Hari ini saya ambil langkah itu.',
-    quoteAuthor: '— Lao Tzu (adapted by Gungde)',
-    markets: ['Forex','Crypto','Gold'],
-    autosave: true,
-    resetHabit: true
+// ============================================================
+// DATA
+// ============================================================
+const LIFE_PRINCIPLES = [
+  {
+    id: '1', num: '1', type: 'life',
+    title: 'Embrace Reality and Deal with It',
+    subs: [
+      { letter: '1.1', text: 'Be a hyperrealist.', detail: 'Dreams + Reality + Determination = A Successful Life. People who create great things are totally grounded in reality.' },
+      { letter: '1.2', text: 'Truth is the essential foundation for any good outcome.', detail: 'Most people fight seeing what\'s true when it\'s not what they want it to be. That\'s bad — deal with the bad stuff first.' },
+      { letter: '1.3', text: 'Be radically open-minded and radically transparent.', detail: 'Radical open-mindedness and transparency are invaluable for rapid learning and effective change.' },
+      { letter: '1.4', text: 'Look to nature to learn how reality works.', detail: 'Don\'t get hung up on how things "should" be. Evolution is the single greatest force in the universe.' },
+      { letter: '1.5', text: 'Evolving is life\'s greatest accomplishment and its greatest reward.', detail: 'Adapt through rapid trial and error. Reality is optimizing for the whole—not for you.' },
+      { letter: '1.6', text: 'Understand nature\'s practical lessons.', detail: 'It is a fundamental law of nature that in order to gain strength one has to push one\'s limits, which is painful.' },
+      { letter: '1.7', text: 'Pain + Reflection = Progress.', detail: 'Go to the pain rather than avoid it. Embrace tough love.' },
+      { letter: '1.8', text: 'Weigh second- and third-order consequences.', detail: 'Avoid choices that feel good in the short-term but have terrible long-term consequences.' },
+      { letter: '1.9', text: 'Own your outcomes.', detail: 'Take personal responsibility. Blaming others prevents learning.' },
+      { letter: '1.10', text: 'Look at the machine from the higher level.', detail: 'Think of yourself as a machine operating within a machine. Distinguish between you as designer and you as worker.' }
+    ]
   },
-  portfolio: [],
-  habits: [
-    {id:'h1', name:'Bangun 05:30', emoji:'🌅', target:'Sebelum 05:30', time:'Pagi', ref:'Buffett, Gates, Bezos', done:false},
-    {id:'h2', name:'Review Chart Pagi', emoji:'📊', target:'30 menit', time:'Pagi', ref:'Habit trader profesional', done:false},
-    {id:'h3', name:'Meditasi', emoji:'🧘', target:'20 menit', time:'Pagi', ref:'Ray Dalio · Jeff Weiner', done:false},
-    {id:'h4', name:'Olahraga', emoji:'💪', target:'30-60 menit', time:'Pagi', ref:'Richard Branson · Zuckerberg', done:false},
-    {id:'h5', name:'Baca/Belajar Trading', emoji:'📖', target:'30 menit', time:'Siang', ref:'Warren Buffett method', done:false},
-    {id:'h6', name:'Journal Trading Malam', emoji:'📓', target:'Review semua trade', time:'Malam', ref:'Ray Dalio · setiap top trader', done:false},
-  ],
-  goals: [
-    {id:'g1', title:'Profit Konsisten $1K/bulan dari Trading', target:'$1,000/bulan', deadline:'2026-12-31', progress:25, category:'trading', note:'Fokus risk management, max 2% per trade', createdAt: new Date().toISOString()},
-    {id:'g2', title:'Net Worth $100K', target:'$100,000', deadline:'2027-06-30', progress:24, category:'wealth', note:'Trading profit + investasi rutin setiap bulan', createdAt: new Date().toISOString()},
-    {id:'g3', title:'Kuasai Analisis Teknikal + Price Action', target:'100% konsisten', deadline:'2026-09-30', progress:40, category:'skill', note:'Belajar 1 jam/hari, backtest 100 setup', createdAt: new Date().toISOString()},
-  ],
-  history: [],
-  habitHistory: {}, // date -> {habitId: true/false}
-  lastHabitReset: null,
-  createdAt: new Date().toISOString()
-};
+  {
+    id: '2', num: '2', type: 'life',
+    title: 'Use the 5-Step Process to Get What You Want',
+    subs: [
+      { letter: '2.1', text: 'Have clear goals.', detail: 'Prioritize. While you can have virtually anything you want, you can\'t have everything. Never rule out a goal because you think it\'s unattainable.' },
+      { letter: '2.2', text: 'Identify and don\'t tolerate problems.', detail: 'View painful problems as potential improvements screaming at you. Be specific. Don\'t mistake a cause for the real problem.' },
+      { letter: '2.3', text: 'Diagnose problems to get at their root causes.', detail: 'Focus on "what is" before "what to do about it." Distinguish proximate from root causes.' },
+      { letter: '2.4', text: 'Design a plan.', detail: 'Think about your problem as a set of outcomes produced by a machine. Write your plan down for everyone to see.' },
+      { letter: '2.5', text: 'Push through to completion.', detail: 'Great planners who don\'t execute go nowhere. Good work habits are vastly underrated. Establish clear metrics.' },
+      { letter: '2.6', text: 'Remember that weaknesses don\'t matter if you find solutions.', detail: 'Look at the patterns of your mistakes and identify at which step you typically fail.' },
+      { letter: '2.7', text: 'Understand your own and others\' mental maps and humility.', detail: 'Know your limits and leverage others\' strengths.' }
+    ]
+  },
+  {
+    id: '3', num: '3', type: 'life',
+    title: 'Be Radically Open-Minded',
+    subs: [
+      { letter: '3.1', text: 'Recognize your two barriers.', detail: 'Your ego barrier makes it hard to accept being wrong. Your blind spot barrier means you can\'t see what you can\'t see.' },
+      { letter: '3.2', text: 'Practice radical open-mindedness.', detail: 'Sincerely believe you might not know the best path. Don\'t worry about looking good — worry about achieving your goal.' },
+      { letter: '3.3', text: 'Appreciate the art of thoughtful disagreement.', detail: 'When two people disagree, you must explore why. The goal is not to win but to find the truth.' },
+      { letter: '3.4', text: 'Triangulate your view with believable people who disagree.', detail: 'Plan for the worst-case scenario to make it as good as possible.' },
+      { letter: '3.5', text: 'Recognize signs of closed- vs. open-mindedness.', detail: 'Closed: more interested in being right than learning. Open: more interested in finding truth than defending position.' },
+      { letter: '3.6', text: 'Understand how you can become radically open-minded.', detail: 'Use pain as guide. Meditate. Be evidence-based. Get to know your blind spots.' }
+    ]
+  },
+  {
+    id: '4', num: '4', type: 'life',
+    title: 'Understand That People Are Wired Very Differently',
+    subs: [
+      { letter: '4.1', text: 'Understand the power of knowing how you and others are wired.', detail: 'We are born with attributes that can help or hurt us, depending on their application.' },
+      { letter: '4.2', text: 'Meaningful work and relationships aren\'t just nice — they\'re genetically programmed.', detail: 'These needs are deep and fundamental. Align your work with your nature.' },
+      { letter: '4.3', text: 'Understand the great brain battles — feeling vs. thinking.', detail: 'Reconcile your feelings and thinking. Choose your habits well. Train your lower-level self.' },
+      { letter: '4.4', text: 'Find out what you and others are like.', detail: 'Introvert/extrovert. Intuiting/sensing. Thinking/feeling. Planning/perceiving. Know your type.' },
+      { letter: '4.5', text: 'Getting the right people in the right roles is the key to success.', detail: 'Manage yourself and orchestrate others to get what you want.' }
+    ]
+  },
+  {
+    id: '5', num: '5', type: 'life',
+    title: 'Learn How to Make Decisions Effectively',
+    subs: [
+      { letter: '5.1', text: 'Recognize that the biggest threat to good decisions is harmful emotions.', detail: 'Decision making is a two-step process: first learning, then deciding. Don\'t reverse them.' },
+      { letter: '5.2', text: 'Synthesize the situation at hand.', detail: 'New is overvalued relative to great. Everything looks bigger up close. Use the 80/20 Rule.' },
+      { letter: '5.3', text: 'Synthesize the situation through time.', detail: 'Keep in mind both the rates of change and the levels. Be imprecise. Be an imperfectionist.' },
+      { letter: '5.5', text: 'Logic, reason, and common sense are your best tools.', detail: 'Don\'t let emotions or unverified opinions drive decisions. Synthesize reality accurately.' },
+      { letter: '5.6', text: 'Make your decisions as expected value calculations.', detail: 'The best choices have more pros than cons, not zero cons. Raise the probability of being right.' },
+      { letter: '5.7', text: 'Prioritize by weighing info value against cost of not deciding.', detail: 'All must-dos must be above the bar before like-to-dos. Don\'t mistake possibilities for probabilities.' },
+      { letter: '5.8', text: 'Simplify!', detail: 'If you can\'t explain it simply, you don\'t understand it well enough.' },
+      { letter: '5.9', text: 'Use principles.', detail: 'Classify situations into types and apply the right principle to get better decisions faster.' },
+      { letter: '5.10', text: 'Believability-weight your decision making.', detail: 'Weight opinions by the track record of the person giving them, not by their enthusiasm.' }
+    ]
+  }
+];
 
-let D = JSON.parse(JSON.stringify(defaultData));
+const WORK_PRINCIPLES = [
+  {
+    id: 'w1', num: '1', type: 'work',
+    title: 'Trust in Radical Truth and Radical Transparency',
+    subs: [
+      { letter: '1.1', text: 'Realize you have nothing to fear from knowing the truth.', detail: 'Truth — even painful — is always better than comfortable illusion for producing good outcomes.' },
+      { letter: '1.2', text: 'Have integrity and demand it from others.', detail: 'Never say anything about someone you wouldn\'t say to them directly.' },
+      { letter: '1.3', text: 'Create an environment where everyone can speak up.', detail: '"Speak up, own it, or get out." Be extremely open. Don\'t be naive about dishonesty.' },
+      { letter: '1.4', text: 'Be radically transparent.', detail: 'Use transparency to enforce justice. Share the things hardest to share.' }
+    ]
+  },
+  {
+    id: 'w2', num: '2', type: 'work',
+    title: 'Cultivate Meaningful Work and Relationships',
+    subs: [
+      { letter: '2.1', text: 'Be loyal to the common mission, not to individuals.', detail: 'If someone isn\'t operating consistently with the mission, loyalty to them is misplaced.' },
+      { letter: '2.2', text: 'Be crystal clear on what the deal is.', detail: 'Make sure people understand fairness vs. generosity. Know where the line is.' },
+      { letter: '2.5', text: 'Treasure honorable people who treat you well even when you\'re not looking.', detail: 'Character is revealed in private moments. Value these people above all.' }
+    ]
+  },
+  {
+    id: 'w3', num: '3', type: 'work',
+    title: 'Create a Culture Where Mistakes are OK, Not Learning is Not',
+    subs: [
+      { letter: '3.1', text: 'Recognize that mistakes are a natural part of evolution.', detail: 'Fail well. Don\'t feel bad about mistakes — love them as learning opportunities.' },
+      { letter: '3.2', text: 'Don\'t worry about looking good — worry about achieving your goals.', detail: 'Get over blame and credit. Get on with accurate and inaccurate.' },
+      { letter: '3.3', text: 'Observe patterns of mistakes to see if they stem from weaknesses.', detail: 'Patterns reveal character. Address the source, not just the symptom.' },
+      { letter: '3.4', text: 'Remember to reflect when you experience pain.', detail: 'Be self-reflective. Nobody can see themselves objectively without help.' }
+    ]
+  },
+  {
+    id: 'w4', num: '4', type: 'work',
+    title: 'Get and Stay in Sync',
+    subs: [
+      { letter: '4.1', text: 'Conflicts are essential for great relationships.', detail: 'Spend lavishly on time devoted to getting in sync — it\'s the best investment you can make.' },
+      { letter: '4.2', text: 'Know how to get in sync and disagree well.', detail: 'Surface areas of possible out-of-syncness. Remember every story has another side.' },
+      { letter: '4.4', text: 'If it\'s your meeting to run, manage the conversation.', detail: 'Be clear who\'s directing. Enforce logic. Avoid topic slip. Use the 2-minute rule.' },
+      { letter: '4.5', text: 'Great collaboration feels like playing jazz.', detail: '1+1=3. 3 to 5 is more than 20.' }
+    ]
+  },
+  {
+    id: 'w5', num: '5', type: 'work',
+    title: 'Believability-Weight Your Decision Making',
+    subs: [
+      { letter: '5.1', text: 'Understand the merit of each person\'s ideas.', detail: 'If you can\'t successfully do something, don\'t think you can tell others how it should be done.' },
+      { letter: '5.2', text: 'Find the most believable people who disagree and understand their reasoning.', detail: 'Believable opinions come from people who\'ve successfully done it at least 3 times.' },
+      { letter: '5.5', text: 'Disagreeing must be done efficiently.', detail: 'Know when to stop debating and move on. Use believability weighting as a tool, not a substitute.' }
+    ]
+  },
+  {
+    id: 'w6', num: '6', type: 'work',
+    title: 'Recognize How to Get Beyond Disagreements',
+    subs: [
+      { letter: '6.1', text: 'Principles can\'t be ignored by mutual agreement.', detail: 'The same standards of behavior apply to everyone. Rules are rules.' },
+      { letter: '6.3', text: 'Don\'t leave important conflicts unresolved.', detail: 'Don\'t get stuck — escalate or vote! Don\'t let small things divide you when agreement on big things should bind you.' },
+      { letter: '6.4', text: 'Once a decision is made, everyone should get behind it.', detail: 'Even if you disagree. See things from the higher level. Never allow meritocracy to slip into anarchy.' }
+    ]
+  }
+];
 
-function load() {
-  try {
-    const raw = localStorage.getItem(KEY);
-    if (raw) {
-      const saved = JSON.parse(raw);
-      D = Object.assign(JSON.parse(JSON.stringify(defaultData)), saved);
-      // ensure arrays
-      if (!D.portfolio) D.portfolio = [];
-      if (!D.habits) D.habits = defaultData.habits;
-      if (!D.goals) D.goals = defaultData.goals;
-      if (!D.history) D.history = [];
-      if (!D.habitHistory) D.habitHistory = {};
+const ALL_PRINCIPLES = [...LIFE_PRINCIPLES, ...WORK_PRINCIPLES];
+
+const DAILY_QUOTES = [
+  { text: "Dreams + Reality + Determination = A Successful Life.", source: "Life Principle 1.1" },
+  { text: "Pain + Reflection = Progress. Go to the pain rather than avoid it.", source: "Life Principle 1.7" },
+  { text: "Truth — or more precisely, an accurate understanding of reality — is the essential foundation for any good outcome.", source: "Life Principle 1.2" },
+  { text: "Evolving is life's greatest accomplishment and its greatest reward.", source: "Life Principle 1.5" },
+  { text: "Radical open-mindedness and radical transparency are invaluable for rapid learning and effective change.", source: "Life Principle 1.3" },
+  { text: "The biggest mistake most people make is to not see themselves and others objectively.", source: "Life Principle 1.10" },
+  { text: "Make believability-weighted decisions. Weight people's opinions by their track record.", source: "Work Principle 5.2" },
+  { text: "If you are open-minded enough and determined, you can get virtually anything you want.", source: "Life Principle 1.10h" },
+  { text: "Knowing how to deal well with your setbacks is as important as knowing how to move forward.", source: "Life Principle 2.1h" },
+  { text: "Almost nothing can stop you from succeeding if you have a) flexibility and b) self-accountability.", source: "Life Principle 2.1g" },
+  { text: "Don't worry about looking good — worry about achieving your goals.", source: "Work Principle 3.2" },
+  { text: "Fail well. Don't feel bad about your mistakes or those of others. Love them!", source: "Work Principle 3.1" },
+  { text: "The most constant struggle is between feeling and thinking. Reconcile them.", source: "Life Principle 4.3b" },
+  { text: "Be clear on whether you are arguing or seeking to understand.", source: "Life Principle 3.2g" },
+  { text: "Simplify! If you can't explain it simply, you don't understand it well enough.", source: "Life Principle 5.8" },
+  { text: "Great planners who don't execute their plans go nowhere.", source: "Life Principle 2.5a" },
+  { text: "Every story has another side. Remember that.", source: "Work Principle 4.2c" },
+  { text: "Meaningful relationships and meaningful work are mutually reinforcing.", source: "Work Principle 1.5" },
+  { text: "Evolve or die. This cycle applies to people, companies, and economies.", source: "Life Principle 1.4d" },
+  { text: "To be principled means to consistently operate with principles that can be clearly explained.", source: "Introduction" },
+];
+
+const DECISION_CHECKLIST_ITEMS = [
+  "Are my emotions influencing this decision? (identify them first)",
+  "Have I looked at this from multiple levels — both detail and big picture?",
+  "Have I consulted at least one believable person who disagrees with my current thinking?",
+  "Am I considering both the proximate AND root causes of the situation?",
+  "Have I weighed the second- and third-order consequences of each option?",
+  "Is this a decision I can reverse? Or is it irreversible (requires more caution)?",
+  "Am I prioritizing by expected value, not just probability of success?",
+  "Have I simplified the decision to its core trade-off?",
+  "Am I deciding based on principles I can articulate clearly?",
+  "Would I be comfortable if everyone could see exactly what I'm doing and why?"
+];
+
+const HABITS = [
+  { id: 'h1', text: 'Practiced radical open-mindedness today', detail: 'Genuinely considered a view opposing your own' },
+  { id: 'h2', text: 'Spoke truth even when uncomfortable', detail: 'Said what you actually think, not what\'s easy' },
+  { id: 'h3', text: 'Reflected on a painful moment', detail: 'Applied Pain + Reflection = Progress' },
+  { id: 'h4', text: 'Made a decision based on expected value', detail: 'Weighed pros, cons, and probabilities consciously' },
+  { id: 'h5', text: 'Separated emotion from analysis', detail: 'Waited for emotional state to calm before deciding' },
+  { id: 'h6', text: 'Asked "what is true?" before "what to do?"', detail: 'Diagnosed before prescribing' },
+  { id: 'h7', text: 'Sought feedback from a believable person', detail: 'Someone with relevant track record, not just agreement' },
+  { id: 'h8', text: 'Owned a mistake without blame', detail: 'Full accountability, no excuses' },
+];
+
+// ============================================================
+// STATE & STORAGE
+// ============================================================
+let db;
+let currentFilter = 'all';
+let habitState = {};
+let decisionOptions = [];
+
+function openDB() {
+  return new Promise((res, rej) => {
+    const req = indexedDB.open('PrinciplesApp', 1);
+    req.onupgradeneeded = e => {
+      const d = e.target.result;
+      if (!d.objectStoreNames.contains('journal')) d.createObjectStore('journal', { keyPath: 'id', autoIncrement: true });
+      if (!d.objectStoreNames.contains('goals')) d.createObjectStore('goals', { keyPath: 'id', autoIncrement: true });
+      if (!d.objectStoreNames.contains('myprinciples')) d.createObjectStore('myprinciples', { keyPath: 'id', autoIncrement: true });
+      if (!d.objectStoreNames.contains('settings')) d.createObjectStore('settings', { keyPath: 'key' });
+    };
+    req.onsuccess = e => { db = e.target.result; res(db); };
+    req.onerror = () => rej(req.error);
+  });
+}
+
+function dbGet(store, key) {
+  return new Promise((res, rej) => {
+    const tx = db.transaction(store, 'readonly');
+    const req = tx.objectStore(store).get(key);
+    req.onsuccess = () => res(req.result);
+    req.onerror = () => rej(req.error);
+  });
+}
+
+function dbGetAll(store) {
+  return new Promise((res, rej) => {
+    const tx = db.transaction(store, 'readonly');
+    const req = tx.objectStore(store).getAll();
+    req.onsuccess = () => res(req.result);
+    req.onerror = () => rej(req.error);
+  });
+}
+
+function dbPut(store, value) {
+  return new Promise((res, rej) => {
+    const tx = db.transaction(store, 'readwrite');
+    const req = tx.objectStore(store).put(value);
+    req.onsuccess = () => res(req.result);
+    req.onerror = () => rej(req.error);
+  });
+}
+
+function dbAdd(store, value) {
+  return new Promise((res, rej) => {
+    const tx = db.transaction(store, 'readwrite');
+    const req = tx.objectStore(store).add(value);
+    req.onsuccess = () => res(req.result);
+    req.onerror = () => rej(req.error);
+  });
+}
+
+function dbDelete(store, key) {
+  return new Promise((res, rej) => {
+    const tx = db.transaction(store, 'readwrite');
+    const req = tx.objectStore(store).delete(key);
+    req.onsuccess = () => res();
+    req.onerror = () => rej(req.error);
+  });
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function goTo(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.getAttribute('onclick')?.includes(page)) n.classList.add('active');
+  });
+  if (page === 'principles') renderPrinciples();
+  if (page === 'journal') renderJournal();
+  if (page === 'fivesteps') renderGoals();
+  if (page === 'habits') renderHabits();
+  if (page === 'myprinciples') renderMyPrinciples();
+  if (page === 'decisions') renderDecisions();
+  if (page === 'dashboard') updateDashboard();
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+function updateDashboard() {
+  const now = new Date();
+  document.getElementById('dash-date').textContent =
+    now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+  // Daily principle (rotate by day of year)
+  const doy = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+  const q = DAILY_QUOTES[doy % DAILY_QUOTES.length];
+  document.getElementById('daily-text').textContent = q.text;
+  document.getElementById('daily-source').textContent = '— ' + q.source;
+
+  // Stats
+  dbGetAll('journal').then(entries => {
+    document.getElementById('stat-journal').textContent = entries.length;
+    // Streak: count consecutive days
+    const days = [...new Set(entries.map(e => new Date(e.date).toDateString()))];
+    let streak = 0;
+    let d = new Date();
+    while (days.includes(d.toDateString())) {
+      streak++;
+      d.setDate(d.getDate() - 1);
     }
-  } catch(e) {}
-  checkHabitReset();
+    document.getElementById('stat-streak').textContent = streak;
+  });
+  dbGetAll('goals').then(goals => {
+    document.getElementById('stat-goals').textContent = goals.filter(g => !g.completed).length;
+  });
 }
 
-function save() {
-  try { localStorage.setItem(KEY, JSON.stringify(D)); } catch(e) {}
+async function saveQuickReflect() {
+  const text = document.getElementById('quick-reflect').value.trim();
+  if (!text) { showToast('Write something first.'); return; }
+  await dbAdd('journal', {
+    date: new Date().toISOString(),
+    pain: 'Quick reflection',
+    root: '',
+    reflection: text,
+    progress: '',
+    tags: ['quick']
+  });
+  document.getElementById('quick-reflect').value = '';
+  showToast('✦ Reflection saved.');
+  updateDashboard();
 }
 
-function saveAll() {
-  // collect settings
-  const n = document.getElementById('cfg-name');
-  if(n) D.profile.name = n.value || D.profile.name;
-  const t = document.getElementById('cfg-target');
-  if(t) D.profile.target = parseFloat(t.value) || D.profile.target;
-  const c = document.getElementById('cfg-capital');
-  if(c) D.profile.capital = parseFloat(c.value) || D.profile.capital;
-  const y = document.getElementById('cfg-year');
-  if(y) D.profile.year = parseInt(y.value) || D.profile.year;
-  const q = document.getElementById('cfg-quote');
-  if(q && q.value) D.profile.quote = q.value;
-  save();
-  showToast('✓ Data tersimpan');
-}
+// ============================================================
+// PRINCIPLES
+// ============================================================
+function renderPrinciples(filter, search) {
+  filter = filter || currentFilter;
+  search = search || '';
+  const container = document.getElementById('principles-list');
+  let data = filter === 'life' ? LIFE_PRINCIPLES :
+             filter === 'work' ? WORK_PRINCIPLES : ALL_PRINCIPLES;
 
-// Auto-save
-setInterval(()=>{ if(D.profile.autosave) save(); }, 30000);
+  if (search) {
+    data = data.filter(p =>
+      p.title.toLowerCase().includes(search) ||
+      p.subs.some(s => s.text.toLowerCase().includes(search))
+    );
+  }
 
-// ==================== HABIT RESET ====================
-function checkHabitReset() {
-  const today = todayStr();
-  if (D.lastHabitReset !== today && D.profile.resetHabit) {
-    // archive yesterday
-    const yesterday = D.habits.reduce((acc, h) => { acc[h.id] = h.done; return acc; }, {});
-    const yesterday_date = D.lastHabitReset;
-    if (yesterday_date) {
-      D.habitHistory[yesterday_date] = yesterday;
-    }
-    D.habits.forEach(h => h.done = false);
-    D.lastHabitReset = today;
-    save();
+  container.innerHTML = '';
+
+  const lifeGroup = data.filter(p => p.type === 'life');
+  const workGroup = data.filter(p => p.type === 'work');
+
+  if (lifeGroup.length) {
+    const section = document.createElement('div');
+    section.className = 'principle-section';
+    section.innerHTML = `<div class="principle-section-title">◆ Life Principles</div>`;
+    lifeGroup.forEach(p => section.appendChild(createPrincipleItem(p)));
+    container.appendChild(section);
+  }
+  if (workGroup.length) {
+    const section = document.createElement('div');
+    section.className = 'principle-section';
+    section.innerHTML = `<div class="principle-section-title">◇ Work Principles</div>`;
+    workGroup.forEach(p => section.appendChild(createPrincipleItem(p)));
+    container.appendChild(section);
+  }
+
+  if (data.length === 0) {
+    container.innerHTML = '<p style="color:var(--text3); font-size:0.83rem;">No principles found.</p>';
   }
 }
 
-function todayStr() {
-  return new Date().toISOString().split('T')[0];
+function createPrincipleItem(p) {
+  const div = document.createElement('div');
+  div.className = 'principle-item';
+  div.innerHTML = `
+    <div class="pi-header" onclick="togglePrinciple('${p.id}')">
+      <span class="pi-num">${p.type === 'life' ? '' : '[W]'} ${p.num}</span>
+      <span class="pi-title">${p.title}</span>
+      <span class="badge ${p.type === 'life' ? 'badge-life' : 'badge-work'}" style="margin-right:8px">${p.type}</span>
+      <span class="pi-toggle" id="toggle-${p.id}">▼</span>
+    </div>
+    <div class="pi-body" id="body-${p.id}">
+      ${p.subs.map(s => `
+        <div class="pi-sub">
+          <span class="pi-sub-letter">${s.letter}</span>
+          <div>
+            <strong>${s.text}</strong>
+            <div style="color:var(--text3); margin-top:3px; font-size:0.78rem">${s.detail}</div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+  return div;
 }
 
-// ==================== QUOTES ====================
-const quotes = [
-  {text:"Trade what you see, not what you think.", author:"— Linda Raschke"},
-  {text:"The goal of a successful trader is to make the best trades. Money is secondary.", author:"— Alexander Elder"},
-  {text:"In trading and in life, the biggest risk is not taking any risk.", author:"— Adapted from Mark Zuckerberg"},
-  {text:"The secret of getting ahead is getting started. The secret of getting started is breaking tasks into small steps.", author:"— Mark Twain"},
-  {text:"Risk comes from not knowing what you're doing. Learn first, trade second.", author:"— Warren Buffett (adapted)"},
-  {text:"Successful investing is about managing risk, not avoiding it.", author:"— Benjamin Graham"},
-  {text:"Compound interest is the eighth wonder of the world. He who understands it, earns it.", author:"— Albert Einstein"},
-  {text:"Every master was once a disaster. Keep learning, keep trading.", author:"— T. Harv Eker"},
-];
-
-function getQuote() {
-  const day = new Date().getDate();
-  return quotes[day % quotes.length];
+function togglePrinciple(id) {
+  const body = document.getElementById('body-' + id);
+  const toggle = document.getElementById('toggle-' + id);
+  const item = body.closest('.principle-item');
+  const isOpen = body.classList.contains('show');
+  body.classList.toggle('show', !isOpen);
+  item.classList.toggle('expanded', !isOpen);
+  toggle.style.transform = isOpen ? '' : 'rotate(180deg)';
 }
 
-// ==================== NAV ====================
-const pageTitles = {
-  dashboard: ['Selamat Datang,', 'Gungde'],
-  portfolio: ['Portfolio', 'Trader'],
-  history: ['Riwayat &', 'History'],
-  habits: ['Daily', 'Habits'],
-  goals: ['Goals &', 'Milestone'],
-  settings: ['Settings &', 'Profil']
-};
-
-function nav(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  const pg = document.getElementById('page-' + id);
-  if(pg) pg.classList.add('active');
-  document.querySelectorAll('.nav-btn').forEach(b => {
-    if(b.getAttribute('onclick') && b.getAttribute('onclick').includes("'"+id+"'")) b.classList.add('active');
+function filterPrinciples(f) {
+  currentFilter = f;
+  ['all','life','work'].forEach(id => {
+    const btn = document.getElementById('filter-' + id);
+    if (btn) {
+      btn.style.borderColor = f === id ? 'var(--gold)' : '';
+      btn.style.color = f === id ? 'var(--gold)' : '';
+    }
   });
-  const t = pageTitles[id] || [id,''];
-  document.getElementById('pageTitle').innerHTML = t[0] + ' <em>' + t[1] + '</em>';
-  renderPage(id);
+  renderPrinciples(f, document.getElementById('search-principles')?.value?.toLowerCase());
 }
 
-function renderPage(id) {
-  if(id==='dashboard') renderDashboard();
-  if(id==='portfolio') renderPortfolio();
-  if(id==='history') renderHistory();
-  if(id==='habits') renderHabits();
-  if(id==='goals') renderGoals();
-  if(id==='settings') renderSettings();
+function searchPrinciples() {
+  renderPrinciples(currentFilter, document.getElementById('search-principles').value.toLowerCase());
 }
 
-// ==================== DASHBOARD ====================
-function renderDashboard() {
-  // Quote
-  const customQ = D.profile.quote;
-  const q = customQ ? {text:customQ, author: D.profile.quoteAuthor || '— ' + D.profile.name} : getQuote();
-  document.getElementById('quoteText').textContent = q.text;
-  document.getElementById('quoteAuthor').textContent = q.author;
+// ============================================================
+// 5-STEP PROCESS
+// ============================================================
+async function createGoal() {
+  const title = document.getElementById('goal-title').value.trim();
+  const why = document.getElementById('goal-why').value.trim();
+  if (!title) { showToast('Enter a goal title.'); return; }
 
-  // Net Worth from portfolio
-  const total = D.portfolio.reduce((s,a)=>s+parseFloat(a.current||0),0);
-  const nwEl = document.getElementById('d-networth');
-  if(total >= 1000000) nwEl.innerHTML = '$' + (total/1000000).toFixed(2) + '<span class="big-unit">M</span>';
-  else if(total >= 1000) nwEl.innerHTML = '$' + (total/1000).toFixed(1) + '<span class="big-unit">K</span>';
-  else nwEl.innerHTML = '$' + total.toFixed(0);
+  await dbAdd('goals', {
+    title, why,
+    created: new Date().toISOString(),
+    completed: false,
+    steps: {
+      1: { done: false, notes: '' },
+      2: { done: false, notes: '' },
+      3: { done: false, notes: '' },
+      4: { done: false, notes: '' },
+      5: { done: false, notes: '' }
+    }
+  });
+  document.getElementById('goal-title').value = '';
+  document.getElementById('goal-why').value = '';
+  showToast('Goal created.');
+  renderGoals();
+}
 
-  // P&L
-  const totalCost = D.portfolio.reduce((s,a)=>s+parseFloat(a.cost||0),0);
-  const pnl = total - totalCost;
-  const pnlEl = document.getElementById('d-pnl');
-  pnlEl.textContent = (pnl>=0?'+':'') + '$' + pnl.toFixed(0);
-  pnlEl.style.color = pnl >= 0 ? 'var(--green)' : 'var(--red)';
-  const pnlDelta = document.getElementById('d-pnl-delta');
-  pnlDelta.className = 'delta ' + (pnl>=0?'up':'dn');
-  const pct = totalCost > 0 ? (pnl/totalCost*100).toFixed(1) : 0;
-  pnlDelta.textContent = (pnl>=0?'▲':'▼') + ' ' + Math.abs(pct) + '% return';
+async function renderGoals() {
+  const goals = await dbGetAll('goals');
+  const container = document.getElementById('goals-container');
+  container.innerHTML = '';
 
-  // Habit score
-  const habDone = D.habits.filter(h=>h.done).length;
-  const habTotal = D.habits.length;
-  const habPct = habTotal > 0 ? Math.round(habDone/habTotal*100) : 0;
-  document.getElementById('d-habitscore').innerHTML = habPct + '<span class="big-unit">%</span>';
-  const hDelta = document.getElementById('d-habit-delta');
-  hDelta.className = 'delta ' + (habPct>=70?'up':habPct>=40?'neu':'dn');
-  hDelta.textContent = (habPct>=70?'▲ Excellent':habPct>=40?'→ Cukup':'▼ Perlu lebih');
+  if (!goals.length) {
+    container.innerHTML = '<p style="color:var(--text3); font-size:0.83rem; padding:20px 0">No goals yet. Create one above.</p>';
+    return;
+  }
 
-  // Goals
-  const goalAvg = D.goals.length > 0 ? Math.round(D.goals.reduce((s,g)=>s+g.progress,0)/D.goals.length) : 0;
-  document.getElementById('d-goals').innerHTML = goalAvg + '<span class="big-unit">%</span>';
-  document.getElementById('d-goal-delta').className = 'delta ' + (goalAvg>=70?'up':'neu');
-  document.getElementById('d-goal-delta').textContent = '→ ' + D.goals.length + ' milestone aktif';
+  goals.reverse().forEach(goal => {
+    const stepsConfig = [
+      { label: 'Set Clear Goals', desc: 'What exactly do you want? Be specific. Write your goal clearly.', field: 'goalStatement' },
+      { label: 'Identify Problems', desc: 'What stands in your way? List all obstacles.', field: 'problems' },
+      { label: 'Diagnose Root Causes', desc: 'Why do these problems exist? Dig past the surface.', field: 'rootCauses' },
+      { label: 'Design a Plan', desc: 'List the specific actions to get from where you are to where you want to be.', field: 'plan' },
+      { label: 'Push to Completion', desc: 'What metrics will you track? What is your deadline?', field: 'metrics' }
+    ];
+    const completedSteps = Object.values(goal.steps || {}).filter(s => s.done).length;
+    const pct = Math.round((completedSteps / 5) * 100);
 
-  // NW delta
-  const nwDelta = document.getElementById('d-nw-delta');
-  nwDelta.className = 'delta ' + (pnl>=0?'up':'dn');
-  nwDelta.textContent = (pnl>=0?'▲':' ▼') + ' P&L ' + (pnl>=0?'+':'') + '$' + pnl.toFixed(0);
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.style.marginBottom = '20px';
+    div.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; flex-wrap:wrap; gap:8px">
+        <div>
+          <div class="card-meta">Goal ${goal.completed ? '— Completed ✓' : ''}</div>
+          <h3>${goal.title}</h3>
+          ${goal.why ? `<p style="margin-top:6px; font-size:0.78rem; color:var(--text3); font-style:italic">"${goal.why}"</p>` : ''}
+        </div>
+        <div style="display:flex; gap:8px; flex-shrink:0">
+          ${!goal.completed ? `<button class="btn btn-gold btn-sm" onclick="completeGoal(${goal.id})">Mark Complete</button>` : ''}
+          <button class="btn btn-danger btn-sm" onclick="deleteGoal(${goal.id})">Delete</button>
+        </div>
+      </div>
+      <div class="meter-wrap" style="margin-bottom:16px">
+        <div class="meter-label"><span>Progress through 5 steps</span><span>${pct}%</span></div>
+        <div class="meter"><div class="meter-fill" style="width:${pct}%"></div></div>
+      </div>
+      ${stepsConfig.map((step, i) => {
+        const stepNum = i + 1;
+        const stepData = (goal.steps || {})[stepNum] || {};
+        const isDone = stepData.done;
+        return `
+          <div class="step-card ${isDone ? 'done' : ''}" id="step-${goal.id}-${stepNum}">
+            <div class="step-header" onclick="toggleStep(${goal.id}, ${stepNum})">
+              <div class="step-num">${isDone ? '✓' : stepNum}</div>
+              <div class="step-info">
+                <div class="step-title">${step.label}</div>
+                <div class="step-desc">${step.desc}</div>
+              </div>
+            </div>
+            <div class="step-body" id="stepbody-${goal.id}-${stepNum}">
+              <textarea id="stepnotes-${goal.id}-${stepNum}" placeholder="Your notes...">${stepData.notes || ''}</textarea>
+              <div style="display:flex; gap:8px; margin-top:10px">
+                <button class="btn ${isDone ? '' : 'btn-gold'} btn-sm" onclick="toggleStepDone(${goal.id}, ${stepNum})">
+                  ${isDone ? 'Mark Incomplete' : 'Mark Complete ✓'}
+                </button>
+                <button class="btn btn-sm" onclick="saveStepNotes(${goal.id}, ${stepNum})">Save Notes</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    `;
+    container.appendChild(div);
+  });
+}
 
-  // Score
-  updateEliteScore();
+function toggleStep(goalId, stepNum) {
+  const body = document.getElementById(`stepbody-${goalId}-${stepNum}`);
+  body.classList.toggle('show');
+}
 
-  // P&L Chart (last 7 history entries of type portfolio/networth)
-  renderPnLChart();
+async function toggleStepDone(goalId, stepNum) {
+  const goals = await dbGetAll('goals');
+  const goal = goals.find(g => g.id === goalId);
+  if (!goal) return;
+  goal.steps[stepNum].done = !goal.steps[stepNum].done;
+  const notes = document.getElementById(`stepnotes-${goalId}-${stepNum}`)?.value || '';
+  goal.steps[stepNum].notes = notes;
+  await dbPut('goals', goal);
+  renderGoals();
+}
 
-  // Dash habits (first 4)
-  const dh = document.getElementById('dashHabits');
-  const habShow = D.habits.slice(0,4);
-  if(habShow.length===0){dh.innerHTML='<div style="color:var(--text3);font-size:11px;padding:10px 0;">Belum ada habit. <a href="#" onclick="nav(\'habits\')" style="color:var(--accent);">Tambahkan</a></div>';return;}
-  dh.innerHTML = habShow.map(h=>`
-    <div class="hrow">
-      <div class="hicon">${h.emoji||'✅'}</div>
-      <div class="hinfo"><div class="hname">${h.name}</div><div class="htgt">${h.target}</div></div>
-      <div class="hcheck ${h.done?'done':''}" onclick="quickToggleHabit('${h.id}')">${h.done?'✓':''}</div>
+async function saveStepNotes(goalId, stepNum) {
+  const notes = document.getElementById(`stepnotes-${goalId}-${stepNum}`)?.value || '';
+  const goals = await dbGetAll('goals');
+  const goal = goals.find(g => g.id === goalId);
+  if (!goal) return;
+  goal.steps[stepNum].notes = notes;
+  await dbPut('goals', goal);
+  showToast('Notes saved.');
+}
+
+async function completeGoal(goalId) {
+  const goals = await dbGetAll('goals');
+  const goal = goals.find(g => g.id === goalId);
+  if (!goal) return;
+  goal.completed = true;
+  await dbPut('goals', goal);
+  showToast('✦ Goal completed!');
+  renderGoals();
+}
+
+async function deleteGoal(goalId) {
+  if (!confirm('Delete this goal?')) return;
+  await dbDelete('goals', goalId);
+  renderGoals();
+  showToast('Goal deleted.');
+}
+
+// ============================================================
+// JOURNAL
+// ============================================================
+async function saveJournalEntry() {
+  const pain = document.getElementById('entry-pain').value.trim();
+  const root = document.getElementById('entry-root').value.trim();
+  const reflection = document.getElementById('entry-reflect').value.trim();
+  const progress = document.getElementById('entry-progress').value.trim();
+  const tagsRaw = document.getElementById('entry-tags').value;
+  const tags = tagsRaw.split(',').map(t => t.trim()).filter(Boolean);
+
+  if (!pain) { showToast('Describe the pain/problem first.'); return; }
+  if (!reflection) { showToast('Add your reflection.'); return; }
+
+  await dbAdd('journal', { date: new Date().toISOString(), pain, root, reflection, progress, tags });
+  document.getElementById('entry-pain').value = '';
+  document.getElementById('entry-root').value = '';
+  document.getElementById('entry-reflect').value = '';
+  document.getElementById('entry-progress').value = '';
+  document.getElementById('entry-tags').value = '';
+  showToast('✦ Reflection logged.');
+  renderJournal();
+}
+
+async function renderJournal() {
+  const entries = await dbGetAll('journal');
+  const container = document.getElementById('journal-entries');
+  container.innerHTML = '';
+
+  if (!entries.length) {
+    container.innerHTML = '<p style="color:var(--text3); font-size:0.83rem;">No entries yet. Log your first reflection.</p>';
+    return;
+  }
+
+  entries.reverse().forEach(entry => {
+    const div = document.createElement('div');
+    div.className = 'journal-entry';
+    div.innerHTML = `
+      <div class="je-header">
+        <span class="je-date">${new Date(entry.date).toLocaleString('en-US', {month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'})}</span>
+        <button class="btn btn-danger btn-sm" onclick="deleteJournal(${entry.id})">✕</button>
+      </div>
+      <div class="je-pain">⚡ ${entry.pain}</div>
+      ${entry.root ? `<div style="font-size:0.78rem; color:var(--text3); margin-bottom:8px"><strong>Root cause:</strong> ${entry.root}</div>` : ''}
+      <div class="je-reflection">${entry.reflection}</div>
+      ${entry.progress ? `<div class="je-progress">→ ${entry.progress}</div>` : ''}
+      ${entry.tags?.length ? `<div class="je-tags">${entry.tags.map(t => `<span class="je-tag">${t}</span>`).join('')}</div>` : ''}
+    `;
+    container.appendChild(div);
+  });
+}
+
+async function deleteJournal(id) {
+  await dbDelete('journal', id);
+  renderJournal();
+  showToast('Entry deleted.');
+}
+
+// ============================================================
+// DECISION MAKER
+// ============================================================
+function renderDecisions() {
+  renderDecisionOptions();
+  renderDecisionChecklist();
+}
+
+function renderDecisionOptions() {
+  const grid = document.getElementById('options-grid');
+  grid.innerHTML = '';
+  if (decisionOptions.length === 0) {
+    addOption();
+    addOption();
+  }
+  decisionOptions.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'decision-option';
+    div.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px">
+        <div class="card-meta">Option ${i + 1}</div>
+        <button class="btn btn-danger btn-sm" onclick="removeOption(${i})">✕</button>
+      </div>
+      <div class="field">
+        <label>Option Name</label>
+        <input type="text" value="${opt.name || ''}" onchange="decisionOptions[${i}].name=this.value" placeholder="e.g. Accept the job offer" />
+      </div>
+      <div class="pros-cons" style="margin-top:12px">
+        <div class="pc-list pros">
+          <div class="pc-title">Pros</div>
+          <textarea onchange="decisionOptions[${i}].pros=this.value" placeholder="One per line" style="min-height:80px; font-size:0.78rem">${opt.pros || ''}</textarea>
+        </div>
+        <div class="pc-list cons">
+          <div class="pc-title">Cons</div>
+          <textarea onchange="decisionOptions[${i}].cons=this.value" placeholder="One per line" style="min-height:80px; font-size:0.78rem">${opt.cons || ''}</textarea>
+        </div>
+      </div>
+      <div class="field" style="margin-top:12px">
+        <label>Probability of Success (0–100)</label>
+        <input type="range" min="0" max="100" value="${opt.prob || 50}" oninput="decisionOptions[${i}].prob=+this.value; document.getElementById('probval-${i}').textContent=this.value+'%'" style="padding:0; border:none; background:transparent" />
+        <span id="probval-${i}" style="font-family:var(--font-mono); font-size:0.72rem; color:var(--gold)">${opt.prob || 50}%</span>
+      </div>
+      <div class="field">
+        <label>Impact if Successful (1–10)</label>
+        <input type="range" min="1" max="10" value="${opt.impact || 5}" oninput="decisionOptions[${i}].impact=+this.value; document.getElementById('impactval-${i}').textContent=this.value" style="padding:0; border:none; background:transparent" />
+        <span id="impactval-${i}" style="font-family:var(--font-mono); font-size:0.72rem; color:var(--gold)">${opt.impact || 5}</span>
+      </div>
+    `;
+    grid.appendChild(div);
+  });
+
+  // Show result
+  if (decisionOptions.length >= 2) {
+    const scored = decisionOptions.map((o, i) => ({
+      name: o.name || `Option ${i+1}`,
+      ev: ((o.prob || 50) / 100) * (o.impact || 5)
+    })).sort((a, b) => b.ev - a.ev);
+    const result = document.getElementById('dec-result');
+    if (result) {
+      result.innerHTML = `
+        <div style="font-size:0.85rem; margin-bottom:12px">Based on your expected value inputs:</div>
+        ${scored.map((s, i) => `
+          <div style="display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid var(--border)">
+            <span style="font-family:var(--font-mono); font-size:0.85rem; color:${i===0?'var(--gold)':'var(--text2)'}; width:20px">${i+1}.</span>
+            <span style="flex:1">${s.name}</span>
+            <span style="font-family:var(--font-mono); color:var(--gold)">${s.ev.toFixed(2)} EV</span>
+          </div>
+        `).join('')}
+        <p style="font-size:0.75rem; color:var(--text3); margin-top:12px">EV = (probability × impact). Use as guidance, not gospel. Consult believable advisors.</p>
+      `;
+    }
+  }
+}
+
+function addOption() {
+  decisionOptions.push({ name: '', pros: '', cons: '', prob: 50, impact: 5 });
+  renderDecisionOptions();
+}
+
+function removeOption(i) {
+  decisionOptions.splice(i, 1);
+  renderDecisionOptions();
+}
+
+function renderDecisionChecklist() {
+  const container = document.getElementById('dec-checklist');
+  container.innerHTML = DECISION_CHECKLIST_ITEMS.map((item, i) => `
+    <div class="checklist-item" id="dci-${i}" onclick="toggleDecCheck(${i})">
+      <div class="check-box" id="dcbox-${i}"></div>
+      <span class="check-text">${item}</span>
+    </div>
+  `).join('');
+}
+
+function toggleDecCheck(i) {
+  const item = document.getElementById('dci-' + i);
+  item.classList.toggle('checked');
+  const checked = document.querySelectorAll('#dec-checklist .checklist-item.checked').length;
+  const total = DECISION_CHECKLIST_ITEMS.length;
+  if (checked === total) showToast('✦ Decision framework complete. Now decide.');
+}
+
+// ============================================================
+// HABITS
+// ============================================================
+function renderHabits() {
+  const today = new Date().toDateString();
+  document.getElementById('habits-date').textContent = today;
+  const container = document.getElementById('habits-list');
+  container.innerHTML = HABITS.map((h, i) => `
+    <div class="card" style="margin-bottom:8px; cursor:pointer" onclick="toggleHabit('${h.id}')" id="hcard-${h.id}">
+      <div style="display:flex; gap:14px; align-items:center">
+        <div class="check-box" id="hbox-${h.id}" style="width:22px;height:22px">${habitState[h.id] ? '✓' : ''}</div>
+        <div style="flex:1">
+          <div style="font-size:0.85rem; font-weight:500">${h.text}</div>
+          <div style="font-size:0.75rem; color:var(--text3); margin-top:2px">${h.detail}</div>
+        </div>
+      </div>
     </div>
   `).join('');
 
-  // Dash portfolio
-  const dp = document.getElementById('dashPort');
-  if(D.portfolio.length===0){dp.innerHTML='<div style="color:var(--text3);font-size:11px;padding:10px 0;">Belum ada aset. <a href="#" onclick="nav(\'portfolio\')" style="color:var(--accent);">Tambahkan</a></div>';}
-  else {
-    dp.innerHTML = D.portfolio.slice(0,4).map(a=>{
-      const pnl=a.current-a.cost; const pct=a.cost>0?(pnl/a.cost*100).toFixed(1):0;
-      return `<div class="port-row">
-        <div class="port-dot" style="background:${marketColor(a.market)};"></div>
-        <div class="port-info"><div class="port-name">${a.name}</div><div class="port-market">${a.market}</div></div>
-        <div>
-          <div class="port-val">$${parseFloat(a.current).toFixed(0)}</div>
-          <div class="port-pnl ${pnl>=0?'up':'dn'}">${pnl>=0?'+':''}$${pnl.toFixed(0)} (${pct}%)</div>
-        </div>
-      </div>`;
-    }).join('');
-  }
-
-  // Dash goals
-  const dg = document.getElementById('dashGoals');
-  dg.innerHTML = D.goals.slice(0,3).map(g=>`
-    <div style="margin-bottom:10px;">
-      <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
-        <span style="font-size:11px;color:var(--text);">${g.title.substring(0,40)}${g.title.length>40?'...':''}</span>
-        <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);">${g.progress}%</span>
-      </div>
-      <div class="progress-bar"><div class="progress-fill" style="width:${g.progress}%;background:${goalColor(g.category)};"></div></div>
-    </div>
-  `).join('') || '<div style="color:var(--text3);font-size:11px;padding:10px 0;">Belum ada goal.</div>';
-
-  // Dash history
-  const dhist = document.getElementById('dashHistory');
-  const recent = D.history.slice(-6).reverse();
-  if(recent.length===0){dhist.innerHTML='<div style="color:var(--text3);font-size:11px;padding:10px 0;text-align:center;">Belum ada riwayat. Mulai tambahkan catatan!</div>';return;}
-  dhist.innerHTML = recent.map(h=>histItemHTML(h)).join('');
-}
-
-function renderPnLChart() {
-  const chartEl = document.getElementById('pnlChart');
-  const labelsEl = document.getElementById('pnlLabels');
-  const days = [];
-  for(let i=6;i>=0;i--){
-    const d = new Date(); d.setDate(d.getDate()-i);
-    days.push({date:d.toISOString().split('T')[0], label:d.toLocaleDateString('id',{weekday:'short'})});
-  }
-  // Get portfolio P&L snapshots from history or just show current with fake
-  const totalPnL = D.portfolio.reduce((s,a)=>s+(parseFloat(a.current||0)-parseFloat(a.cost||0)),0);
-  const colors = days.map((_,i)=>{
-    const variation = (Math.sin(i*1.2)*0.3 + Math.random()*0.1);
-    return variation;
-  });
-  // Use history data if available, else generate visual
-  const portfolioHistory = D.history.filter(h=>h.type==='networth');
-  chartEl.innerHTML = days.map((d,i)=>{
-    const hEntry = portfolioHistory.find(h=>h.date===d.date);
-    const val = hEntry ? parseFloat(hEntry.value||0) : (totalPnL * (0.7 + i*0.05));
-    const maxV = Math.max(...days.map((_,j)=>Math.abs(totalPnL*(0.7+j*0.05))), 1);
-    const heightPct = Math.max(10, Math.min(95, Math.abs(val)/maxV*90));
-    const isPos = val >= 0;
-    return `<div class="cbar" style="height:${heightPct}%;background:${isPos?'rgba(0,230,118,0.5)':'rgba(255,68,68,0.5)'};" data-val="${isPos?'+':''}$${Math.abs(val).toFixed(0)}"></div>`;
-  }).join('');
-  labelsEl.innerHTML = days.map(d=>`<div class="cbar-label">${d.label}</div>`).join('');
-}
-
-// ==================== PORTFOLIO ====================
-function renderPortfolio() {
-  const tbody = document.getElementById('portTable');
-  const empty = document.getElementById('portEmpty');
-  const total = D.portfolio.reduce((s,a)=>s+parseFloat(a.current||0),0);
-  const totalCost = D.portfolio.reduce((s,a)=>s+parseFloat(a.cost||0),0);
-  const pnl = total - totalCost;
-
-  document.getElementById('p-total').textContent = '$' + total.toFixed(0);
-  const pnlEl = document.getElementById('p-pnl');
-  pnlEl.textContent = (pnl>=0?'+':'') + '$' + pnl.toFixed(0);
-  pnlEl.style.color = pnl>=0?'var(--green)':'var(--red)';
-  document.getElementById('p-count').textContent = D.portfolio.length;
-
-  // Best performer
-  if(D.portfolio.length>0){
-    const best = D.portfolio.reduce((b,a)=>{
-      const bPct = b.cost>0?(b.current-b.cost)/b.cost*100:0;
-      const aPct = a.cost>0?(a.current-a.cost)/a.cost*100:0;
-      return aPct>bPct?a:b;
-    });
-    const bPct = best.cost>0?((best.current-best.cost)/best.cost*100).toFixed(1):0;
-    document.getElementById('p-best').textContent = best.name;
-    document.getElementById('p-best-val').textContent = '+' + bPct + '%';
-  }
-
-  if(D.portfolio.length===0){
-    tbody.innerHTML=''; empty.style.display='block';
-  } else {
-    empty.style.display='none';
-    tbody.innerHTML = D.portfolio.map(a=>{
-      const pnl = parseFloat(a.current) - parseFloat(a.cost);
-      const pct = a.cost>0?(pnl/a.cost*100).toFixed(2):0;
-      return `<tr>
-        <td class="tdl"><strong>${a.name}</strong><br><span style="font-size:9px;color:var(--text3);">${a.note||''}</span></td>
-        <td><span class="tag tag-${a.market.toLowerCase().replace('/','')}">${a.market}</span></td>
-        <td style="font-family:'JetBrains Mono',monospace;">$${parseFloat(a.cost).toFixed(0)}</td>
-        <td style="font-family:'JetBrains Mono',monospace;">$${parseFloat(a.current).toFixed(0)}</td>
-        <td style="font-family:'JetBrains Mono',monospace;color:${pnl>=0?'var(--green)':'var(--red)'};">${pnl>=0?'+':''}$${pnl.toFixed(0)}</td>
-        <td style="font-family:'JetBrains Mono',monospace;color:${pct>=0?'var(--green)':'var(--red)'};">${pct>=0?'+':''}${pct}%</td>
-        <td><button class="btn btn-ghost btn-sm" onclick="openEditPort('${a.id}')">Edit</button></td>
-      </tr>`;
-    }).join('');
-  }
-
-  // Allocation
-  const markets = ['Forex','Crypto','Gold','Saham'];
-  const allocEl = document.getElementById('allocation');
-  allocEl.innerHTML = markets.map(m=>{
-    const mv = D.portfolio.filter(a=>a.market===m).reduce((s,a)=>s+parseFloat(a.current||0),0);
-    const pct = total>0?((mv/total)*100).toFixed(1):0;
-    if(mv===0) return '';
-    return `<div style="display:flex;align-items:center;gap:8px;">
-      <div style="width:10px;height:10px;border-radius:2px;background:${marketColor(m)};"></div>
-      <span style="font-size:11px;color:var(--text);">${m}</span>
-      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gold);">${pct}%</span>
-      <span style="font-size:10px;color:var(--text3);">($${mv.toFixed(0)})</span>
-    </div>`;
-  }).join('');
-}
-
-function openPortModal() { openModal('portModal'); }
-function addPortfolio() {
-  const name = document.getElementById('pa-name').value.trim();
-  const market = document.getElementById('pa-market').value;
-  const cost = parseFloat(document.getElementById('pa-cost').value)||0;
-  const current = parseFloat(document.getElementById('pa-current').value)||cost;
-  const note = document.getElementById('pa-note').value.trim();
-  if(!name){showToast('⚠ Nama aset wajib diisi');return;}
-  const asset = {id:'p'+Date.now(), name, market, cost, current, note, addedAt:new Date().toISOString()};
-  D.portfolio.push(asset);
-  addHistory({type:'portfolio', title:'Tambah aset: '+name, value:'+$'+current.toFixed(0), market, note:'Modal: $'+cost.toFixed(0)+' | Sekarang: $'+current.toFixed(0)});
-  save(); closeModal('portModal');
-  ['pa-name','pa-cost','pa-current','pa-note'].forEach(id=>document.getElementById(id).value='');
-  renderPortfolio(); renderDashboard();
-  showToast('✓ Aset '+name+' ditambahkan');
-}
-
-function openEditPort(id) {
-  const a = D.portfolio.find(x=>x.id===id);
-  if(!a)return;
-  document.getElementById('pe-id').value = a.id;
-  document.getElementById('pe-name').value = a.name;
-  document.getElementById('pe-market').value = a.market;
-  document.getElementById('pe-cost').value = a.cost;
-  document.getElementById('pe-current').value = a.current;
-  document.getElementById('pe-note').value = a.note||'';
-  openModal('portEditModal');
-}
-
-function updatePortfolio() {
-  const id = document.getElementById('pe-id').value;
-  const idx = D.portfolio.findIndex(x=>x.id===id);
-  if(idx<0)return;
-  const oldVal = D.portfolio[idx].current;
-  D.portfolio[idx].cost = parseFloat(document.getElementById('pe-cost').value)||D.portfolio[idx].cost;
-  D.portfolio[idx].current = parseFloat(document.getElementById('pe-current').value)||D.portfolio[idx].current;
-  D.portfolio[idx].note = document.getElementById('pe-note').value;
-  const diff = D.portfolio[idx].current - oldVal;
-  addHistory({type:'portfolio', title:'Update: '+D.portfolio[idx].name, value:(diff>=0?'+':'')+'$'+diff.toFixed(0), market:D.portfolio[idx].market, note:'Nilai baru: $'+D.portfolio[idx].current.toFixed(0)});
-  save(); closeModal('portEditModal');
-  renderPortfolio(); renderDashboard();
-  showToast('✓ Aset diupdate');
-}
-
-function deletePortfolio() {
-  const id = document.getElementById('pe-id').value;
-  const a = D.portfolio.find(x=>x.id===id);
-  if(!a || !confirm('Hapus aset '+a.name+'?'))return;
-  addHistory({type:'portfolio', title:'Hapus aset: '+a.name, value:'-$'+a.current.toFixed(0), market:a.market, note:'Aset dihapus dari portfolio'});
-  D.portfolio = D.portfolio.filter(x=>x.id!==id);
-  save(); closeModal('portEditModal');
-  renderPortfolio(); renderDashboard();
-  showToast('✓ Aset dihapus');
-}
-
-// ==================== HABITS ====================
-function renderHabits() {
-  const done = D.habits.filter(h=>h.done).length;
-  const total = D.habits.length;
-  const pct = total>0?Math.round(done/total*100):0;
-  document.getElementById('hab-today').innerHTML = pct + '<span class="big-unit">%</span>';
-
-  // Streak calculation
-  const streak = calcStreak();
-  document.getElementById('hab-streak').innerHTML = streak + '<span class="big-unit">d</span>';
-  document.getElementById('streakDisplay').textContent = '🔥 ' + streak + ' hari streak';
-
-  // 30-day avg
-  const histKeys = Object.keys(D.habitHistory).sort().slice(-30);
-  let avgSum = 0;
-  histKeys.forEach(date=>{
-    const dayData = D.habitHistory[date];
-    const dayDone = Object.values(dayData).filter(Boolean).length;
-    const dayTotal = Object.values(dayData).length;
-    avgSum += dayTotal>0?dayDone/dayTotal*100:0;
-  });
-  const avg = histKeys.length>0?Math.round(avgSum/histKeys.length):pct;
-  document.getElementById('hab-avg').innerHTML = avg + '<span class="big-unit">%</span>';
-
-  const list = document.getElementById('habitList');
-  const empty = document.getElementById('habitEmpty');
-  if(D.habits.length===0){list.innerHTML='';empty.style.display='block';}
-  else {
-    empty.style.display='none';
-    const groups = ['Pagi','Siang','Sore','Malam'];
-    list.innerHTML = groups.map(g=>{
-      const gHabits = D.habits.filter(h=>h.time===g);
-      if(gHabits.length===0)return'';
-      return `<div style="margin-bottom:12px;">
-        <div style="font-size:8px;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:4px;">${g}</div>
-        ${gHabits.map(h=>`
-          <div class="hrow">
-            <div class="hicon">${h.emoji||'✅'}</div>
-            <div class="hinfo">
-              <div class="hname">${h.name}</div>
-              <div class="htgt">${h.target} · ${h.ref}</div>
-            </div>
-            <div class="hbar-w"><div class="hbar" style="width:${h.done?'100':'0'}%;"></div></div>
-            <div class="hcheck ${h.done?'done':''}" onclick="toggleHabit('${h.id}')">${h.done?'✓':''}</div>
-          </div>
-        `).join('')}
-      </div>`;
-    }).join('');
-  }
-
-  renderHeatmap();
-  updateEliteScore();
+  updateHabitsScore();
 }
 
 function toggleHabit(id) {
-  const h = D.habits.find(x=>x.id===id);
-  if(!h)return;
-  h.done = !h.done;
-  save(); renderHabits(); renderDashboard();
-  showToast(h.done ? '✓ ' + h.name + ' selesai!' : '○ ' + h.name + ' ditandai belum');
-}
-
-function quickToggleHabit(id) {
-  toggleHabit(id);
-}
-
-function calcStreak() {
-  let streak = 0;
-  const d = new Date();
-  for(let i=1;i<=365;i++){
-    d.setDate(d.getDate()-1);
-    const key = d.toISOString().split('T')[0];
-    const day = D.habitHistory[key];
-    if(!day) break;
-    const done = Object.values(day).filter(Boolean).length;
-    const total = Object.values(day).length;
-    if(total>0 && done/total >= 0.5) streak++;
-    else break;
-  }
-  return streak;
-}
-
-function renderHeatmap() {
-  const el = document.getElementById('habitHeatmap');
-  const days = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
-  const last28 = [];
-  for(let i=27;i>=0;i--){
-    const d = new Date(); d.setDate(d.getDate()-i);
-    last28.push(d.toISOString().split('T')[0]);
-  }
-  el.innerHTML = `<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;">
-    ${days.map(d=>`<div style="font-size:8px;color:var(--text3);text-align:center;margin-bottom:4px;letter-spacing:1px;">${d}</div>`).join('')}
-    ${last28.map(date=>{
-      const day = D.habitHistory[date];
-      const isToday = date === todayStr();
-      let pct = 0;
-      if(isToday){ const done=D.habits.filter(h=>h.done).length; const tot=D.habits.length; pct=tot>0?done/tot:0; }
-      else if(day){ const done=Object.values(day).filter(Boolean).length; const tot=Object.values(day).length; pct=tot>0?done/tot:0; }
-      const alpha = pct > 0 ? 0.2 + pct*0.8 : 0.04;
-      return `<div style="aspect-ratio:1;border-radius:3px;background:rgba(0,212,255,${alpha});title:'${date}:${Math.round(pct*100)}%'" title="${date}: ${Math.round(pct*100)}%"></div>`;
-    }).join('')}
-  </div>`;
-}
-
-function openHabitModal() { openModal('habitModal'); }
-function addHabit() {
-  const name = document.getElementById('h-name').value.trim();
-  const emoji = document.getElementById('h-emoji').value.trim() || '✅';
-  const target = document.getElementById('h-target').value.trim();
-  const time = document.getElementById('h-time').value;
-  const ref = document.getElementById('h-ref').value.trim();
-  if(!name){showToast('⚠ Nama habit wajib');return;}
-  D.habits.push({id:'h'+Date.now(), name, emoji, target, time, ref, done:false});
-  addHistory({type:'habit', title:'Habit baru: '+name, value:'', note:'Target: '+target+' | '+time});
-  save(); closeModal('habitModal');
-  ['h-name','h-emoji','h-target','h-ref'].forEach(id=>document.getElementById(id).value='');
-  renderHabits();
-  showToast('✓ Habit "'+name+'" ditambahkan');
-}
-
-// ==================== GOALS ====================
-function renderGoals() {
-  const avg = D.goals.length>0?Math.round(D.goals.reduce((s,g)=>s+g.progress,0)/D.goals.length):0;
-  document.getElementById('g-count').textContent = D.goals.length;
-  document.getElementById('g-avg').innerHTML = avg + '<span class="big-unit">%</span>';
-
-  const list = document.getElementById('goalList');
-  const empty = document.getElementById('goalEmpty');
-  if(D.goals.length===0){list.innerHTML='';empty.style.display='block';}
-  else {
-    empty.style.display='none';
-    list.innerHTML = D.goals.map(g=>{
-      const daysLeft = g.deadline ? Math.ceil((new Date(g.deadline)-new Date())/(1000*60*60*24)) : null;
-      return `<div class="gcard">
-        <button class="edit-btn" onclick="openEditGoal('${g.id}')">✎</button>
-        <div class="gcard-header">
-          <div class="gcard-emoji">${goalEmoji(g.category)}</div>
-          <div class="gcard-title">${g.title}</div>
-          <div class="gcard-target">${g.target}</div>
-        </div>
-        <div class="progress-bar"><div class="progress-fill" style="width:${g.progress}%;background:${goalColor(g.category)};"></div></div>
-        <div class="gcard-meta">
-          <span>${g.progress}% selesai</span>
-          <span>${daysLeft!==null?(daysLeft>0?daysLeft+' hari lagi':'⚠ Overdue'):'Tanpa deadline'}</span>
-        </div>
-        ${g.note?`<div style="font-size:10px;color:var(--text3);margin-top:8px;line-height:1.5;">${g.note}</div>`:''}
-      </div>`;
-    }).join('');
-  }
-
-  // Timeline
-  const tl = document.getElementById('goalTimeline');
-  const milestones = [
-    {title:'Mulai Konsisten Profit', desc:'Win rate >60%, RR ratio 1:2, max 2% risk/trade', color:'var(--accent)', done:true},
-    {title:'$10K Net Worth', desc:'Modal tumbuh dari trading + investasi rutin', color:'var(--green)', done:D.portfolio.reduce((s,a)=>s+a.current,0)>=10000},
-    {title:'$100K Net Worth', desc:'Multiple income streams, portfolio diversified', color:'var(--gold)', done:D.portfolio.reduce((s,a)=>s+a.current,0)>=100000},
-    {title:'$1M Net Worth', desc:'Millionaire milestone — passive income > expenses', color:'var(--purple)', done:D.portfolio.reduce((s,a)=>s+a.current,0)>=1000000},
-    {title:'$10M Net Worth', desc:'Scale trading desk, fund manager mentality', color:'var(--gold2)', done:false},
-    {title:'$1B+ — Billionaire', desc:'Institutional level, legacy wealth building', color:'var(--gold)', done:false},
-  ];
-  tl.innerHTML = milestones.map(m=>`
-    <div class="tl-item">
-      <div class="tl-dot" style="background:${m.done?m.color:'var(--bg4)'};border-color:${m.done?m.color:'var(--text3)'};box-shadow:${m.done?'0 0 8px '+m.color:'none'};"></div>
-      <div class="tl-title" style="color:${m.done?'var(--text)':'var(--text3)'};">${m.done?'✓ ':''} ${m.title}</div>
-      <div class="tl-desc">${m.desc}</div>
-    </div>
-  `).join('');
-
-  updateEliteScore();
-}
-
-function openGoalModal() {
-  document.getElementById('gModalTitle').textContent = 'Tambah Goal Baru';
-  document.getElementById('g-edit-id').value = '';
-  ['g-title','g-target','g-note'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('g-progress').value = '0';
-  document.getElementById('g-deadline').value = '';
-  openModal('goalModal');
-}
-
-function openEditGoal(id) {
-  const g = D.goals.find(x=>x.id===id);
-  if(!g)return;
-  document.getElementById('gModalTitle').textContent = 'Edit Goal';
-  document.getElementById('g-edit-id').value = g.id;
-  document.getElementById('g-title').value = g.title;
-  document.getElementById('g-target').value = g.target;
-  document.getElementById('g-deadline').value = g.deadline||'';
-  document.getElementById('g-progress').value = g.progress;
-  document.getElementById('g-category').value = g.category;
-  document.getElementById('g-note').value = g.note||'';
-  openModal('goalModal');
-}
-
-function saveGoal() {
-  const editId = document.getElementById('g-edit-id').value;
-  const title = document.getElementById('g-title').value.trim();
-  const target = document.getElementById('g-target').value.trim();
-  const deadline = document.getElementById('g-deadline').value;
-  const progress = parseInt(document.getElementById('g-progress').value)||0;
-  const category = document.getElementById('g-category').value;
-  const note = document.getElementById('g-note').value.trim();
-  if(!title){showToast('⚠ Judul goal wajib diisi');return;}
-
-  if(editId) {
-    const idx = D.goals.findIndex(x=>x.id===editId);
-    if(idx>=0) {
-      const oldProg = D.goals[idx].progress;
-      D.goals[idx] = {...D.goals[idx], title, target, deadline, progress, category, note};
-      if(progress!==oldProg) addHistory({type:'goal', title:'Update goal: '+title, value:progress+'%', note:'Progress: '+oldProg+'% → '+progress+'%'});
-    }
+  habitState[id] = !habitState[id];
+  const box = document.getElementById('hbox-' + id);
+  const card = document.getElementById('hcard-' + id);
+  if (habitState[id]) {
+    box.textContent = '✓';
+    box.style.background = 'var(--gold-dim)';
+    box.style.borderColor = 'var(--gold)';
+    box.style.color = 'var(--gold)';
+    card.style.borderColor = 'var(--gold)';
   } else {
-    const g = {id:'g'+Date.now(), title, target, deadline, progress, category, note, createdAt:new Date().toISOString()};
-    D.goals.push(g);
-    addHistory({type:'goal', title:'Goal baru: '+title, value:target, note:'Target: '+target+' | Deadline: '+(deadline||'--')});
+    box.textContent = '';
+    box.style.background = '';
+    box.style.borderColor = '';
+    box.style.color = '';
+    card.style.borderColor = '';
   }
-  save(); closeModal('goalModal');
-  renderGoals(); renderDashboard();
-  showToast('✓ Goal tersimpan');
+  updateHabitsScore();
 }
 
-// ==================== HISTORY ====================
-function addHistory(entry) {
-  D.history.push({
-    id: 'hst'+Date.now(),
-    type: entry.type||'note',
-    title: entry.title||'',
-    value: entry.value||'',
-    market: entry.market||'',
-    note: entry.note||'',
-    date: todayStr(),
-    datetime: new Date().toISOString()
+function updateHabitsScore() {
+  const done = Object.values(habitState).filter(Boolean).length;
+  const total = HABITS.length;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('habits-score').textContent = pct + '%';
+  document.getElementById('habits-fill').style.width = pct + '%';
+  const msgs = [
+    'Start somewhere. One honest action today.',
+    'Getting there. Every step matters.',
+    'You\'re building the habit of radical honesty.',
+    'Strong day. This is how principles are internalized.',
+    'Exceptional. This is what Bridgewater was built on.',
+    '✦ Perfect score. A fully principled day.'
+  ];
+  const idx = Math.floor((pct / 100) * (msgs.length - 1));
+  document.getElementById('habits-message').textContent = msgs[Math.min(idx, msgs.length - 1)];
+}
+
+function resetHabits() {
+  habitState = {};
+  renderHabits();
+}
+
+// ============================================================
+// MY PRINCIPLES
+// ============================================================
+async function saveMyPrinciple() {
+  const title = document.getElementById('mp-title').value.trim();
+  const desc = document.getElementById('mp-desc').value.trim();
+  const cat = document.getElementById('mp-cat').value;
+  if (!title) { showToast('Write your principle first.'); return; }
+  await dbAdd('myprinciples', { title, desc, cat, created: new Date().toISOString() });
+  document.getElementById('mp-title').value = '';
+  document.getElementById('mp-desc').value = '';
+  showToast('✦ Principle saved.');
+  renderMyPrinciples();
+}
+
+async function renderMyPrinciples() {
+  const principles = await dbGetAll('myprinciples');
+  const container = document.getElementById('my-principles-list');
+  container.innerHTML = '';
+
+  if (!principles.length) {
+    container.innerHTML = `
+      <div class="quote-block">"Think for yourself to decide what you want, what is true, and what you should do to achieve it." — Ray Dalio. <br><br>Start by writing your first personal principle above.</div>
+    `;
+    return;
+  }
+
+  const cats = [...new Set(principles.map(p => p.cat))];
+  const catLabels = { life:'Life', work:'Work', relationships:'Relationships', finance:'Finance/Trading', health:'Health', mindset:'Mindset' };
+
+  cats.forEach(cat => {
+    const group = principles.filter(p => p.cat === cat);
+    const section = document.createElement('div');
+    section.className = 'principle-section';
+    section.innerHTML = `<div class="principle-section-title">◆ ${catLabels[cat] || cat}</div>`;
+    group.reverse().forEach(p => {
+      const div = document.createElement('div');
+      div.className = 'my-principle';
+      div.innerHTML = `
+        <div style="color:var(--gold); font-family:var(--font-mono); font-size:0.8rem; margin-top:2px">✦</div>
+        <div class="mp-body">
+          <div class="mp-text">${p.title}</div>
+          ${p.desc ? `<div class="mp-desc">${p.desc}</div>` : ''}
+          <div style="margin-top:6px; font-family:var(--font-mono); font-size:0.62rem; color:var(--text3)">${new Date(p.created).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</div>
+        </div>
+        <div class="mp-actions">
+          <button class="btn btn-danger btn-sm" onclick="deleteMyPrinciple(${p.id})">✕</button>
+        </div>
+      `;
+      section.appendChild(div);
+    });
+    container.appendChild(section);
   });
 }
 
-function renderHistory() {
-  const filterType = document.getElementById('histFilter')?.value||'all';
-  const filterMarket = document.getElementById('histMarket')?.value||'all';
-  const search = document.getElementById('histSearch')?.value?.toLowerCase()||'';
-
-  let items = [...D.history].reverse();
-  if(filterType!=='all') items = items.filter(h=>h.type===filterType);
-  if(filterMarket!=='all') items = items.filter(h=>h.market===filterMarket);
-  if(search) items = items.filter(h=>(h.title+h.note+h.value).toLowerCase().includes(search));
-
-  document.getElementById('h-total').textContent = D.history.length;
-  const firstNW = D.history.find(h=>h.type==='networth');
-  const lastNW = [...D.history].reverse().find(h=>h.type==='networth');
-  if(firstNW&&lastNW&&firstNW.id!==lastNW.id){
-    const growth = parseFloat(lastNW.value||0) - parseFloat(firstNW.value||0);
-    document.getElementById('h-growth').innerHTML = `<span style="color:${growth>=0?'var(--green)':'var(--red)'};">${growth>=0?'+':''}$${growth.toFixed(0)}</span>`;
-  } else document.getElementById('h-growth').textContent = '--';
-
-  // Consistency
-  const histKeys = Object.keys(D.habitHistory).sort().slice(-30);
-  let sum = 0;
-  histKeys.forEach(k=>{ const d=D.habitHistory[k]; const done=Object.values(d).filter(Boolean).length; const tot=Object.values(d).length; sum+=tot>0?done/tot*100:0; });
-  document.getElementById('h-consistency').innerHTML = (histKeys.length>0?Math.round(sum/histKeys.length):0)+'<span class="big-unit">%</span>';
-
-  const list = document.getElementById('historyList');
-  const empty = document.getElementById('histEmpty');
-  if(items.length===0){list.innerHTML='';empty.style.display='block';}
-  else{empty.style.display='none';list.innerHTML=items.map(h=>histItemHTML(h)).join('');}
+async function deleteMyPrinciple(id) {
+  await dbDelete('myprinciples', id);
+  renderMyPrinciples();
 }
 
-function histItemHTML(h) {
-  const colors = {portfolio:'var(--accent)',habit:'var(--green)',goal:'var(--gold)',networth:'var(--purple)',note:'var(--text3)'};
-  const icons = {portfolio:'📈',habit:'✅',goal:'🎯',networth:'💰',note:'📝'};
-  const date = new Date(h.datetime).toLocaleString('id',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
-  return `<div class="hist-item">
-    <div class="hist-dot" style="background:${colors[h.type]||'var(--text3)'};"></div>
-    <div class="hist-content">
-      <div class="hist-title">${icons[h.type]||'📝'} ${h.title}</div>
-      <div class="hist-meta">${date}${h.market?' · '+h.market:''}${h.note?' · '+h.note:''}</div>
-    </div>
-    ${h.value?`<div class="hist-val" style="color:${h.value.startsWith('-')?'var(--red)':'var(--green)'};">${h.value}</div>`:''}
-  </div>`;
-}
-
-// ==================== NOTE MODAL ====================
-function openAddModal() { openModal('addModal'); }
-function addNote() {
-  const type = document.getElementById('add-type').value;
-  const title = document.getElementById('add-title').value.trim();
-  const market = document.getElementById('add-market').value;
-  const value = document.getElementById('add-value').value.trim();
-  const note = document.getElementById('add-note').value.trim();
-  if(!title){showToast('⚠ Judul wajib diisi');return;}
-  addHistory({type, title, market, value, note});
-  save();
-  closeModal('addModal');
-  ['add-title','add-value','add-note'].forEach(id=>document.getElementById(id).value='');
-  renderHistory(); renderDashboard();
-  showToast('✓ Catatan ditambahkan');
-}
-
-// ==================== SETTINGS ====================
-function renderSettings() {
-  document.getElementById('cfg-name').value = D.profile.name||'Gungde';
-  document.getElementById('cfg-target').value = D.profile.target||1000000000;
-  document.getElementById('cfg-capital').value = D.profile.capital||10000;
-  document.getElementById('cfg-year').value = D.profile.year||2040;
-  document.getElementById('cfg-quote').value = D.profile.quote||'';
-  document.getElementById('cfg-autosave').checked = D.profile.autosave !== false;
-  document.getElementById('cfg-resethabit').checked = D.profile.resetHabit !== false;
-  document.getElementById('cfg-forex').checked = D.profile.markets?.includes('Forex')!==false;
-  document.getElementById('cfg-crypto').checked = D.profile.markets?.includes('Crypto')!==false;
-  document.getElementById('cfg-gold').checked = D.profile.markets?.includes('Gold')!==false;
-
-  // Journey stats
-  const total = D.portfolio.reduce((s,a)=>s+parseFloat(a.current||0),0);
-  const target = D.profile.target || 1000000000;
-  const daysActive = Math.ceil((new Date()-new Date(D.createdAt||new Date()))/(1000*60*60*24))+1;
-  const stats = [
-    {label:'Hari Aktif', val: daysActive+'d'},
-    {label:'Total Catatan', val: D.history.length},
-    {label:'Habits Dibuat', val: D.habits.length},
-    {label:'Goals Aktif', val: D.goals.length},
-    {label:'Aset Tracked', val: D.portfolio.length},
-    {label:'Path to Billionaire', val: (total/target*100).toFixed(4)+'%'},
-  ];
-  document.getElementById('journeyStats').innerHTML = stats.map(s=>`
-    <div style="background:rgba(0,212,255,0.04);border:1px solid var(--border2);border-radius:8px;padding:10px;text-align:center;">
-      <div style="font-family:'JetBrains Mono',monospace;font-size:16px;color:var(--accent);">${s.val}</div>
-      <div style="font-size:9px;color:var(--text3);margin-top:3px;letter-spacing:1px;">${s.label}</div>
-    </div>
-  `).join('');
-}
-
-function saveSettings() {
-  D.profile.name = document.getElementById('cfg-name').value || 'Gungde';
-  D.profile.target = parseFloat(document.getElementById('cfg-target').value) || 1000000000;
-  D.profile.capital = parseFloat(document.getElementById('cfg-capital').value) || 10000;
-  D.profile.year = parseInt(document.getElementById('cfg-year').value) || 2040;
-  D.profile.quote = document.getElementById('cfg-quote').value;
-  D.profile.autosave = document.getElementById('cfg-autosave').checked;
-  D.profile.resetHabit = document.getElementById('cfg-resethabit').checked;
-  D.profile.markets = [];
-  if(document.getElementById('cfg-forex').checked) D.profile.markets.push('Forex');
-  if(document.getElementById('cfg-crypto').checked) D.profile.markets.push('Crypto');
-  if(document.getElementById('cfg-gold').checked) D.profile.markets.push('Gold');
-  save();
-  showToast('✓ Profil tersimpan');
-  // Update brand name
-  document.querySelector('.brand-name').textContent = D.profile.name.toUpperCase();
-  document.getElementById('pageTitle').innerHTML = 'Settings & <em>Profil</em>';
-}
-
-// ==================== ELITE SCORE ====================
-function updateEliteScore() {
-  const habDone = D.habits.filter(h=>h.done).length;
-  const habTotal = D.habits.length || 1;
-  const habScore = (habDone/habTotal)*35;
-  const goalScore = D.goals.length>0 ? (D.goals.reduce((s,g)=>s+g.progress,0)/D.goals.length)*0.35 : 0;
-  const portScore = D.portfolio.length>0 ? Math.min(30, D.portfolio.length*5) : 0;
-  const histScore = Math.min(10, D.history.length);
-  const total = Math.round(habScore + goalScore + portScore + histScore);
-  document.getElementById('eliteScore').textContent = Math.max(0,Math.min(100,total));
-}
-
-// ==================== EXPORT ====================
-function exportHistory() {
-  const rows = [['Tanggal','Tipe','Judul','Nilai','Market','Catatan']];
-  D.history.forEach(h=>rows.push([h.datetime,h.type,h.title,h.value,h.market,h.note]));
-  const csv = rows.map(r=>r.map(v=>'"'+(v||'').replace(/"/g,'""')+'"').join(',')).join('\n');
-  download('gungde_history_'+todayStr()+'.csv', csv, 'text/csv');
-  showToast('✓ History diexport');
-}
-
-function exportAll() {
-  const json = JSON.stringify(D, null, 2);
-  download('gungde_backup_'+todayStr()+'.json', json, 'application/json');
-  showToast('✓ Data diexport sebagai JSON');
-}
-
-function importData() {
-  const inp = document.createElement('input');
-  inp.type='file'; inp.accept='.json';
-  inp.onchange = e=>{
-    const file = e.target.files[0];
-    if(!file)return;
-    const r = new FileReader();
-    r.onload = ev=>{
-      try {
-        const imported = JSON.parse(ev.target.result);
-        if(confirm('Import data? Data saat ini akan DITIMPA.')){
-          D = imported; save(); load();
-          renderDashboard(); renderSettings();
-          showToast('✓ Data berhasil diimport');
-        }
-      } catch(e){ showToast('⚠ File tidak valid'); }
-    };
-    r.readAsText(file);
-  };
-  inp.click();
-}
-
-function confirmReset() {
-  if(confirm('RESET SEMUA DATA? Ini tidak bisa dibatalkan!\n\nKetik OK untuk konfirmasi.')) {
-    if(confirm('Yakin? Semua data portfolio, habits, goals, dan history akan terhapus.')) {
-      localStorage.removeItem(KEY);
-      D = JSON.parse(JSON.stringify(defaultData));
-      save();
-      renderDashboard(); renderSettings();
-      showToast('✓ Data direset');
-    }
-  }
-}
-
-function download(filename, content, type) {
-  const blob = new Blob([content], {type});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href=url; a.download=filename; a.click();
-  URL.revokeObjectURL(url);
-}
-
-// ==================== MODALS ====================
-function openModal(id) { document.getElementById(id)?.classList.add('open'); }
-function closeModal(id) { document.getElementById(id)?.classList.remove('open'); }
-
-document.querySelectorAll('.overlay').forEach(o=>{
-  o.addEventListener('click', e=>{ if(e.target===o) o.classList.remove('open'); });
+// ============================================================
+// INIT
+// ============================================================
+openDB().then(() => {
+  updateDashboard();
 });
-
-// ==================== TOAST ====================
-let toastT;
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  document.getElementById('toastMsg').textContent = msg;
-  t.classList.add('show');
-  clearTimeout(toastT);
-  toastT = setTimeout(()=>t.classList.remove('show'), 2800);
-}
-
-// ==================== HELPERS ====================
-function marketColor(m) {
-  return {Forex:'var(--accent)',Crypto:'var(--purple)',Gold:'var(--gold)',Saham:'var(--green)'}[m] || 'var(--text3)';
-}
-function goalColor(c) {
-  return {wealth:'var(--gold)',trading:'var(--accent)',lifestyle:'var(--purple)',health:'var(--green)',skill:'#ff8a65'}[c] || 'var(--accent)';
-}
-function goalEmoji(c) {
-  return {wealth:'💰',trading:'📈',lifestyle:'🌟',health:'💪',skill:'🧠'}[c] || '🎯';
-}
-
-// ==================== DATE DISPLAY ====================
-function updateDate() {
-  const now = new Date();
-  document.getElementById('liveDate').textContent = now.toLocaleDateString('id-ID',{weekday:'short',day:'2-digit',month:'short',year:'numeric'}).toUpperCase() + ' · ' + now.toLocaleTimeString('id',{hour:'2-digit',minute:'2-digit'});
-}
-updateDate();
-setInterval(updateDate, 30000);
-
-// ==================== INIT ====================
-load();
-renderDashboard();
-
-// Show welcome toast
-setTimeout(()=>{
-  showToast('⚡ Welcome back, ' + (D.profile.name||'Gungde') + '! Let\'s build that wealth.');
-}, 800);
 </script>
 </body>
 </html>
