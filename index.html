@@ -1029,18 +1029,18 @@ mark { background: var(--gold-dim); color: var(--gold); border-radius: 2px; padd
 
     <div class="nav-section-label">Practice</div>
     <div class="nav-item" onclick="goTo('journal')">
-      <span class="icon">✎</span> Reflection Journal
+      <span class="icon">✎</span> Jurnal Refleksi
       <span class="nav-badge" id="badge-journal">0</span>
     </div>
     <div class="nav-item" onclick="goTo('fivesteps')">
-      <span class="icon">◎</span> 5-Step Goals
+      <span class="icon">◎</span> 5-Langkah Goal
       <span class="nav-badge" id="badge-goals">0</span>
     </div>
     <div class="nav-item" onclick="goTo('decisions')">
-      <span class="icon">⊡</span> Decision Maker
+      <span class="icon">⊡</span> Pembuat Keputusan
     </div>
     <div class="nav-item" onclick="goTo('habits')">
-      <span class="icon">◉</span> Daily Habits
+      <span class="icon">◉</span> Kebiasaan Harian
     </div>
 
     <div class="nav-section-label">Personal</div>
@@ -1120,26 +1120,26 @@ mark { background: var(--gold-dim); color: var(--gold); border-radius: 2px; padd
   </div>
 
   <div class="card">
-    <div class="card-meta">Quick Reflection</div>
+    <div class="card-meta">Refleksi Cepat</div>
     <div style="margin-top:10px">
       <div class="field">
-        <label>What painful lesson did you encounter today?</label>
-        <textarea id="quick-reflect" placeholder="Write freely. Radical honesty leads to radical growth..." style="min-height:70px"></textarea>
+        <label>Apa pelajaran atau rasa sakit yang kamu hadapi hari ini?</label>
+        <textarea id="quick-reflect" placeholder="Tulis bebas. Kejujuran radikal menghasilkan pertumbuhan radikal..." style="min-height:70px"></textarea>
       </div>
-      <button class="btn btn-gold" onclick="saveQuickReflect()">Log Reflection →</button>
+      <button class="btn btn-gold" onclick="saveQuickReflect()">Catat Refleksi →</button>
     </div>
   </div>
 
   <div class="grid-2" style="margin-top:16px">
     <div class="card" style="cursor:pointer" onclick="goTo('fivesteps')">
-      <div class="card-meta">5-Step Process</div>
-      <div style="font-size:0.84rem; color:var(--text); margin:6px 0 4px">Track your goals through Dalio's framework</div>
-      <div style="font-size:0.75rem; color:var(--text3)">Goals → Problems → Diagnosis → Plan → Execute</div>
+      <div class="card-meta">Proses 5 Langkah</div>
+      <div style="font-size:0.84rem; color:var(--text); margin:6px 0 4px">Lacak tujuanmu lewat kerangka Dalio</div>
+      <div style="font-size:0.75rem; color:var(--text3)">Tujuan → Masalah → Diagnosis → Rencana → Eksekusi</div>
     </div>
     <div class="card" style="cursor:pointer" onclick="goTo('decisions')">
-      <div class="card-meta">Decision Maker</div>
-      <div style="font-size:0.84rem; color:var(--text); margin:6px 0 4px">Expected value framework for hard choices</div>
-      <div style="font-size:0.75rem; color:var(--text3)">Pros · Cons · Probability · Impact · EV</div>
+      <div class="card-meta">Pembuat Keputusan</div>
+      <div style="font-size:0.84rem; color:var(--text); margin:6px 0 4px">Kerangka expected value untuk pilihan sulit</div>
+      <div style="font-size:0.75rem; color:var(--text3)">Pro · Kontra · Probabilitas · Dampak · EV</div>
     </div>
   </div>
 </div>
@@ -1193,47 +1193,78 @@ mark { background: var(--gold-dim); color: var(--gold); border-radius: 2px; padd
 <!-- ══════════ JOURNAL ══════════ -->
 <div class="page" id="page-journal">
   <div class="page-header">
-    <div class="page-tag">Pain → Reflection → Progress</div>
-    <h2>Reflection Journal</h2>
-    <p>"The quality of your life will depend on the choices you make at those painful moments." — Ray Dalio</p>
+    <div class="page-tag">Rasa Sakit → Refleksi → Kemajuan</div>
+    <h2>Jurnal Refleksi Diri</h2>
+    <p>"Kualitas hidupmu ditentukan oleh pilihan-pilihan yang kamu buat di momen-momen yang menyakitkan." — Ray Dalio</p>
+  </div>
+
+  <!-- Panduan Singkat -->
+  <div class="card" style="margin-bottom:16px; border-left:3px solid var(--gold); background:var(--gold-dim2)">
+    <div class="card-meta" style="margin-bottom:8px">◆ Cara Menggunakan Jurnal Ini</div>
+    <p style="font-size:0.8rem; color:var(--text2); line-height:1.7">
+      Jurnal ini mengikuti formula Dalio: <strong style="color:var(--gold)">Rasa Sakit + Refleksi = Kemajuan</strong>.
+      Tulislah setiap pengalaman buruk, kesalahan, atau hambatan yang kamu hadapi — sekecil apapun.
+      Kemudian gali akar masalahnya dengan jujur. Kejujuran radikal adalah fondasi pertumbuhan.
+    </p>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:12px">
+      <div style="background:var(--bg3); padding:10px 12px; border-radius:3px; border:1px solid var(--border)">
+        <div style="font-family:var(--font-mono); font-size:0.6rem; color:var(--gold); margin-bottom:4px">LANGKAH 1</div>
+        <div style="font-size:0.78rem; color:var(--text)">✎ Tulis masalah atau rasa sakit hari ini</div>
+      </div>
+      <div style="background:var(--bg3); padding:10px 12px; border-radius:3px; border:1px solid var(--border)">
+        <div style="font-family:var(--font-mono); font-size:0.6rem; color:var(--gold); margin-bottom:4px">LANGKAH 2</div>
+        <div style="font-size:0.78rem; color:var(--text)">⊡ Gali akar penyebabnya (tanya "Kenapa?" 3x)</div>
+      </div>
+      <div style="background:var(--bg3); padding:10px 12px; border-radius:3px; border:1px solid var(--border)">
+        <div style="font-family:var(--font-mono); font-size:0.6rem; color:var(--gold); margin-bottom:4px">LANGKAH 3</div>
+        <div style="font-size:0.78rem; color:var(--text)">◆ Tentukan prinsip atau langkah konkret</div>
+      </div>
+    </div>
   </div>
 
   <div class="card" style="margin-bottom:20px" id="journal-form-card">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px">
-      <div class="card-meta" id="journal-form-title">New Entry</div>
-      <button class="btn btn-ghost btn-sm" id="journal-cancel-btn" onclick="cancelJournalEdit()" style="display:none">✕ Cancel</button>
+      <div class="card-meta" id="journal-form-title">Catatan Baru</div>
+      <button class="btn btn-ghost btn-sm" id="journal-cancel-btn" onclick="cancelJournalEdit()" style="display:none">✕ Batal</button>
     </div>
     <input type="hidden" id="journal-edit-id">
+
     <div class="field">
-      <label>Pain / Problem Encountered</label>
-      <input type="text" id="entry-pain" placeholder="What went wrong? Be brutally honest." />
+      <label>Apa masalah atau rasa sakit yang kamu hadapi hari ini?</label>
+      <input type="text" id="entry-pain" placeholder="Jujurlah sepenuhnya. Tidak ada yang menghakimi kamu di sini." />
+      <div class="field-hint">Contoh: "Saya marah ke teman karena dia tidak menepati janji" atau "Saya gagal disiplin dalam trading hari ini"</div>
     </div>
+
+    <div class="field">
+      <label>Kenapa ini terjadi? Gali akar masalahnya (Tanya "Kenapa?" minimal 3x)</label>
+      <textarea id="entry-root" placeholder="Penyebab langsung: ...&#10;Penyebab lebih dalam: ...&#10;Akar sejati: ..." style="min-height:90px"></textarea>
+      <div class="field-hint">Jangan berhenti di penyebab pertama. Dalio: "Bedakan penyebab proksimal dan akar sejati."</div>
+    </div>
+
+    <div class="field">
+      <label>Apa yang bisa kamu pelajari dari ini? Prinsip apa yang terungkap?</label>
+      <textarea id="entry-reflect" placeholder="Pelajaran yang saya ambil: ...&#10;Prinsip yang relevan: ...&#10;Jika terjadi lagi, saya akan: ..." style="min-height:90px"></textarea>
+      <div class="field-hint">Ini adalah inti dari jurnal — mengubah rasa sakit menjadi kebijaksanaan yang bisa diterapkan.</div>
+    </div>
+
+    <div class="field">
+      <label>Langkah konkret berikutnya (tindakan spesifik, bukan niat samar)</label>
+      <input type="text" id="entry-progress" placeholder="Contoh: Besok pagi saya akan bicara langsung dengan..." />
+    </div>
+
     <div class="field-row">
       <div>
-        <label>Root Cause (Why? × 3)</label>
-        <textarea id="entry-root" placeholder="Proximate: ...\nRoot: ..." style="min-height:70px"></textarea>
+        <label>Label / Tema (pisahkan dengan koma)</label>
+        <input type="text" id="entry-tags" placeholder="trading, emosi, disiplin, hubungan" />
       </div>
       <div>
-        <label>Reflection & Insight</label>
-        <textarea id="entry-reflect" placeholder="What principle does this reveal?" style="min-height:70px"></textarea>
-      </div>
-    </div>
-    <div class="field">
-      <label>Progress / Next Action</label>
-      <input type="text" id="entry-progress" placeholder="Concrete next step or principle to adopt." />
-    </div>
-    <div class="field-row">
-      <div>
-        <label>Tags (comma-separated)</label>
-        <input type="text" id="entry-tags" placeholder="work, decision-making, emotions" />
-      </div>
-      <div>
-        <label>Mood / Intensity (1–10)</label>
+        <label>Intensitas Rasa Sakit (1–10)</label>
         <input type="number" id="entry-mood" min="1" max="10" placeholder="5" />
+        <div class="field-hint">1 = ringan, 10 = sangat menyakitkan</div>
       </div>
     </div>
     <div class="btn-group">
-      <button class="btn btn-gold" id="journal-save-btn" onclick="saveJournalEntry()">Save Entry →</button>
+      <button class="btn btn-gold" id="journal-save-btn" onclick="saveJournalEntry()">Simpan Catatan →</button>
     </div>
   </div>
 
@@ -1241,7 +1272,7 @@ mark { background: var(--gold-dim); color: var(--gold); border-radius: 2px; padd
     <div class="filter-tabs" id="journal-tag-filters" style="margin-bottom:0"></div>
     <div class="search-bar" style="width:220px; margin-bottom:0">
       <span class="search-icon">⌕</span>
-      <input type="text" id="journal-search" placeholder="Search entries..." oninput="renderJournal()">
+      <input type="text" id="journal-search" placeholder="Cari catatan..." oninput="renderJournal()">
     </div>
   </div>
 
@@ -1291,48 +1322,97 @@ mark { background: var(--gold-dim); color: var(--gold); border-radius: 2px; padd
 <!-- ══════════ DECISION MAKER ══════════ -->
 <div class="page" id="page-decisions">
   <div class="page-header">
-    <div class="page-tag">Decision Tool</div>
-    <h2>Make Decisions Effectively</h2>
-    <p>"Make your decisions as expected value calculations." — Principle 5.6</p>
+    <div class="page-tag">Alat Pengambil Keputusan</div>
+    <h2>Buat Keputusan Secara Efektif</h2>
+    <p>"Buat keputusanmu sebagai kalkulasi nilai ekspektasi." — Prinsip 5.6 Ray Dalio</p>
+  </div>
+
+  <!-- PANDUAN CARA PAKAI -->
+  <div class="card" style="margin-bottom:20px; border-left:3px solid var(--gold)">
+    <div style="display:flex; justify-content:space-between; align-items:center; cursor:pointer" onclick="toggleDecGuide()">
+      <div class="card-meta">◆ Panduan Cara Menggunakan Decision Maker</div>
+      <span id="dec-guide-toggle" style="font-family:var(--font-mono); font-size:0.75rem; color:var(--gold)">▼ Tampilkan</span>
+    </div>
+    <div id="dec-guide-body" style="display:none; margin-top:14px">
+      <p style="font-size:0.82rem; color:var(--text2); line-height:1.7; margin-bottom:14px">
+        Tool ini membantu kamu membuat keputusan sulit dengan cara yang <em>sistematis dan bebas emosi</em>, menggunakan metode <strong style="color:var(--gold)">Expected Value (EV)</strong> — cara Dalio mengajarkan untuk menilai setiap pilihan secara objektif.
+      </p>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px">
+        <div style="background:var(--bg3); padding:14px; border-radius:3px; border:1px solid var(--border)">
+          <div style="font-family:var(--font-mono); font-size:0.62rem; color:var(--gold); margin-bottom:6px">LANGKAH 1 — Definisikan Keputusan</div>
+          <p style="font-size:0.78rem; color:var(--text2); line-height:1.6">Tulis keputusan yang harus kamu buat dengan jelas dan spesifik. Juga tuliskan konteks situasinya — apa yang dipertaruhkan?</p>
+          <p style="font-size:0.72rem; color:var(--text3); margin-top:6px; font-family:var(--font-mono)">Contoh: "Apakah saya harus masuk posisi BTC hari ini atau menunggu?"</p>
+        </div>
+        <div style="background:var(--bg3); padding:14px; border-radius:3px; border:1px solid var(--border)">
+          <div style="font-family:var(--font-mono); font-size:0.62rem; color:var(--gold); margin-bottom:6px">LANGKAH 2 — Tambahkan Opsi</div>
+          <p style="font-size:0.78rem; color:var(--text2); line-height:1.6">Tambahkan minimal 2 opsi. Setiap opsi punya kolom <strong style="color:var(--green)">Pro</strong> (keuntungan) dan <strong style="color:var(--red)">Kontra</strong> (kerugian). Tulis satu per baris.</p>
+          <p style="font-size:0.72rem; color:var(--text3); margin-top:6px; font-family:var(--font-mono)">Contoh Opsi A: Masuk sekarang | Opsi B: Tunggu 2 hari</p>
+        </div>
+        <div style="background:var(--bg3); padding:14px; border-radius:3px; border:1px solid var(--border)">
+          <div style="font-family:var(--font-mono); font-size:0.62rem; color:var(--gold); margin-bottom:6px">LANGKAH 3 — Atur Probabilitas & Dampak</div>
+          <p style="font-size:0.78rem; color:var(--text2); line-height:1.6"><strong style="color:var(--text)">Probabilitas Sukses:</strong> Seberapa besar kemungkinan opsi ini berhasil? (0–100%)<br><strong style="color:var(--text)">Dampak jika Sukses:</strong> Seberapa besar pengaruhnya jika berhasil? (1–10)</p>
+        </div>
+        <div style="background:var(--bg3); padding:14px; border-radius:3px; border:1px solid var(--border)">
+          <div style="font-family:var(--font-mono); font-size:0.62rem; color:var(--gold); margin-bottom:6px">LANGKAH 4 — Baca Rekomendasi EV</div>
+          <p style="font-size:0.78rem; color:var(--text2); line-height:1.6"><strong style="color:var(--gold)">EV = Probabilitas × Dampak.</strong> Opsi dengan EV tertinggi adalah rekomendasi matematisnya. Gunakan sebagai panduan, bukan keputusan final.</p>
+          <p style="font-size:0.72rem; color:var(--text3); margin-top:6px; font-family:var(--font-mono)">EV 0.75 lebih baik dari EV 0.30</p>
+        </div>
+      </div>
+
+      <div style="background:var(--bg3); padding:12px 16px; border-radius:3px; border:1px solid var(--border); border-left:2px solid var(--blue)">
+        <div style="font-family:var(--font-mono); font-size:0.62rem; color:var(--blue); margin-bottom:6px">LANGKAH 5 — Checklist Dalio</div>
+        <p style="font-size:0.78rem; color:var(--text2); line-height:1.6">Setelah mengisi opsi, centang semua item di <strong style="color:var(--text)">Checklist Dalio</strong> di bawah. Ini memastikan kamu tidak membuat keputusan karena emosi atau bias kognitif. Usahakan mencapai 100% sebelum memutuskan.</p>
+      </div>
+
+      <div style="background:var(--gold-dim2); padding:10px 14px; border-radius:3px; margin-top:10px">
+        <p style="font-size:0.76rem; color:var(--gold); line-height:1.6">
+          ✦ <em>Ingat prinsip Dalio: "Keputusan terbaik bukan yang tidak punya kerugian, tapi yang pro-nya lebih besar dari kontranya — dan kamu sudah memperhitungkan kemungkinan dan konsekuensinya secara jujur."</em>
+        </p>
+      </div>
+    </div>
   </div>
 
   <div class="card" style="margin-bottom:20px">
-    <div class="card-meta">The Decision</div>
+    <div class="card-meta">Keputusan yang Harus Dibuat</div>
     <div class="field" style="margin-top:10px">
-      <label>What is the decision?</label>
-      <input type="text" id="dec-title" placeholder="State the decision clearly and specifically." />
+      <label>Apa keputusannya? (Tulis sejelas dan sepesifik mungkin)</label>
+      <input type="text" id="dec-title" placeholder="Contoh: Apakah saya harus resign dari pekerjaan ini sekarang?" />
     </div>
     <div class="field">
-      <label>Context & Stakes</label>
-      <textarea id="dec-context" placeholder="What's the situation? What are the consequences?" style="min-height:60px"></textarea>
+      <label>Konteks & Apa yang Dipertaruhkan</label>
+      <textarea id="dec-context" placeholder="Apa situasinya? Apa konsekuensi jika salah memilih? Siapa yang terpengaruh?" style="min-height:60px"></textarea>
     </div>
   </div>
 
-  <div class="divider-label"><span>Options</span></div>
+  <div class="divider-label"><span>Opsi-Opsi Pilihan</span></div>
+  <div style="font-size:0.76rem; color:var(--text3); margin-bottom:10px; font-family:var(--font-mono)">Tambahkan minimal 2 opsi. Isi pro, kontra, probabilitas sukses, dan dampaknya.</div>
 
   <div id="options-grid" style="margin-bottom:12px"></div>
-  <button class="btn" onclick="addOption()" style="margin-bottom:20px">+ Add Option</button>
+  <button class="btn" onclick="addOption()" style="margin-bottom:20px">+ Tambah Opsi</button>
 
   <div id="dec-result-card" style="display:none; margin-bottom:20px">
-    <div class="divider-label"><span>Recommendation</span></div>
+    <div class="divider-label"><span>Rekomendasi Berdasarkan EV</span></div>
     <div class="card card-gold">
-      <div class="card-meta">Expected Value Analysis</div>
+      <div class="card-meta">Analisis Expected Value</div>
+      <p style="font-size:0.74rem; color:var(--text3); font-family:var(--font-mono); margin-bottom:10px">EV = Probabilitas Sukses × Dampak. Opsi dengan EV tertinggi direkomendasikan secara matematis.</p>
       <div id="dec-result" style="margin-top:10px"></div>
     </div>
   </div>
 
-  <div class="divider-label"><span>Dalio's Checklist</span></div>
+  <div class="divider-label"><span>Checklist Keputusan Dalio</span></div>
   <div class="card">
+    <p style="font-size:0.76rem; color:var(--text2); margin-bottom:12px; line-height:1.6">Centang setiap item untuk memastikan keputusanmu sudah dipikirkan dari semua sudut. Target: 100%.</p>
     <div id="dec-checklist"></div>
     <div class="meter-wrap" style="margin-top:14px">
-      <div class="meter-label"><span>Checklist Progress</span><span id="dec-progress-pct">0%</span></div>
+      <div class="meter-label"><span>Progress Checklist</span><span id="dec-progress-pct">0%</span></div>
       <div class="meter"><div class="meter-fill" id="dec-progress-fill" style="width:0%"></div></div>
     </div>
   </div>
 
   <div class="btn-group" style="margin-top:16px">
-    <button class="btn btn-gold" onclick="saveDecision()">Save Decision →</button>
-    <button class="btn" onclick="clearDecision()">Clear</button>
+    <button class="btn btn-gold" onclick="saveDecision()">Simpan Keputusan →</button>
+    <button class="btn" onclick="clearDecision()">Bersihkan</button>
   </div>
 </div>
 
@@ -1440,40 +1520,40 @@ mark { background: var(--gold-dim); color: var(--gold); border-radius: 2px; padd
 <div class="modal-overlay" id="modal-journal">
   <div class="modal">
     <div class="modal-header">
-      <h3>Edit Journal Entry</h3>
+      <h3>Edit Catatan Jurnal</h3>
       <button class="btn btn-ghost btn-icon" onclick="closeModal('modal-journal')">✕</button>
     </div>
     <div class="modal-body">
       <div class="field">
-        <label>Pain / Problem</label>
+        <label>Masalah / Rasa Sakit</label>
         <input type="text" id="modal-pain" />
       </div>
       <div class="field">
-        <label>Root Cause</label>
+        <label>Akar Masalah</label>
         <textarea id="modal-root"></textarea>
       </div>
       <div class="field">
-        <label>Reflection & Insight</label>
+        <label>Refleksi & Pelajaran</label>
         <textarea id="modal-reflect"></textarea>
       </div>
       <div class="field">
-        <label>Progress / Next Action</label>
+        <label>Langkah Selanjutnya</label>
         <input type="text" id="modal-progress" />
       </div>
       <div class="field-row">
         <div>
-          <label>Tags</label>
+          <label>Label / Tema</label>
           <input type="text" id="modal-tags" />
         </div>
         <div>
-          <label>Mood (1–10)</label>
+          <label>Intensitas (1–10)</label>
           <input type="number" id="modal-mood" min="1" max="10" />
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn" onclick="closeModal('modal-journal')">Cancel</button>
-      <button class="btn btn-gold" onclick="updateJournalEntry()">Save Changes</button>
+      <button class="btn" onclick="closeModal('modal-journal')">Batal</button>
+      <button class="btn btn-gold" onclick="updateJournalEntry()">Simpan Perubahan</button>
     </div>
   </div>
 </div>
@@ -1685,16 +1765,16 @@ const DAILY_QUOTES = [
 ];
 
 const DECISION_CHECKLIST_ITEMS = [
-  "Are my emotions influencing this decision?",
-  "Have I looked at this from multiple levels — detail and big picture?",
-  "Have I consulted a believable person who disagrees with me?",
-  "Am I considering both proximate AND root causes?",
-  "Have I weighed the second- and third-order consequences?",
-  "Is this decision reversible? (if not, require more caution)",
-  "Am I prioritizing by expected value, not just probability?",
-  "Have I simplified the decision to its core trade-off?",
-  "Am I deciding based on principles I can articulate clearly?",
-  "Would I be comfortable if everyone could see exactly what I'm doing and why?",
+  "Apakah emosi mempengaruhi keputusanku saat ini? (Jika ya, tunggu hingga tenang)",
+  "Sudahkah aku melihat ini dari dua sudut: detail teknis DAN gambaran besar?",
+  "Sudahkah aku berkonsultasi dengan seseorang yang punya rekam jejak di bidang ini?",
+  "Sudahkah aku mempertimbangkan penyebab langsung DAN akar masalah sebenarnya?",
+  "Sudahkah aku memikirkan konsekuensi jangka panjang (lapis 2 & 3)?",
+  "Apakah keputusan ini bisa dibalik? (Jika tidak, butuh kehati-hatian ekstra)",
+  "Apakah aku memilih berdasarkan expected value, bukan sekadar probabilitas tertinggi?",
+  "Sudahkah aku menyederhanakan keputusan ini ke trade-off intinya?",
+  "Bisakah aku menjelaskan alasan keputusan ini dengan prinsip yang jelas?",
+  "Apakah aku akan nyaman jika semua orang bisa melihat apa yang kulakukan dan alasannya?",
 ];
 
 const HABITS = [
@@ -1849,18 +1929,18 @@ async function updateDashboard() {
       </div>
       <span class="hi-type-badge ${item.type}">${item.type}</span>
     </div>
-  `).join('') : '<div style="font-size:0.78rem; color:var(--text3)">No activity yet. Start journaling.</div>';
+  `).join('') : '<div style="font-size:0.78rem; color:var(--text3)">Belum ada aktivitas. Mulai dengan menulis jurnal.</div>';
 }
 
 async function saveQuickReflect() {
   const text = document.getElementById('quick-reflect').value.trim();
-  if (!text) { showToast('Write something first.', 'error'); return; }
+  if (!text) { showToast('Tulis sesuatu dulu.', 'error'); return; }
   await dbAdd('journal', {
     pain: text, root: '', reflection: '', progress: '',
     tags: [], mood: null, date: new Date().toISOString()
   });
   document.getElementById('quick-reflect').value = '';
-  showToast('✦ Reflection logged.', 'success');
+  showToast('✦ Refleksi tercatat.', 'success');
   updateDashboard();
 }
 
@@ -1958,7 +2038,7 @@ function toggleBookmark(id) {
 // ═══════════════════════════════════════════════════════════════
 async function saveJournalEntry() {
   const pain = document.getElementById('entry-pain').value.trim();
-  if (!pain) { showToast('Describe the pain/problem first.', 'error'); return; }
+  if (!pain) { showToast('Tuliskan dulu masalah atau rasa sakitnya.', 'error'); return; }
   const entry = {
     pain,
     root: document.getElementById('entry-root').value.trim(),
@@ -1970,7 +2050,7 @@ async function saveJournalEntry() {
   };
   await dbAdd('journal', entry);
   ['entry-pain','entry-root','entry-reflect','entry-progress','entry-tags','entry-mood'].forEach(id => document.getElementById(id).value = '');
-  showToast('✦ Entry saved.', 'success');
+  showToast('✦ Catatan tersimpan.', 'success');
   renderJournal();
   updateDashboard();
 }
@@ -1996,7 +2076,7 @@ async function renderJournal() {
   );
 
   if (!filtered.length) {
-    container.innerHTML = `<div class="empty-state"><div class="empty-icon">✎</div><p>No entries yet. Write your first reflection above.</p></div>`;
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">✎</div><p>Belum ada catatan. Mulai tulis refleksimu yang pertama di atas.</p><div class="empty-hint">Rasa sakit + Refleksi = Kemajuan</div></div>`;
     return;
   }
   container.innerHTML = filtered.map(e => renderJournalCard(e)).join('');
@@ -2008,7 +2088,7 @@ function renderJournalCard(e) {
     <div class="journal-entry" id="je-${e.id}">
       <div class="je-header">
         <div class="je-meta">
-          <div class="je-date">${fmtDate(e.date)} ${e.mood ? `· Mood: ${e.mood}/10` : ''}</div>
+          <div class="je-date">${fmtDate(e.date)} ${e.mood ? `· Intensitas: ${e.mood}/10` : ''}</div>
           <div class="je-pain">${esc(e.pain)}</div>
         </div>
         <div class="je-actions">
@@ -2018,11 +2098,11 @@ function renderJournalCard(e) {
       </div>
       ${hasExtra ? `
         <div class="je-expand-btn" onclick="toggleJeExpand(${e.id})">
-          <span id="je-expand-icon-${e.id}">▼</span> Show details
+          <span id="je-expand-icon-${e.id}">▼</span> Lihat detail
         </div>
         <div class="je-expandable" id="je-exp-${e.id}">
-          ${e.root ? `<div class="je-root"><strong style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text3);font-family:var(--font-mono)">Root Cause</strong><br>${esc(e.root)}</div>` : ''}
-          ${e.reflection ? `<div class="je-reflection"><strong style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text3);font-family:var(--font-mono)">Reflection</strong><br>${esc(e.reflection)}</div>` : ''}
+          ${e.root ? `<div class="je-root"><strong style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text3);font-family:var(--font-mono)">Akar Masalah</strong><br>${esc(e.root)}</div>` : ''}
+          ${e.reflection ? `<div class="je-reflection"><strong style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text3);font-family:var(--font-mono)">Refleksi & Pelajaran</strong><br>${esc(e.reflection)}</div>` : ''}
           ${e.progress ? `<div class="je-progress">${esc(e.progress)}</div>` : ''}
         </div>
       ` : ''}
@@ -2070,16 +2150,16 @@ async function updateJournalEntry() {
   e.edited = new Date().toISOString();
   await dbPut('journal', e);
   closeModal('modal-journal');
-  showToast('✦ Entry updated.', 'success');
+  showToast('✦ Catatan diperbarui.', 'success');
   renderJournal();
 }
 
 async function deleteJournal(id) {
-  if (!confirm('Delete this entry?')) return;
+  if (!confirm('Hapus catatan ini?')) return;
   await dbDelete('journal', id);
   renderJournal();
   updateDashboard();
-  showToast('Entry deleted.');
+  showToast('Catatan dihapus.');
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -2243,6 +2323,14 @@ function filterGoals(type, btn) {
 // ═══════════════════════════════════════════════════════════════
 // DECISION MAKER
 // ═══════════════════════════════════════════════════════════════
+function toggleDecGuide() {
+  const body = document.getElementById('dec-guide-body');
+  const toggle = document.getElementById('dec-guide-toggle');
+  const isOpen = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : 'block';
+  toggle.textContent = isOpen ? '▼ Tampilkan' : '▲ Sembunyikan';
+}
+
 function renderDecisions() {
   renderDecisionOptions();
   renderDecisionChecklist();
@@ -2254,29 +2342,29 @@ function renderDecisionOptions() {
   grid.innerHTML = decisionOptions.map((opt, i) => `
     <div class="decision-option">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px">
-        <div class="card-meta">Option ${i+1}</div>
-        <button class="btn btn-danger btn-sm" onclick="removeOption(${i})">✕</button>
+        <div class="card-meta">Opsi ${i+1}</div>
+        <button class="btn btn-danger btn-sm" onclick="removeOption(${i})">✕ Hapus</button>
       </div>
       <div class="field">
-        <label>Option Name</label>
-        <input type="text" value="${esc(opt.name||'')}" oninput="decisionOptions[${i}].name=this.value; updateEV()" placeholder="e.g. Accept the offer" />
+        <label>Nama Opsi</label>
+        <input type="text" value="${esc(opt.name||'')}" oninput="decisionOptions[${i}].name=this.value; updateEV()" placeholder="Contoh: Masuk posisi sekarang, Tunggu dulu, Tidak jadi" />
       </div>
       <div class="pros-cons" style="margin-top:10px">
         <div class="pc-list pros">
-          <div class="pc-title">Pros</div>
-          <textarea onchange="decisionOptions[${i}].pros=this.value" placeholder="One per line" style="min-height:70px; font-size:0.76rem">${esc(opt.pros||'')}</textarea>
+          <div class="pc-title">Pro (Keuntungan)</div>
+          <textarea onchange="decisionOptions[${i}].pros=this.value" placeholder="Satu per baris&#10;- Potensi profit besar&#10;- Timing tepat" style="min-height:70px; font-size:0.76rem">${esc(opt.pros||'')}</textarea>
         </div>
         <div class="pc-list cons">
-          <div class="pc-title">Cons</div>
-          <textarea onchange="decisionOptions[${i}].cons=this.value" placeholder="One per line" style="min-height:70px; font-size:0.76rem">${esc(opt.cons||'')}</textarea>
+          <div class="pc-title">Kontra (Kerugian)</div>
+          <textarea onchange="decisionOptions[${i}].cons=this.value" placeholder="Satu per baris&#10;- Risiko tinggi&#10;- Belum riset cukup" style="min-height:70px; font-size:0.76rem">${esc(opt.cons||'')}</textarea>
         </div>
       </div>
       <div class="field" style="margin-top:12px">
-        <label>Probability of Success: <span id="probval-${i}" style="color:var(--gold)">${opt.prob||50}%</span></label>
+        <label>Probabilitas Sukses: <span id="probval-${i}" style="color:var(--gold)">${opt.prob||50}%</span> <span style="color:var(--text3); font-weight:normal">(Seberapa mungkin opsi ini berhasil?)</span></label>
         <input type="range" min="0" max="100" value="${opt.prob||50}" oninput="decisionOptions[${i}].prob=+this.value; document.getElementById('probval-${i}').textContent=this.value+'%'; updateEV()" style="padding:4px 0; border:none; background:transparent" />
       </div>
       <div class="field">
-        <label>Impact if Successful: <span id="impactval-${i}" style="color:var(--gold)">${opt.impact||5}</span>/10</label>
+        <label>Dampak jika Berhasil: <span id="impactval-${i}" style="color:var(--gold)">${opt.impact||5}</span>/10 <span style="color:var(--text3); font-weight:normal">(Seberapa besar pengaruhnya?)</span></label>
         <input type="range" min="1" max="10" value="${opt.impact||5}" oninput="decisionOptions[${i}].impact=+this.value; document.getElementById('impactval-${i}').textContent=this.value; updateEV()" style="padding:4px 0; border:none; background:transparent" />
       </div>
     </div>
@@ -2300,7 +2388,7 @@ function updateEV() {
       <div class="ev-bar-wrap"><div class="ev-bar" style="width:${maxEV?((s.ev/maxEV)*100)+'%':'0%'}"></div></div>
       <span class="ev-value">${s.ev.toFixed(2)}</span>
     </div>
-  `).join('') + `<p style="font-size:0.7rem; color:var(--text3); margin-top:10px; font-family:var(--font-mono)">EV = probability × impact. Use as guidance. Consult believable advisors.</p>`;
+  `).join('') + `<p style="font-size:0.7rem; color:var(--text3); margin-top:10px; font-family:var(--font-mono)">EV = probabilitas × dampak. Gunakan sebagai panduan, bukan keputusan final. Konsultasikan dengan orang yang berpengalaman di bidang ini.</p>`;
 }
 
 function addOption() {
@@ -2320,14 +2408,14 @@ function clearDecision() {
 
 async function saveDecision() {
   const title = document.getElementById('dec-title').value.trim();
-  if (!title) { showToast('State the decision first.', 'error'); return; }
+  if (!title) { showToast('Tuliskan dulu keputusannya.', 'error'); return; }
   await dbAdd('decisions', {
     title,
     context: document.getElementById('dec-context').value.trim(),
     options: decisionOptions,
     date: new Date().toISOString(),
   });
-  showToast('✦ Decision saved to history.', 'success');
+  showToast('✦ Keputusan tersimpan ke riwayat.', 'success');
 }
 
 function renderDecisionChecklist() {
@@ -2353,7 +2441,7 @@ function updateDecProgress() {
   const pct = Math.round((checked/total)*100);
   document.getElementById('dec-progress-pct').textContent = pct + '%';
   document.getElementById('dec-progress-fill').style.width = pct + '%';
-  if (checked === total) showToast('✦ Decision framework complete. Now decide.', 'success');
+  if (checked === total) showToast('✦ Checklist selesai. Saatnya memutuskan.', 'success');
 }
 
 // ═══════════════════════════════════════════════════════════════
