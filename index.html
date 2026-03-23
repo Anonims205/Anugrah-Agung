@@ -44,6 +44,8 @@ body {
   display: flex;
   overflow: hidden;
 }
+/* Decision page needs enough bottom space to scroll fully */
+#page-decisions { padding-bottom: 80px; }
 
 /* ═══════════════════ SCROLLBAR ═══════════════════ */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
@@ -1043,6 +1045,14 @@ mark { background: var(--gold-dim); color: var(--gold); border-radius: 2px; padd
       <span class="icon">◉</span> Kebiasaan Harian
     </div>
 
+    <div class="nav-section-label">Versi Bahasa Indonesia</div>
+    <div class="nav-item" onclick="goTo('habits-id')">
+      <span class="icon">◉</span> Kebiasaan Harian
+    </div>
+    <div class="nav-item" onclick="goTo('principles-id')">
+      <span class="icon">◆</span> Semua Prinsip (ID)
+    </div>
+
     <div class="nav-section-label">Personal</div>
     <div class="nav-item" onclick="goTo('myprinciples')">
       <span class="icon">✦</span> My Principles
@@ -1513,6 +1523,60 @@ mark { background: var(--gold-dim); color: var(--gold); border-radius: 2px; padd
   </div>
   <div id="bookmarks-list"></div>
 </div>
+<!-- ══════════ KEBIASAAN HARIAN (INDONESIA) ══════════ -->
+<div class="page" id="page-habits-id">
+  <div class="page-header">
+    <div class="page-tag">Keterbukaan Pikiran Radikal</div>
+    <h2>Kebiasaan Harian</h2>
+    <p>Latih kebiasaan-kebiasaan ini setiap hari untuk menginternalisasi prinsip-prinsip Dalio secara mendalam.</p>
+  </div>
+
+  <div style="display:flex; gap:12px; align-items:center; margin-bottom:20px; flex-wrap:wrap">
+    <span id="habits-id-date" style="font-family:var(--font-mono); font-size:0.72rem; color:var(--gold)"></span>
+    <div style="flex:1"></div>
+    <button class="btn btn-sm" onclick="resetHabitsId()">Reset Hari Ini</button>
+  </div>
+
+  <div id="habits-id-list"></div>
+
+  <div class="divider"></div>
+  <div class="card" style="margin-top:16px">
+    <div class="card-meta">Skor Hari Ini</div>
+    <div class="meter-wrap">
+      <div class="meter-label">
+        <span>Keterbukaan Pikiran Radikal</span>
+        <span id="habits-id-score">0%</span>
+      </div>
+      <div class="meter">
+        <div class="meter-fill" id="habits-id-fill" style="width:0%"></div>
+      </div>
+    </div>
+    <p id="habits-id-message" style="font-size:0.78rem; color:var(--text3); margin-top:10px; font-style:italic;"></p>
+  </div>
+</div>
+
+<!-- ══════════ SEMUA PRINSIP (INDONESIA) ══════════ -->
+<div class="page" id="page-principles-id">
+  <div class="page-header">
+    <div class="page-tag">Referensi</div>
+    <h2>Semua Prinsip</h2>
+    <p>Jelajahi Prinsip Kehidupan & Kerja dalam Bahasa Indonesia. Klik untuk memperluas sub-prinsip. Tandai favorit kamu.</p>
+  </div>
+
+  <div class="filter-tabs">
+    <button class="filter-tab active" onclick="filterPrinciplesId('all', this)">Semua</button>
+    <button class="filter-tab" onclick="filterPrinciplesId('life', this)">Kehidupan</button>
+    <button class="filter-tab" onclick="filterPrinciplesId('work', this)">Pekerjaan</button>
+    <button class="filter-tab" onclick="filterPrinciplesId('bookmarked', this)">Ditandai</button>
+  </div>
+
+  <div class="search-bar">
+    <span class="search-icon">⌕</span>
+    <input type="text" id="search-principles-id" placeholder="Cari prinsip..." oninput="searchPrinciplesId()">
+  </div>
+
+  <div id="principles-id-list"></div>
+</div>
 
 </main>
 
@@ -1744,6 +1808,130 @@ const WORK_PRINCIPLES = [
 
 const ALL_PRINCIPLES = [...LIFE_PRINCIPLES, ...WORK_PRINCIPLES];
 
+// ═══════════════════════════════════════════════════════════════
+// DATA — PRINSIP (BAHASA INDONESIA)
+// ═══════════════════════════════════════════════════════════════
+const LIFE_PRINCIPLES_ID = [
+  { id:'id1', num:'1', type:'life', title:'Terimalah Kenyataan dan Hadapi dengan Berani',
+    subs:[
+      {letter:'1.1',text:'Jadilah seorang hiper-realis.',detail:'Mimpi + Kenyataan + Tekad = Kehidupan yang Sukses. Orang-orang yang menciptakan hal-hal luar biasa sepenuhnya berakar pada kenyataan.'},
+      {letter:'1.2',text:'Kebenaran adalah fondasi esensial dari setiap hasil yang baik.',detail:'Kebanyakan orang menolak melihat kebenaran ketika itu bukan yang mereka inginkan. Hadapi hal-hal buruk terlebih dahulu.'},
+      {letter:'1.3',text:'Jadilah sangat terbuka pikirannya dan sangat transparan.',detail:'Keterbukaan pikiran radikal dan transparansi sangat berharga untuk pembelajaran cepat dan perubahan efektif.'},
+      {letter:'1.4',text:'Belajarlah dari alam tentang cara kerja kenyataan.',detail:'Jangan terpaku pada bagaimana seharusnya segala sesuatu. Evolusi adalah kekuatan terbesar di alam semesta.'},
+      {letter:'1.5',text:'Berkembang adalah pencapaian terbesar kehidupan dan hadiahnya.',detail:'Beradaptasi melalui percobaan dan kesalahan yang cepat. Kenyataan mengoptimalkan keseluruhan — bukan hanya kamu.'},
+      {letter:'1.6',text:'Pahami pelajaran praktis alam.',detail:'Untuk mendapatkan kekuatan, seseorang harus mendorong batas-batasnya, yang terasa menyakitkan. Ini adalah hukum fundamental.'},
+      {letter:'1.7',text:'Rasa Sakit + Refleksi = Kemajuan.',detail:'Pergi menuju rasa sakit daripada menghindarinya. Rangkul cinta yang keras.'},
+      {letter:'1.8',text:'Timbang konsekuensi tingkat kedua dan ketiga.',detail:'Hindari pilihan yang terasa enak jangka pendek tapi punya konsekuensi jangka panjang yang buruk.'},
+      {letter:'1.9',text:'Miliki hasilmu sendiri.',detail:'Ambil tanggung jawab pribadi. Menyalahkan orang lain mencegah pembelajaran.'},
+      {letter:'1.10',text:'Lihatlah mesin dari level yang lebih tinggi.',detail:'Anggap dirimu sebagai mesin yang beroperasi dalam mesin yang lebih besar. Bedakan antara kamu sebagai perancang dan kamu sebagai pekerja.'},
+    ]
+  },
+  { id:'id2', num:'2', type:'life', title:'Gunakan Proses 5 Langkah untuk Mendapatkan Apa yang Kamu Inginkan',
+    subs:[
+      {letter:'2.1',text:'Miliki tujuan yang jelas.',detail:'Prioritaskan. Meski kamu bisa mendapatkan hampir apa saja yang kamu inginkan, kamu tidak bisa mendapatkan semuanya sekaligus. Jangan pernah mencoret tujuan karena kamu pikir itu tidak dapat dicapai.'},
+      {letter:'2.2',text:'Identifikasi dan jangan tolerir masalah.',detail:'Pandang masalah menyakitkan sebagai potensi perbaikan yang berteriak padamu. Jadilah spesifik. Jangan salah mengartikan penyebab sebagai masalah sebenarnya.'},
+      {letter:'2.3',text:'Diagnosa masalah sampai ke akar penyebabnya.',detail:'Fokus pada "apa yang terjadi" sebelum "apa yang harus dilakukan." Bedakan penyebab proksimal dari akar penyebab.'},
+      {letter:'2.4',text:'Rancang sebuah rencana.',detail:'Pikirkan masalahmu sebagai sekumpulan hasil yang diproduksi oleh sebuah mesin. Tuliskan rencanamu agar semua orang bisa melihat.'},
+      {letter:'2.5',text:'Dorong hingga selesai.',detail:'Perencana hebat yang tidak mengeksekusi tidak akan ke mana-mana. Kebiasaan kerja yang baik sangat diremehkan. Tetapkan metrik yang jelas.'},
+      {letter:'2.6',text:'Ingat bahwa kelemahan tidak masalah jika kamu menemukan solusinya.',detail:'Lihatlah pola kesalahanmu dan identifikasi di langkah mana biasanya kamu gagal.'},
+      {letter:'2.7',text:'Pahami peta mental dan kerendahan hatimu sendiri dan orang lain.',detail:'Ketahui batas-batasmu dan manfaatkan kekuatan orang lain.'},
+    ]
+  },
+  { id:'id3', num:'3', type:'life', title:'Jadilah Sangat Terbuka Pikirannya',
+    subs:[
+      {letter:'3.1',text:'Kenali dua hambatanmu.',detail:'Hambatan ego-mu membuatnya sulit untuk menerima bahwa kamu salah. Hambatan titik buta-mu berarti kamu tidak bisa melihat apa yang tidak bisa kamu lihat.'},
+      {letter:'3.2',text:'Praktikkan keterbukaan pikiran radikal.',detail:'Percayalah dengan tulus bahwa kamu mungkin tidak mengetahui jalur terbaik. Jangan khawatir terlihat baik — khawatirlah tentang mencapai tujuanmu.'},
+      {letter:'3.3',text:'Hargai seni ketidaksetujuan yang bijaksana.',detail:'Ketika dua orang tidak setuju, eksplorasi alasannya. Tujuannya bukan untuk menang tapi untuk menemukan kebenaran.'},
+      {letter:'3.4',text:'Triangulasi pandanganmu dengan orang-orang yang dapat dipercaya yang tidak setuju.',detail:'Rencanakan untuk skenario terburuk agar membuatnya sebaik mungkin.'},
+      {letter:'3.5',text:'Kenali tanda-tanda pikiran tertutup vs. terbuka.',detail:'Tertutup: lebih tertarik untuk benar daripada belajar. Terbuka: lebih tertarik menemukan kebenaran daripada mempertahankan posisi.'},
+      {letter:'3.6',text:'Pahami bagaimana kamu bisa menjadi sangat terbuka pikirannya.',detail:'Gunakan rasa sakit sebagai panduan. Meditasi. Berbasis bukti. Kenali titik-titik buta-mu.'},
+    ]
+  },
+  { id:'id4', num:'4', type:'life', title:'Pahami Bahwa Orang Dikabelkan Sangat Berbeda',
+    subs:[
+      {letter:'4.1',text:'Pahami kekuatan mengetahui bagaimana kamu dan orang lain dikabelkan.',detail:'Kita dilahirkan dengan atribut yang bisa membantu atau menyakiti kita, tergantung penerapannya.'},
+      {letter:'4.2',text:'Kerja bermakna dan hubungan bermakna adalah kebutuhan yang terprogram secara genetis.',detail:'Kebutuhan ini dalam dan fundamental. Selaraskan pekerjaanmu dengan sifat dasarmu.'},
+      {letter:'4.3',text:'Pahami pertempuran otak besar — perasaan vs. pemikiran.',detail:'Rekonsiliasi perasaan dan pikiranmu. Pilih kebiasaanmu dengan baik. Latih dirimu yang tingkat rendah.'},
+      {letter:'4.4',text:'Temukan seperti apa kamu dan orang lain itu.',detail:'Introvert/ekstrovert. Intuisi/penginderaan. Berpikir/merasakan. Merencanakan/mempersepsi. Ketahui tipe-mu.'},
+      {letter:'4.5',text:'Mendapatkan orang yang tepat di peran yang tepat adalah kunci sukses.',detail:'Kelola dirimu dan orkestrasikan orang lain untuk mendapatkan apa yang kamu inginkan.'},
+    ]
+  },
+  { id:'id5', num:'5', type:'life', title:'Belajarlah Membuat Keputusan Secara Efektif',
+    subs:[
+      {letter:'5.1',text:'Kenali bahwa ancaman terbesar untuk keputusan baik adalah emosi yang merugikan.',detail:'Pengambilan keputusan adalah proses dua langkah: pertama belajar, kemudian memutuskan. Jangan membaliknya.'},
+      {letter:'5.2',text:'Sintesis situasi yang ada.',detail:'Yang baru dinilai terlalu tinggi dibandingkan yang hebat. Semua terlihat lebih besar dari dekat. Gunakan Aturan 80/20.'},
+      {letter:'5.3',text:'Sintesis situasi melalui waktu.',detail:'Ingat baik laju perubahan maupun level. Jadilah tidak tepat. Jadilah perfeksionis yang tidak sempurna.'},
+      {letter:'5.5',text:'Logika, alasan, dan akal sehat adalah alat terbaikmu.',detail:'Jangan biarkan emosi atau pendapat yang belum terverifikasi mendorong keputusan. Sintesis realitas secara akurat.'},
+      {letter:'5.6',text:'Buat keputusanmu sebagai kalkulasi expected value.',detail:'Pilihan terbaik memiliki lebih banyak pro daripada kontra, bukan nol kontra. Tingkatkan probabilitas benar.'},
+      {letter:'5.7',text:'Prioritaskan dengan menimbang nilai informasi terhadap biaya tidak memutuskan.',detail:'Semua keharusan harus di atas bar sebelum yang seperti-ingin. Jangan salah mengartikan kemungkinan sebagai probabilitas.'},
+      {letter:'5.8',text:'Sederhanakan!',detail:'Jika kamu tidak bisa menjelaskannya dengan sederhana, kamu tidak memahaminya dengan cukup baik.'},
+      {letter:'5.9',text:'Gunakan prinsip.',detail:'Klasifikasikan situasi ke dalam tipe-tipe dan terapkan prinsip yang tepat untuk mendapatkan keputusan yang lebih baik lebih cepat.'},
+      {letter:'5.10',text:'Timbang-kepercayaan pengambilan keputusanmu.',detail:'Timbang pendapat berdasarkan rekam jejak orang yang memberikannya, bukan berdasarkan antusiasmanya.'},
+    ]
+  },
+];
+
+const WORK_PRINCIPLES_ID = [
+  { id:'idw1', num:'1', type:'work', title:'Percaya pada Kebenaran Radikal dan Transparansi Radikal',
+    subs:[
+      {letter:'1.1',text:'Sadari bahwa kamu tidak perlu takut mengetahui kebenaran.',detail:'Kebenaran — bahkan yang menyakitkan — selalu lebih baik daripada ilusi yang nyaman untuk menghasilkan hasil yang baik.'},
+      {letter:'1.2',text:'Miliki integritas dan tuntut dari orang lain.',detail:'Jangan pernah mengatakan sesuatu tentang seseorang yang tidak akan kamu katakan langsung kepada mereka.'},
+      {letter:'1.3',text:'Ciptakan lingkungan di mana semua orang bisa bersuara.',detail:'"Bersuara, akui, atau pergi." Jadilah sangat terbuka. Jangan naif tentang ketidakjujuran.'},
+      {letter:'1.4',text:'Jadilah transparan secara radikal.',detail:'Gunakan transparansi untuk menegakkan keadilan. Bagikan hal-hal yang paling sulit untuk dibagikan.'},
+    ]
+  },
+  { id:'idw2', num:'2', type:'work', title:'Kembangkan Kerja Bermakna dan Hubungan Bermakna',
+    subs:[
+      {letter:'2.1',text:'Jadilah loyal pada misi bersama, bukan pada individu.',detail:'Jika seseorang tidak beroperasi secara konsisten dengan misi, loyalitas kepada mereka salah tempat.'},
+      {letter:'2.2',text:'Jadilah sangat jelas tentang apa kesepakatan itu.',detail:'Pastikan orang memahami keadilan vs. kemurahan hati. Ketahui di mana garisnya.'},
+      {letter:'2.5',text:'Hargai orang terhormat yang memperlakukanmu dengan baik bahkan ketika kamu tidak melihat.',detail:'Karakter terungkap dalam momen-momen pribadi. Hargai orang-orang ini di atas segalanya.'},
+    ]
+  },
+  { id:'idw3', num:'3', type:'work', title:'Ciptakan Budaya di mana Kesalahan OK, Tidak Belajar Tidak OK',
+    subs:[
+      {letter:'3.1',text:'Kenali bahwa kesalahan adalah bagian alami dari evolusi.',detail:'Gagal dengan baik. Jangan merasa buruk tentang kesalahan — cintai mereka sebagai kesempatan belajar.'},
+      {letter:'3.2',text:'Jangan khawatir terlihat baik — khawatirlah tentang mencapai tujuanmu.',detail:'Atasi kesalahan dan kredit. Lanjutkan dengan yang akurat dan tidak akurat.'},
+      {letter:'3.3',text:'Amati pola kesalahan untuk melihat apakah berasal dari kelemahan.',detail:'Pola mengungkap karakter. Atasi sumbernya, bukan hanya gejalanya.'},
+      {letter:'3.4',text:'Ingat untuk merefleksikan ketika kamu mengalami rasa sakit.',detail:'Jadilah reflektif diri. Tidak ada yang bisa melihat diri mereka sendiri secara objektif tanpa bantuan.'},
+    ]
+  },
+  { id:'idw4', num:'4', type:'work', title:'Tetap Sinkron',
+    subs:[
+      {letter:'4.1',text:'Konflik sangat penting untuk hubungan yang hebat.',detail:'Investasikan banyak waktu yang didedikasikan untuk sinkronisasi — itu adalah investasi terbaik yang bisa kamu lakukan.'},
+      {letter:'4.2',text:'Ketahui cara sinkronisasi dan tidak setuju dengan baik.',detail:'Permukakan area kemungkinan tidak-sinkron. Ingat setiap cerita memiliki sisi lain.'},
+      {letter:'4.4',text:'Jika pertemuanmu untuk dijalankan, kelola percakapan.',detail:'Jadilah jelas siapa yang mengarahkan. Tegakkan logika. Hindari penyimpangan topik. Gunakan aturan 2 menit.'},
+      {letter:'4.5',text:'Kolaborasi hebat terasa seperti bermain jazz.',detail:'1+1=3. Tiga hingga lima lebih dari dua puluh.'},
+    ]
+  },
+  { id:'idw5', num:'5', type:'work', title:'Timbang-Kepercayaan Pengambilan Keputusanmu',
+    subs:[
+      {letter:'5.1',text:'Pahami manfaat ide setiap orang.',detail:'Jika kamu tidak bisa berhasil melakukan sesuatu, jangan pikir kamu bisa memberitahu orang lain bagaimana seharusnya dilakukan.'},
+      {letter:'5.2',text:'Temukan orang yang paling dapat dipercaya yang tidak setuju dan pahami alasannya.',detail:'Pendapat yang dapat dipercaya berasal dari orang yang telah berhasil melakukannya minimal 3 kali.'},
+      {letter:'5.5',text:'Ketidaksetujuan harus dilakukan dengan efisien.',detail:'Ketahui kapan harus berhenti berdebat dan melanjutkan. Gunakan pembobotan kepercayaan sebagai alat, bukan pengganti.'},
+    ]
+  },
+  { id:'idw6', num:'6', type:'work', title:'Kenali Cara Mengatasi Ketidaksetujuan',
+    subs:[
+      {letter:'6.1',text:'Prinsip tidak bisa diabaikan dengan kesepakatan bersama.',detail:'Standar perilaku yang sama berlaku untuk semua orang. Aturan ya aturan.'},
+      {letter:'6.3',text:'Jangan biarkan konflik penting tidak terselesaikan.',detail:'Jangan mandek — eskalasi atau vote! Jangan biarkan hal-hal kecil memecah belah.'},
+      {letter:'6.4',text:'Setelah keputusan dibuat, semua orang harus mendukungnya.',detail:'Bahkan jika kamu tidak setuju. Lihat dari level yang lebih tinggi. Jangan biarkan meritokrasi tergelincir ke anarkisme.'},
+    ]
+  },
+];
+
+const ALL_PRINCIPLES_ID = [...LIFE_PRINCIPLES_ID, ...WORK_PRINCIPLES_ID];
+
+const HABITS_ID = [
+  {id:'ih1',text:'Mempraktikkan keterbukaan pikiran radikal',detail:'Dengan tulus mempertimbangkan sudut pandang yang berlawanan dengan pandanganmu'},
+  {id:'ih2',text:'Berbicara jujur meski tidak nyaman',detail:'Mengatakan apa yang benar-benar kamu pikirkan, bukan apa yang mudah'},
+  {id:'ih3',text:'Merefleksikan momen yang menyakitkan',detail:'Menerapkan formula: Rasa Sakit + Refleksi = Kemajuan'},
+  {id:'ih4',text:'Membuat keputusan berdasarkan expected value',detail:'Secara sadar menimbang pro, kontra, dan probabilitas'},
+  {id:'ih5',text:'Memisahkan emosi dari analisis',detail:'Menunggu hingga keadaan emosi tenang sebelum memutuskan'},
+  {id:'ih6',text:'Bertanya "apa yang benar?" sebelum "apa yang harus dilakukan?"',detail:'Mendiagnosa sebelum meresepkan solusi'},
+  {id:'ih7',text:'Mencari umpan balik dari orang yang dapat dipercaya',detail:'Seseorang dengan rekam jejak yang relevan, bukan hanya persetujuan'},
+  {id:'ih8',text:'Mengakui kesalahan tanpa menyalahkan orang lain',detail:'Akuntabilitas penuh, tanpa alasan'},
+];
+
 const DAILY_QUOTES = [
   {text:"Dreams + Reality + Determination = A Successful Life.",source:"Life Principle 1.1"},
   {text:"Pain + Reflection = Progress. Go to the pain rather than avoid it.",source:"Life Principle 1.7"},
@@ -1793,10 +1981,12 @@ const HABITS = [
 // ═══════════════════════════════════════════════════════════════
 let db;
 let currentPrincipleFilter = 'all';
+let currentPrincipleFilterId = 'all';
 let currentGoalFilter = 'active';
 let currentMpFilter = 'all';
 let currentHistoryFilter = 'all';
 let habitState = {};
+let habitStateId = {};
 let decisionOptions = [];
 let bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
 let editingModalId = null;
@@ -1837,9 +2027,11 @@ function goTo(page) {
   });
   if (page === 'dashboard') updateDashboard();
   if (page === 'principles') renderPrinciples();
+  if (page === 'principles-id') renderPrinciplesId();
   if (page === 'journal') renderJournal();
   if (page === 'fivesteps') renderGoals();
   if (page === 'habits') renderHabits();
+  if (page === 'habits-id') renderHabitsId();
   if (page === 'myprinciples') renderMyPrinciples();
   if (page === 'bookmarks') renderBookmarks();
   if (page === 'history') renderHistory();
@@ -2445,7 +2637,144 @@ function updateDecProgress() {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// HABITS
+// KEBIASAAN HARIAN (INDONESIA)
+// ═══════════════════════════════════════════════════════════════
+function renderHabitsId() {
+  const today = new Date().toLocaleDateString('id-ID', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+  document.getElementById('habits-id-date').textContent = today;
+  const container = document.getElementById('habits-id-list');
+  container.innerHTML = HABITS_ID.map(h => `
+    <div class="habit-card ${habitStateId[h.id]?'done':''}" id="ihcard-${h.id}" onclick="toggleHabitId('${h.id}')">
+      <div class="habit-check" id="ihbox-${h.id}">${habitStateId[h.id]?'✓':''}</div>
+      <div style="flex:1">
+        <div class="habit-text">${h.text}</div>
+        <div class="habit-detail">${h.detail}</div>
+      </div>
+    </div>
+  `).join('');
+  updateHabitsIdScore();
+}
+
+function toggleHabitId(id) {
+  habitStateId[id] = !habitStateId[id];
+  document.getElementById('ihcard-'+id).classList.toggle('done', habitStateId[id]);
+  document.getElementById('ihbox-'+id).textContent = habitStateId[id] ? '✓' : '';
+  updateHabitsIdScore();
+}
+
+function updateHabitsIdScore() {
+  const done = Object.values(habitStateId).filter(Boolean).length;
+  const total = HABITS_ID.length;
+  const pct = Math.round((done/total)*100);
+  document.getElementById('habits-id-score').textContent = pct + '%';
+  document.getElementById('habits-id-fill').style.width = pct + '%';
+  const msgs = [
+    'Mulailah dari mana saja. Satu tindakan jujur hari ini.',
+    'Terus maju. Setiap langkah berarti.',
+    'Membangun kebiasaan kejujuran radikal.',
+    'Hari yang kuat. Prinsip-prinsip sedang terinternalisasi.',
+    'Luar biasa. Inilah yang dibangun Bridgewater.',
+    '✦ Skor sempurna. Hari yang benar-benar berprinsipal.',
+  ];
+  const idx = Math.min(Math.floor((pct/100)*(msgs.length)), msgs.length-1);
+  document.getElementById('habits-id-message').textContent = msgs[idx];
+}
+
+function resetHabitsId() { habitStateId = {}; renderHabitsId(); }
+
+// ═══════════════════════════════════════════════════════════════
+// SEMUA PRINSIP (INDONESIA)
+// ═══════════════════════════════════════════════════════════════
+function renderPrinciplesId() {
+  const container = document.getElementById('principles-id-list');
+  const search = document.getElementById('search-principles-id').value.toLowerCase();
+  let list = ALL_PRINCIPLES_ID.filter(p => {
+    if (currentPrincipleFilterId === 'life') return p.type === 'life';
+    if (currentPrincipleFilterId === 'work') return p.type === 'work';
+    if (currentPrincipleFilterId === 'bookmarked') return bookmarks.includes(p.id);
+    return true;
+  });
+  if (search) {
+    list = list.filter(p => p.title.toLowerCase().includes(search) ||
+      p.subs.some(s => s.text.toLowerCase().includes(search) || s.detail.toLowerCase().includes(search)));
+  }
+
+  const lifeList = list.filter(p => p.type === 'life');
+  const workList = list.filter(p => p.type === 'work');
+
+  const highlight = t => search ? t.replace(new RegExp(search, 'gi'), m => `<mark>${m}</mark>`) : t;
+
+  let html = '';
+  if (lifeList.length) {
+    html += `<div class="principle-section"><div class="principle-section-title">◆ Prinsip Kehidupan <span style="opacity:0.5">(${lifeList.length})</span></div>`;
+    html += lifeList.map(p => renderPrincipleItemId(p, search)).join('');
+    html += '</div>';
+  }
+  if (workList.length) {
+    html += `<div class="principle-section"><div class="principle-section-title">◆ Prinsip Pekerjaan <span style="opacity:0.5">(${workList.length})</span></div>`;
+    html += workList.map(p => renderPrincipleItemId(p, search)).join('');
+    html += '</div>';
+  }
+  if (!html) html = `<div class="empty-state"><div class="empty-icon">◇</div><p>Tidak ada prinsip yang cocok dengan pencarianmu.</p></div>`;
+  container.innerHTML = html;
+}
+
+function renderPrincipleItemId(p, search = '') {
+  const isBookmarked = bookmarks.includes(p.id);
+  const highlight = t => search ? t.replace(new RegExp(search, 'gi'), m => `<mark>${m}</mark>`) : t;
+  return `
+    <div class="principle-item" id="piid-${p.id}" onclick="togglePrincipleId('${p.id}')">
+      <div class="pi-header">
+        <span class="pi-num">${p.num}.</span>
+        <span class="pi-title">${highlight(p.title)}</span>
+        <span class="pi-bookmark ${isBookmarked?'bookmarked':''}" onclick="event.stopPropagation(); toggleBookmarkId('${p.id}')">${isBookmarked ? '◆' : '◇'}</span>
+        <span class="pi-toggle" id="pitid-${p.id}">▼</span>
+      </div>
+      <div class="pi-body" id="pibid-${p.id}">
+        ${p.subs.map(s => `
+          <div class="pi-sub">
+            <span class="pi-sub-letter">${s.letter}</span>
+            <div>
+              <div class="pi-sub-text">${highlight(s.text)}</div>
+              <div class="pi-sub-detail">${highlight(s.detail)}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function togglePrincipleId(id) {
+  const body = document.getElementById('pibid-' + id);
+  const toggle = document.getElementById('pitid-' + id);
+  const item = document.getElementById('piid-' + id);
+  const isOpen = body.classList.contains('show');
+  body.classList.toggle('show', !isOpen);
+  toggle.style.transform = isOpen ? '' : 'rotate(180deg)';
+  item.classList.toggle('expanded', !isOpen);
+}
+
+function filterPrinciplesId(type, btn) {
+  currentPrincipleFilterId = type;
+  document.querySelectorAll('#page-principles-id .filter-tab').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderPrinciplesId();
+}
+
+function searchPrinciplesId() { renderPrinciplesId(); }
+
+function toggleBookmarkId(id) {
+  const idx = bookmarks.indexOf(id);
+  if (idx === -1) { bookmarks.push(id); showToast('◆ Ditandai.', 'success'); }
+  else { bookmarks.splice(idx, 1); showToast('Tanda dihapus.'); }
+  localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+  document.getElementById('badge-bm').textContent = bookmarks.length;
+  renderPrinciplesId();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// HABITS (ENGLISH — original)
 // ═══════════════════════════════════════════════════════════════
 function renderHabits() {
   const today = new Date().toDateString();
