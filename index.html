@@ -1155,55 +1155,55 @@ mark { background: var(--gold-dim); color: var(--gold); border-radius: 2px; padd
 
   <nav class="nav">
     <div class="nav-group">
-      <div class="nav-group-label">Ringkasan</div>
+      <div class="nav-group-label">Overview</div>
       <div class="nav-item active" onclick="goTo('dashboard')">
         <span class="nav-icon">◈</span> Dashboard
       </div>
       <div class="nav-item" onclick="goTo('history')">
-        <span class="nav-icon">◷</span> Riwayat Aktivitas
+        <span class="nav-icon">◷</span> Activity Log
         <span class="nav-badge" id="badge-history">0</span>
       </div>
     </div>
 
     <div class="nav-group">
-      <div class="nav-group-label">Referensi</div>
+      <div class="nav-group-label">Reference</div>
       <div class="nav-item" onclick="goTo('principles')">
-        <span class="nav-icon">◆</span> Semua Prinsip (EN)
+        <span class="nav-icon">◆</span> All Principles (EN)
       </div>
       <div class="nav-item" onclick="goTo('principles-id')">
-        <span class="nav-icon">◆</span> Semua Prinsip (ID)
+        <span class="nav-icon">◆</span> All Principles (ID)
       </div>
     </div>
 
     <div class="nav-group">
-      <div class="nav-group-label">Latihan</div>
+      <div class="nav-group-label">Practice</div>
       <div class="nav-item" onclick="goTo('journal')">
-        <span class="nav-icon">✎</span> Jurnal Refleksi
+        <span class="nav-icon">✎</span> Reflection Journal
         <span class="nav-badge" id="badge-journal">0</span>
       </div>
       <div class="nav-item" onclick="goTo('fivesteps')">
-        <span class="nav-icon">◎</span> 5-Langkah Goal
+        <span class="nav-icon">◎</span> 5-Step Goals
         <span class="nav-badge" id="badge-goals">0</span>
       </div>
       <div class="nav-item" onclick="goTo('decisions')">
-        <span class="nav-icon">⊡</span> Pembuat Keputusan
+        <span class="nav-icon">⊡</span> Decision Maker
       </div>
       <div class="nav-item" onclick="goTo('habits')">
-        <span class="nav-icon">◉</span> Kebiasaan Harian (EN)
+        <span class="nav-icon">◉</span> Daily Habits (EN)
       </div>
       <div class="nav-item" onclick="goTo('habits-id')">
-        <span class="nav-icon">◉</span> Kebiasaan Harian (ID)
+        <span class="nav-icon">◉</span> Daily Habits (ID)
       </div>
     </div>
 
     <div class="nav-group">
       <div class="nav-group-label">Personal</div>
       <div class="nav-item" onclick="goTo('myprinciples')">
-        <span class="nav-icon">✦</span> Prinsip Saya
+        <span class="nav-icon">✦</span> My Principles
         <span class="nav-badge" id="badge-mp">0</span>
       </div>
       <div class="nav-item" onclick="goTo('bookmarks')">
-        <span class="nav-icon">◇</span> Tersimpan
+        <span class="nav-icon">◇</span> Bookmarks
         <span class="nav-badge" id="badge-bm">0</span>
       </div>
     </div>
@@ -1213,7 +1213,7 @@ mark { background: var(--gold-dim); color: var(--gold); border-radius: 2px; padd
     <div class="footer-stats">
       <div class="footer-stat">
         <span class="n" id="sf-journal">0</span>
-        <span class="l">Catatan</span>
+        <span class="l">Entries</span>
       </div>
       <div class="footer-stat">
         <span class="n" id="sf-streak">0</span>
@@ -2243,6 +2243,7 @@ function toggleBookmark(id) {
   localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
   document.getElementById('badge-bm').textContent = bookmarks.length;
   renderPrinciples();
+  if (document.getElementById('page-bookmarks').classList.contains('active')) renderBookmarks();
 }
 
 // ════════════════════════════════════════════
@@ -2650,7 +2651,7 @@ function renderPrincipleItemId(p, search = '') {
 function togglePrincipleId(id) { const body=document.getElementById('pibid-'+id); const toggle=document.getElementById('pitid-'+id); const item=document.getElementById('piid-'+id); const isOpen=body.classList.contains('show'); body.classList.toggle('show',!isOpen); toggle.style.transform=isOpen?'':'rotate(180deg)'; item.classList.toggle('expanded',!isOpen); }
 function filterPrinciplesId(type, btn) { currentPrincipleFilterId=type; document.querySelectorAll('#page-principles-id .filter-tab').forEach(b=>b.classList.remove('active')); if(btn) btn.classList.add('active'); renderPrinciplesId(); }
 function searchPrinciplesId() { renderPrinciplesId(); }
-function toggleBookmarkId(id) { const idx=bookmarks.indexOf(id); if(idx===-1){bookmarks.push(id);showToast('◆ Ditandai.','success');}else{bookmarks.splice(idx,1);showToast('Tanda dihapus.');} localStorage.setItem('bookmarks',JSON.stringify(bookmarks)); document.getElementById('badge-bm').textContent=bookmarks.length; renderPrinciplesId(); }
+function toggleBookmarkId(id) { const idx=bookmarks.indexOf(id); if(idx===-1){bookmarks.push(id);showToast('◆ Bookmarked.','success');}else{bookmarks.splice(idx,1);showToast('Bookmark removed.');} localStorage.setItem('bookmarks',JSON.stringify(bookmarks)); document.getElementById('badge-bm').textContent=bookmarks.length; renderPrinciplesId(); if(document.getElementById('page-bookmarks').classList.contains('active')) renderBookmarks(); }
 
 // ════════════════════════════════════════════
 // MY PRINCIPLES
@@ -2703,9 +2704,24 @@ function cancelMpEdit() {}
 // ════════════════════════════════════════════
 function renderBookmarks() {
   const container = document.getElementById('bookmarks-list');
-  const bm = ALL_PRINCIPLES.filter(p => bookmarks.includes(p.id));
-  if (!bm.length) { container.innerHTML = `<div class="empty-state"><div class="empty-icon">◇</div><p>Belum ada bookmark. Buka <strong>All Principles</strong> dan tandai favorit dengan ◇.</p></div>`; return; }
-  container.innerHTML = bm.map(p => renderPrincipleItem(p)).join('');
+  const bmEN = ALL_PRINCIPLES.filter(p => bookmarks.includes(p.id));
+  const bmID = ALL_PRINCIPLES_ID.filter(p => bookmarks.includes(p.id));
+  if (!bmEN.length && !bmID.length) {
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">◇</div><p>No bookmarks yet. Go to <strong>All Principles</strong> (EN or ID) and bookmark favorites with ◇.</p></div>`;
+    return;
+  }
+  let html = '';
+  if (bmEN.length) {
+    html += `<div class="principle-section"><div class="principle-section-title">◆ English Principles <span style="opacity:0.5">(${bmEN.length})</span></div>`;
+    html += bmEN.map(p => renderPrincipleItem(p)).join('');
+    html += '</div>';
+  }
+  if (bmID.length) {
+    html += `<div class="principle-section"><div class="principle-section-title">◆ Prinsip Bahasa Indonesia <span style="opacity:0.5">(${bmID.length})</span></div>`;
+    html += bmID.map(p => renderPrincipleItemId(p)).join('');
+    html += '</div>';
+  }
+  container.innerHTML = html;
 }
 
 // ════════════════════════════════════════════
