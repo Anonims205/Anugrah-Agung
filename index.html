@@ -13,33 +13,37 @@
   --bg4: #18181e;
   --card: #111115;
   --card2: #17171d;
-  --border: #1e1e26;
-  --border2: #28283a;
-  --border3: #32324a;
+  --border: #222228;
+  --border2: #2c2c3c;
+  --border3: #38384e;
   --gold: #c9a84c;
   --gold2: #e2be70;
   --gold3: #f0d490;
-  --gold-dim: rgba(201,168,76,0.10);
-  --gold-dim2: rgba(201,168,76,0.05);
-  --gold-glow: rgba(201,168,76,0.15);
+  --gold-dim: rgba(201,168,76,0.12);
+  --gold-dim2: rgba(201,168,76,0.06);
+  --gold-glow: rgba(201,168,76,0.18);
   --text: #eeeae0;
-  --text2: #8a8070;
-  --text3: #484440;
-  --text4: #302e2a;
+  --text2: #9a9080;
+  --text3: #565250;
+  --text4: #353230;
   --red: #c45c4c;
-  --red-dim: rgba(196,92,76,0.10);
+  --red-dim: rgba(196,92,76,0.12);
+  --red-hover: rgba(196,92,76,0.20);
   --green: #5a9e6e;
-  --green-dim: rgba(90,158,110,0.10);
+  --green-dim: rgba(90,158,110,0.12);
   --blue: #4c7ec9;
-  --blue-dim: rgba(76,126,201,0.10);
+  --blue-dim: rgba(76,126,201,0.12);
   --amber: #d4956a;
+  --amber-dim: rgba(212,149,106,0.12);
+  --trash: #8b6cb5;
+  --trash-dim: rgba(139,108,181,0.12);
   --font-serif: 'Cormorant Garamond', Georgia, serif;
   --font-sans: 'DM Sans', sans-serif;
   --font-mono: 'DM Mono', monospace;
-  --radius-sm: 4px;
-  --radius: 8px;
-  --radius-lg: 12px;
-  --sidebar: 240px;
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 14px;
+  --sidebar: 256px;
   --transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
 }
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -53,13 +57,15 @@ body {
   overflow: hidden;
 }
 
-/* ─────────── SCROLLBAR ─────────── */
+/* ─── SCROLLBAR ─── */
 ::-webkit-scrollbar { width: 3px; height: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--border3); }
 
-/* ─────────── SIDEBAR ─────────── */
+/* ═══════════════════════════════
+   SIDEBAR
+═══════════════════════════════ */
 .sidebar {
   width: var(--sidebar);
   min-width: var(--sidebar);
@@ -75,38 +81,38 @@ body {
 }
 
 .sidebar-brand {
-  padding: 24px 20px 20px;
+  padding: 20px 18px 16px;
   border-bottom: 1px solid var(--border);
   position: relative;
 }
 .sidebar-brand::after {
   content: '';
   position: absolute;
-  bottom: -1px; left: 20px; right: 20px;
+  bottom: -1px; left: 18px; right: 18px;
   height: 1px;
   background: linear-gradient(90deg, var(--gold), transparent);
-  opacity: 0.4;
+  opacity: 0.35;
 }
 .brand-icon {
-  width: 32px; height: 32px;
+  width: 34px; height: 34px;
   background: var(--gold-dim);
   border: 1px solid rgba(201,168,76,0.3);
   border-radius: var(--radius-sm);
   display: flex; align-items: center; justify-content: center;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   margin-bottom: 10px;
   color: var(--gold);
 }
 .brand-title {
   font-family: var(--font-serif);
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 700;
   color: var(--text);
   letter-spacing: 0.01em;
   line-height: 1;
 }
 .brand-sub {
-  font-size: 0.65rem;
+  font-size: 0.64rem;
   color: var(--text3);
   font-family: var(--font-mono);
   margin-top: 3px;
@@ -121,24 +127,25 @@ body {
   color: var(--gold);
   background: var(--gold-dim2);
   border: 1px solid rgba(201,168,76,0.2);
-  padding: 2px 6px;
+  padding: 2px 7px;
   border-radius: 20px;
   margin-top: 8px;
   letter-spacing: 0.05em;
 }
 
-.nav { padding: 8px 0; flex: 1; overflow-y: auto; }
-.nav-group { margin-bottom: 4px; }
+/* ─── NAV ─── */
+.nav { padding: 10px 0; flex: 1; overflow-y: auto; }
+.nav-group { margin-bottom: 2px; }
 .nav-group-label {
   font-family: var(--font-mono);
-  font-size: 0.58rem;
+  font-size: 0.57rem;
   text-transform: uppercase;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.18em;
   color: var(--text4);
-  padding: 12px 20px 5px;
+  padding: 14px 18px 5px;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 .nav-group-label::after {
   content: '';
@@ -149,18 +156,18 @@ body {
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 9px;
-  padding: 8px 20px;
+  gap: 10px;
+  padding: 9px 18px;
   cursor: pointer;
   transition: var(--transition);
-  font-size: 0.78rem;
+  font-size: 0.80rem;
   color: var(--text2);
   position: relative;
-  border-radius: 0;
   font-weight: 400;
   letter-spacing: 0.01em;
+  user-select: none;
 }
-.nav-item:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+.nav-item:hover { color: var(--text); background: rgba(255,255,255,0.04); }
 .nav-item.active {
   color: var(--gold);
   background: var(--gold-dim2);
@@ -168,23 +175,28 @@ body {
 .nav-item.active::before {
   content: '';
   position: absolute;
-  left: 0; top: 4px; bottom: 4px;
+  left: 0; top: 5px; bottom: 5px;
   width: 2px;
   background: var(--gold);
   border-radius: 0 2px 2px 0;
 }
+.nav-item.trash-nav { color: var(--text3); }
+.nav-item.trash-nav:hover { color: var(--trash); background: var(--trash-dim); }
+.nav-item.trash-nav.active { color: var(--trash); background: var(--trash-dim); }
+.nav-item.trash-nav.active::before { background: var(--trash); }
+
 .nav-icon {
-  width: 15px; height: 15px;
+  width: 16px; height: 16px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   flex-shrink: 0;
-  opacity: 0.7;
+  opacity: 0.75;
 }
 .nav-item.active .nav-icon { opacity: 1; }
 .nav-badge {
   margin-left: auto;
   font-family: var(--font-mono);
-  font-size: 0.58rem;
+  font-size: 0.57rem;
   background: var(--bg3);
   color: var(--text3);
   border: 1px solid var(--border);
@@ -198,9 +210,12 @@ body {
   color: var(--gold);
   border-color: rgba(201,168,76,0.25);
 }
+.nav-item.trash-nav .nav-badge { border-color: var(--trash-dim); }
+.nav-item.trash-nav.active .nav-badge { background: var(--trash-dim); color: var(--trash); border-color: rgba(139,108,181,0.3); }
 
+/* ─── SIDEBAR FOOTER ─── */
 .sidebar-footer {
-  padding: 14px 20px;
+  padding: 14px 18px;
   border-top: 1px solid var(--border);
   background: var(--bg2);
 }
@@ -214,21 +229,17 @@ body {
   overflow: hidden;
   margin-bottom: 10px;
 }
-.footer-stat {
-  background: var(--bg3);
-  padding: 8px 0;
-  text-align: center;
-}
+.footer-stat { background: var(--bg3); padding: 8px 0; text-align: center; }
 .footer-stat .n {
   font-family: var(--font-mono);
-  font-size: 1rem;
+  font-size: 1.05rem;
   color: var(--gold);
   font-weight: 500;
   display: block;
   line-height: 1;
 }
 .footer-stat .l {
-  font-size: 0.56rem;
+  font-size: 0.55rem;
   color: var(--text3);
   font-family: var(--font-mono);
   text-transform: uppercase;
@@ -236,60 +247,52 @@ body {
   margin-top: 3px;
   display: block;
 }
-.footer-copy {
-  font-size: 0.6rem;
-  color: var(--text4);
-  font-family: var(--font-mono);
-  text-align: center;
-}
+.footer-copy { font-size: 0.58rem; color: var(--text4); font-family: var(--font-mono); text-align: center; }
 
-/* ─────────── MAIN ─────────── */
+/* ═══════════════════════════════
+   MAIN
+═══════════════════════════════ */
 .main { flex: 1; height: 100vh; overflow-y: auto; }
-.page { display: none; padding: 40px 52px 72px; max-width: 960px; }
+.page { display: none; padding: 40px 52px 80px; max-width: 980px; }
 .page.active { display: block; animation: pageFadeIn 0.2s ease; }
-@keyframes pageFadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pageFadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-/* ─────────── PAGE HEADER ─────────── */
+/* ─── PAGE HEADER ─── */
 .page-header { margin-bottom: 32px; }
 .page-eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   font-family: var(--font-mono);
-  font-size: 0.6rem;
+  font-size: 0.60rem;
   text-transform: uppercase;
   letter-spacing: 0.14em;
   color: var(--text3);
   margin-bottom: 10px;
 }
-.page-eyebrow-dot {
-  width: 4px; height: 4px;
-  border-radius: 50%;
-  background: var(--gold);
-  opacity: 0.6;
-}
+.page-eyebrow-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--gold); opacity: 0.7; }
 .page-header h2 {
   font-family: var(--font-serif);
-  font-size: 2.2rem;
+  font-size: 2.3rem;
   font-weight: 600;
   color: var(--text);
   line-height: 1.15;
   letter-spacing: -0.01em;
 }
 .page-header .subtitle {
-  font-size: 0.82rem;
+  font-size: 0.83rem;
   color: var(--text2);
   margin-top: 8px;
   line-height: 1.65;
   max-width: 560px;
 }
 
-/* ─────────── GRID ─────────── */
+/* ─── GRID ─── */
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
 .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
 
-/* ─────────── STAT CARDS ─────────── */
+/* ─── STAT CARDS ─── */
 .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 24px; }
 .stat-card {
   background: var(--card);
@@ -300,44 +303,35 @@ body {
   overflow: hidden;
   transition: var(--transition);
 }
-.stat-card:hover { border-color: var(--border2); }
+.stat-card:hover { border-color: var(--border2); transform: translateY(-1px); }
 .stat-card::before {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--gold), transparent);
-  opacity: 0.25;
+  opacity: 0.22;
 }
-.stat-icon {
-  font-size: 0.8rem;
-  color: var(--text3);
-  margin-bottom: 10px;
-}
+.stat-icon { font-size: 0.85rem; color: var(--text3); margin-bottom: 12px; }
 .stat-num {
   font-family: var(--font-mono);
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: 500;
   color: var(--gold);
   line-height: 1;
   letter-spacing: -0.02em;
 }
 .stat-label {
-  font-size: 0.68rem;
+  font-size: 0.67rem;
   color: var(--text3);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.09em;
   font-family: var(--font-mono);
   margin-top: 6px;
 }
-.stat-trend {
-  font-size: 0.66rem;
-  font-family: var(--font-mono);
-  color: var(--green);
-  margin-top: 4px;
-}
+.stat-trend { font-size: 0.65rem; font-family: var(--font-mono); color: var(--green); margin-top: 4px; }
 
-/* ─────────── CARDS ─────────── */
+/* ─── CARDS ─── */
 .card {
   background: var(--card);
   border: 1px solid var(--border);
@@ -351,71 +345,41 @@ body {
 .card-accent-green { border-left: 2px solid var(--green); }
 .card-accent-red { border-left: 2px solid var(--red); }
 .card-accent-blue { border-left: 2px solid var(--blue); }
+.card-accent-trash { border-left: 2px solid var(--trash); }
 
 .card-label {
   font-family: var(--font-mono);
-  font-size: 0.6rem;
+  font-size: 0.60rem;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.13em;
   color: var(--text3);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
 }
-.card-label-dot {
-  width: 3px; height: 3px;
-  border-radius: 50%;
-  background: var(--gold);
-  opacity: 0.5;
-}
-.card h3 {
-  font-family: var(--font-serif);
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: var(--text);
-  margin-bottom: 8px;
-}
+.card-label-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--gold); opacity: 0.6; }
+.card h3 { font-family: var(--font-serif); font-size: 1.05rem; font-weight: 600; color: var(--text); margin-bottom: 8px; }
 .card p { font-size: 0.82rem; color: var(--text2); line-height: 1.65; }
-.card-actions {
-  display: flex;
-  gap: 8px;
-  margin-top: 14px;
-  padding-top: 14px;
-  border-top: 1px solid var(--border);
-  flex-wrap: wrap;
-}
+.card-actions { display: flex; gap: 8px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); flex-wrap: wrap; }
 
-/* ─────────── QUOTE BLOCK ─────────── */
+/* ─── QUOTE BLOCK ─── */
 .quote-block {
   background: var(--gold-dim2);
   border-left: 2px solid var(--gold);
   padding: 16px 20px;
   margin: 16px 0;
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  position: relative;
 }
-.quote-block p {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 1.05rem;
-  color: var(--text);
-  line-height: 1.65;
-}
-.quote-source {
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  color: var(--gold);
-  margin-top: 8px;
-  opacity: 0.65;
-}
+.quote-block p { font-family: var(--font-serif); font-style: italic; font-size: 1.05rem; color: var(--text); line-height: 1.65; }
+.quote-source { font-family: var(--font-mono); font-size: 0.62rem; color: var(--gold); margin-top: 8px; opacity: 0.65; }
 
-/* ─────────── FORMS ─────────── */
+/* ─── FORMS ─── */
 .field { margin-bottom: 14px; }
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
 label {
   display: block;
-  font-size: 0.65rem;
+  font-size: 0.64rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   font-family: var(--font-mono);
@@ -427,7 +391,7 @@ input, textarea, select {
   border: 1px solid var(--border2);
   color: var(--text);
   font-family: var(--font-sans);
-  font-size: 0.84rem;
+  font-size: 0.85rem;
   padding: 10px 14px;
   border-radius: var(--radius-sm);
   outline: none;
@@ -442,21 +406,15 @@ input:focus, textarea:focus, select:focus {
 textarea { resize: vertical; min-height: 80px; }
 input[type="range"] { padding: 4px 0; border: none; background: transparent; cursor: pointer; }
 select option { background: var(--bg3); }
-.field-hint {
-  font-size: 0.67rem;
-  color: var(--text3);
-  font-family: var(--font-mono);
-  margin-top: 5px;
-  line-height: 1.5;
-}
+.field-hint { font-size: 0.67rem; color: var(--text3); font-family: var(--font-mono); margin-top: 5px; line-height: 1.5; }
 
-/* ─────────── BUTTONS ─────────── */
+/* ─── BUTTONS ─── */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 8px 16px;
+  padding: 9px 16px;
   font-family: var(--font-mono);
   font-size: 0.68rem;
   text-transform: uppercase;
@@ -471,43 +429,51 @@ select option { background: var(--bg3); }
   font-weight: 400;
 }
 .btn:hover { border-color: var(--border3); color: var(--text); background: var(--bg4); }
-.btn-primary {
-  background: var(--gold);
-  color: #000;
-  border-color: var(--gold);
-  font-weight: 600;
-}
+.btn-primary { background: var(--gold); color: #000; border-color: var(--gold); font-weight: 600; }
 .btn-primary:hover { background: var(--gold2); border-color: var(--gold2); color: #000; }
 .btn-danger { border-color: rgba(196,92,76,0.3); color: var(--red); background: var(--bg3); }
-.btn-danger:hover { background: var(--red-dim); border-color: rgba(196,92,76,0.5); }
+.btn-danger:hover { background: var(--red-hover); border-color: rgba(196,92,76,0.6); color: var(--red); }
 .btn-ghost { border-color: transparent; color: var(--text3); background: transparent; }
 .btn-ghost:hover { color: var(--text2); background: var(--bg3); border-color: var(--border); }
+.btn-success { border-color: rgba(90,158,110,0.3); color: var(--green); background: transparent; }
+.btn-success:hover { background: var(--green-dim); border-color: rgba(90,158,110,0.5); }
+.btn-trash { border-color: rgba(139,108,181,0.3); color: var(--trash); background: transparent; }
+.btn-trash:hover { background: var(--trash-dim); border-color: rgba(139,108,181,0.5); }
 .btn-sm { padding: 5px 10px; font-size: 0.62rem; }
-.btn-icon { padding: 6px 8px; }
+.btn-icon { padding: 6px 9px; }
 .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
 
-/* ─────────── SEARCH BAR ─────────── */
-.search-wrap {
-  position: relative;
-  margin-bottom: 18px;
+/* ─── ACTION BUTTONS (edit/delete) ─── */
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 0.78rem;
+  background: transparent;
+  flex-shrink: 0;
 }
-.search-wrap input { padding-left: 38px; }
-.search-icon {
-  position: absolute;
-  left: 12px; top: 50%;
-  transform: translateY(-50%);
-  color: var(--text3);
-  font-size: 0.9rem;
-  pointer-events: none;
-}
+.action-btn.edit { color: var(--text3); }
+.action-btn.edit:hover { color: var(--gold); background: var(--gold-dim2); border-color: rgba(201,168,76,0.2); }
+.action-btn.delete { color: var(--text4); }
+.action-btn.delete:hover { color: var(--red); background: var(--red-dim); border-color: rgba(196,92,76,0.2); }
+.action-btn.restore { color: var(--text3); }
+.action-btn.restore:hover { color: var(--green); background: var(--green-dim); border-color: rgba(90,158,110,0.2); }
+.action-btn.perm-delete { color: var(--text4); }
+.action-btn.perm-delete:hover { color: var(--red); background: var(--red-dim); border-color: rgba(196,92,76,0.2); }
+.action-group { display: flex; gap: 3px; align-items: center; flex-shrink: 0; }
 
-/* ─────────── FILTER TABS ─────────── */
-.filter-tabs {
-  display: flex;
-  gap: 4px;
-  flex-wrap: wrap;
-  margin-bottom: 18px;
-}
+/* ─── SEARCH BAR ─── */
+.search-wrap { position: relative; margin-bottom: 18px; }
+.search-wrap input { padding-left: 38px; }
+.search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text3); font-size: 0.9rem; pointer-events: none; }
+
+/* ─── FILTER TABS ─── */
+.filter-tabs { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 18px; }
 .filter-tab {
   display: inline-flex;
   align-items: center;
@@ -526,32 +492,24 @@ select option { background: var(--bg3); }
 }
 .filter-tab:hover { border-color: var(--border2); color: var(--text2); }
 .filter-tab.active { border-color: rgba(201,168,76,0.4); color: var(--gold); background: var(--gold-dim2); }
-.filter-count {
-  background: var(--bg3);
-  border-radius: 10px;
-  padding: 0 5px;
-  font-size: 0.58rem;
-  min-width: 16px;
-  text-align: center;
-}
+.filter-count { background: var(--bg3); border-radius: 10px; padding: 0 5px; font-size: 0.57rem; min-width: 16px; text-align: center; }
 .filter-tab.active .filter-count { background: var(--gold-dim); }
 
-/* ─────────── PRINCIPLE LIST ─────────── */
-.principle-group { margin-bottom: 28px; }
-.principle-group-title {
+/* ─── PRINCIPLE LIST ─── */
+.principle-section { margin-bottom: 28px; }
+.principle-section-title {
   font-family: var(--font-mono);
-  font-size: 0.62rem;
+  font-size: 0.64rem;
   text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: var(--text3);
+  letter-spacing: 0.15em;
+  color: var(--gold);
   margin-bottom: 12px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--border);
+  padding-bottom: 9px;
+  border-bottom: 1px solid var(--gold-dim);
   display: flex;
   align-items: center;
   gap: 8px;
 }
-.principle-group-title span { color: var(--gold); }
 .principle-item {
   background: var(--card);
   border: 1px solid var(--border);
@@ -562,481 +520,231 @@ select option { background: var(--bg3); }
   border-radius: var(--radius-sm);
 }
 .principle-item:hover { border-color: var(--border2); background: var(--card2); }
-.principle-item.expanded { border-color: rgba(201,168,76,0.25); background: var(--card2); }
+.principle-item.expanded { border-color: rgba(201,168,76,0.22); background: var(--card2); }
 .pi-header { display: flex; align-items: flex-start; gap: 12px; }
-.pi-num {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  color: var(--gold);
-  opacity: 0.5;
-  min-width: 32px;
-  margin-top: 2px;
-}
-.pi-title {
-  font-size: 0.85rem;
-  color: var(--text);
-  font-weight: 500;
-  line-height: 1.4;
-  flex: 1;
-}
-.pi-bookmark {
-  margin-left: auto;
-  font-size: 0.75rem;
-  color: var(--text3);
-  cursor: pointer;
-  transition: var(--transition);
-  padding: 2px 4px;
-  flex-shrink: 0;
-}
+.pi-num { font-family: var(--font-mono); font-size: 0.64rem; color: var(--gold); opacity: 0.55; min-width: 30px; margin-top: 2px; }
+.pi-title { font-size: 0.87rem; color: var(--text); font-weight: 500; line-height: 1.4; flex: 1; }
+.pi-bookmark { margin-left: auto; font-size: 0.76rem; color: var(--text3); cursor: pointer; transition: var(--transition); padding: 2px 4px; flex-shrink: 0; }
 .pi-bookmark.bookmarked { color: var(--gold); }
 .pi-bookmark:hover { color: var(--gold); }
 .pi-toggle { color: var(--text4); font-size: 0.7rem; margin-left: 4px; transition: transform 0.2s; flex-shrink: 0; margin-top: 2px; }
-.pi-body {
-  display: none;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--border);
-}
+.pi-body { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
 .pi-body.show { display: block; }
-.pi-sub {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.03);
-}
+.pi-sub { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
 .pi-sub:last-child { border-bottom: none; }
-.pi-sub-letter {
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  color: var(--gold);
-  opacity: 0.5;
-  min-width: 30px;
-  margin-top: 2px;
-}
-.pi-sub-text {
-  font-size: 0.82rem;
-  color: var(--text);
-  font-weight: 500;
-  line-height: 1.4;
-}
-.pi-sub-detail {
-  font-size: 0.76rem;
-  color: var(--text2);
-  line-height: 1.6;
-  margin-top: 3px;
-}
+.pi-sub-letter { font-family: var(--font-mono); font-size: 0.62rem; color: var(--gold); opacity: 0.5; min-width: 30px; margin-top: 2px; }
+.pi-sub-text { font-size: 0.83rem; color: var(--text); font-weight: 500; line-height: 1.4; }
+.pi-sub-detail { font-size: 0.77rem; color: var(--text2); line-height: 1.6; margin-top: 3px; }
 
-/* ─────────── JOURNAL ─────────── */
+/* ─── JOURNAL ─── */
 .journal-entry {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 18px 20px;
-  margin-bottom: 10px;
+  padding: 16px 20px;
+  margin-bottom: 8px;
   transition: var(--transition);
 }
 .journal-entry:hover { border-color: var(--border2); }
 .je-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; gap: 12px; }
-.je-meta { display: flex; flex-direction: column; gap: 3px; }
-.je-date { font-family: var(--font-mono); font-size: 0.62rem; color: var(--text3); }
-.je-pain { font-size: 0.9rem; font-weight: 500; color: var(--text); line-height: 1.3; }
-.je-root { font-size: 0.8rem; color: var(--text2); line-height: 1.6; margin-bottom: 8px; }
+.je-meta { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
+.je-date { font-family: var(--font-mono); font-size: 0.61rem; color: var(--text3); }
+.je-pain { font-size: 0.92rem; font-weight: 500; color: var(--text); line-height: 1.35; }
+.je-root { font-size: 0.80rem; color: var(--text2); line-height: 1.6; margin-bottom: 6px; }
 .je-reflection { font-size: 0.81rem; color: var(--text2); line-height: 1.65; }
-.je-progress {
-  margin-top: 10px;
-  padding: 8px 12px;
-  background: var(--green-dim);
-  border-left: 2px solid var(--green);
-  font-size: 0.78rem;
-  color: var(--green);
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-}
+.je-progress { margin-top: 10px; padding: 8px 12px; background: var(--green-dim); border-left: 2px solid var(--green); font-size: 0.78rem; color: var(--green); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
 .je-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
-.je-tag {
-  font-family: var(--font-mono);
-  font-size: 0.58rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 2px 8px;
-  border: 1px solid var(--border);
-  color: var(--text3);
-  border-radius: 20px;
-  cursor: pointer;
-  transition: var(--transition);
-}
+.je-tag { font-family: var(--font-mono); font-size: 0.57rem; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 8px; border: 1px solid var(--border); color: var(--text3); border-radius: 20px; cursor: pointer; transition: var(--transition); }
 .je-tag:hover { border-color: rgba(201,168,76,0.3); color: var(--gold); }
-.je-actions { display: flex; gap: 5px; flex-shrink: 0; }
 .je-expandable { display: none; margin-top: 10px; }
 .je-expandable.open { display: block; }
-.je-expand-btn {
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  color: var(--text3);
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  margin-top: 8px;
-  transition: var(--transition);
-  padding: 3px 0;
-}
+.je-expand-btn { font-family: var(--font-mono); font-size: 0.62rem; color: var(--text3); cursor: pointer; display: inline-flex; align-items: center; gap: 4px; margin-top: 8px; transition: var(--transition); padding: 3px 0; }
 .je-expand-btn:hover { color: var(--gold); }
+.je-section-label { font-family: var(--font-mono); font-size: 0.60rem; text-transform: uppercase; letter-spacing: 0.09em; color: var(--text3); margin-bottom: 4px; }
 
-/* ─────────── GOAL / 5-STEP ─────────── */
-.goal-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  margin-bottom: 12px;
-  overflow: hidden;
-  transition: border-color 0.18s;
-}
+/* ─── GOALS ─── */
+.goal-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; overflow: hidden; transition: border-color 0.18s; }
 .goal-card:hover { border-color: var(--border2); }
-.goal-header {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 16px 20px;
-  cursor: pointer;
-}
-.goal-status-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  background: var(--text4);
-  transition: var(--transition);
-}
+.goal-header { display: flex; align-items: center; gap: 14px; padding: 16px 20px; cursor: pointer; }
+.goal-status-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; background: var(--text4); transition: var(--transition); }
 .goal-status-dot.active { background: var(--gold); box-shadow: 0 0 6px var(--gold-glow); }
 .goal-status-dot.done { background: var(--green); }
-.goal-title-wrap { flex: 1; }
-.goal-title { font-size: 0.88rem; font-weight: 500; color: var(--text); }
+.goal-title-wrap { flex: 1; min-width: 0; }
+.goal-title { font-size: 0.90rem; font-weight: 500; color: var(--text); }
 .goal-sub { font-size: 0.68rem; color: var(--text3); font-family: var(--font-mono); margin-top: 3px; }
 .goal-progress-bar { height: 2px; background: var(--bg3); }
 .goal-progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold2)); transition: width 0.4s ease; }
 .goal-body { display: none; padding: 18px 20px; border-top: 1px solid var(--border); }
 .goal-body.open { display: block; }
-.step-card {
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 12px 16px;
-  margin-bottom: 8px;
-  transition: var(--transition);
-}
-.step-card.done { opacity: 0.65; border-color: rgba(90,158,110,0.3); }
+.step-card { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 16px; margin-bottom: 8px; transition: var(--transition); }
+.step-card.done { opacity: 0.6; border-color: rgba(90,158,110,0.25); }
 .step-card.step-active { border-color: rgba(201,168,76,0.3); background: var(--gold-dim2); }
 .step-header { display: flex; align-items: center; gap: 12px; }
-.step-num {
-  width: 26px; height: 26px;
-  border: 1.5px solid var(--border2);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  color: var(--text2);
-  flex-shrink: 0;
-  transition: var(--transition);
-}
+.step-num { width: 28px; height: 28px; border: 1.5px solid var(--border2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 0.70rem; color: var(--text2); flex-shrink: 0; transition: var(--transition); }
 .step-card.done .step-num { border-color: var(--green); color: var(--green); }
 .step-card.step-active .step-num { border-color: var(--gold); color: var(--gold); }
 .step-info { flex: 1; }
-.step-title { font-weight: 500; font-size: 0.82rem; }
+.step-title { font-weight: 500; font-size: 0.84rem; }
 .step-desc { font-size: 0.72rem; color: var(--text3); margin-top: 2px; }
 .step-body { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
 .step-body.show { display: block; }
 
-/* ─────────── DECISION TOOL ─────────── */
-.decision-option {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 18px 20px;
-  margin-bottom: 10px;
-}
+/* ─── DECISION TOOL ─── */
+.decision-option { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; margin-bottom: 10px; }
 .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .pc-list { font-size: 0.78rem; }
-.pc-title {
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-  display: flex; align-items: center; gap: 5px;
-}
+.pc-title { font-family: var(--font-mono); font-size: 0.60rem; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
 .pros .pc-title { color: var(--green); }
 .cons .pc-title { color: var(--red); }
-.ev-result-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 9px 0;
-  border-bottom: 1px solid var(--border);
-}
+.ev-result-row { display: flex; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--border); }
 .ev-result-row:last-of-type { border-bottom: none; }
 .ev-rank { font-family: var(--font-mono); font-size: 0.78rem; color: var(--text3); width: 20px; }
-.ev-name { flex: 1; font-size: 0.82rem; }
+.ev-name { flex: 1; font-size: 0.84rem; }
 .ev-bar-wrap { width: 80px; height: 3px; background: var(--bg3); border-radius: 2px; }
 .ev-bar { height: 100%; background: var(--gold); border-radius: 2px; transition: width 0.4s; }
 .ev-value { font-family: var(--font-mono); font-size: 0.74rem; color: var(--gold); width: 48px; text-align: right; }
 
-/* ─────────── HABITS ─────────── */
-.habit-item {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 13px 16px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  margin-bottom: 6px;
-  cursor: pointer;
-  transition: var(--transition);
-}
+/* ─── HABITS ─── */
+.habit-item { display: flex; align-items: center; gap: 14px; padding: 13px 16px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 6px; cursor: pointer; transition: var(--transition); }
 .habit-item:hover { border-color: var(--border2); }
-.habit-item.done { border-color: rgba(201,168,76,0.2); background: var(--gold-dim2); }
-.habit-check {
-  width: 20px; height: 20px;
-  border: 1.5px solid var(--border3);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.65rem;
-  color: transparent;
-  flex-shrink: 0;
-  transition: var(--transition);
-}
-.habit-item.done .habit-check {
-  border-color: var(--gold);
-  background: var(--gold-dim);
-  color: var(--gold);
-}
-.habit-text { font-size: 0.83rem; font-weight: 500; }
-.habit-detail { font-size: 0.7rem; color: var(--text3); margin-top: 2px; }
+.habit-item.done { border-color: rgba(201,168,76,0.18); background: var(--gold-dim2); }
+.habit-check { width: 22px; height: 22px; border: 1.5px solid var(--border3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; color: transparent; flex-shrink: 0; transition: var(--transition); }
+.habit-item.done .habit-check { border-color: var(--gold); background: var(--gold-dim); color: var(--gold); }
+.habit-text { font-size: 0.84rem; font-weight: 500; }
+.habit-detail { font-size: 0.71rem; color: var(--text3); margin-top: 2px; }
 
-/* ─────────── MY PRINCIPLES ─────────── */
-.my-principle {
-  display: flex;
-  gap: 14px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 14px 18px;
-  margin-bottom: 8px;
-  transition: var(--transition);
-}
+/* ─── MY PRINCIPLES ─── */
+.my-principle { display: flex; gap: 14px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 8px; transition: var(--transition); }
 .my-principle:hover { border-color: var(--border2); }
 .mp-bullet { color: var(--gold); font-family: var(--font-mono); font-size: 0.75rem; flex-shrink: 0; margin-top: 3px; opacity: 0.6; }
 .mp-body { flex: 1; min-width: 0; }
-.mp-text { font-size: 0.87rem; font-weight: 500; color: var(--text); line-height: 1.4; }
+.mp-text { font-size: 0.88rem; font-weight: 500; color: var(--text); line-height: 1.4; }
 .mp-desc { font-size: 0.77rem; color: var(--text2); line-height: 1.6; margin-top: 5px; }
 .mp-meta { display: flex; align-items: center; gap: 7px; margin-top: 8px; flex-wrap: wrap; }
-.mp-date { font-family: var(--font-mono); font-size: 0.58rem; color: var(--text3); }
-.mp-badge {
-  font-family: var(--font-mono);
-  font-size: 0.56rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 1px 6px;
-  border: 1px solid var(--border2);
-  color: var(--text3);
-  border-radius: 10px;
-}
-.mp-actions { display: flex; gap: 5px; flex-shrink: 0; }
+.mp-date { font-family: var(--font-mono); font-size: 0.57rem; color: var(--text3); }
+.mp-badge { font-family: var(--font-mono); font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 7px; border: 1px solid var(--border2); color: var(--text3); border-radius: 10px; }
 
-/* ─────────── HISTORY ─────────── */
-.history-item {
-  display: flex;
-  gap: 14px;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--border);
-}
+/* ─── HISTORY ─── */
+.history-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
 .history-item:last-child { border-bottom: none; }
-.hi-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--gold);
-  flex-shrink: 0;
-  margin-top: 6px;
-}
+.hi-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); flex-shrink: 0; margin-top: 6px; }
 .hi-dot.journal { background: var(--blue); }
 .hi-dot.goal { background: var(--green); }
 .hi-dot.principle { background: var(--gold); }
 .hi-body { flex: 1; min-width: 0; }
-.hi-title { font-size: 0.81rem; color: var(--text); font-weight: 500; }
-.hi-meta { font-family: var(--font-mono); font-size: 0.6rem; color: var(--text3); margin-top: 2px; }
-.hi-type-badge {
-  font-family: var(--font-mono);
-  font-size: 0.56rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 2px 7px;
-  border-radius: 3px;
-  flex-shrink: 0;
-}
+.hi-title { font-size: 0.82rem; color: var(--text); font-weight: 500; }
+.hi-meta { font-family: var(--font-mono); font-size: 0.60rem; color: var(--text3); margin-top: 2px; }
+.hi-type-badge { font-family: var(--font-mono); font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 8px; border-radius: 4px; flex-shrink: 0; margin-top: 2px; }
 .hi-type-badge.journal { background: var(--blue-dim); color: var(--blue); }
 .hi-type-badge.goal { background: var(--green-dim); color: var(--green); }
 .hi-type-badge.principle { background: var(--gold-dim); color: var(--gold); }
 
-/* ─────────── MODAL ─────────── */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.8);
-  z-index: 1000;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  backdrop-filter: blur(6px);
-}
-.modal-overlay.open { display: flex; }
-.modal {
-  background: var(--bg2);
-  border: 1px solid var(--border2);
-  border-radius: var(--radius-lg);
-  width: 100%;
-  max-width: 540px;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 24px 64px rgba(0,0,0,0.6);
-}
-.modal-header {
+/* ─── TRASH ─── */
+.trash-item { display: flex; gap: 14px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 8px; transition: var(--transition); align-items: flex-start; }
+.trash-item:hover { border-color: rgba(139,108,181,0.2); }
+.trash-icon-col { color: var(--trash); font-size: 0.80rem; opacity: 0.5; flex-shrink: 0; margin-top: 2px; width: 18px; text-align: center; }
+.trash-body { flex: 1; min-width: 0; }
+.trash-title { font-size: 0.87rem; font-weight: 500; color: var(--text2); line-height: 1.35; }
+.trash-subtitle { font-size: 0.75rem; color: var(--text3); margin-top: 3px; line-height: 1.5; }
+.trash-meta { display: flex; align-items: center; gap: 8px; margin-top: 7px; flex-wrap: wrap; }
+.trash-badge { font-family: var(--font-mono); font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 7px; border-radius: 4px; }
+.trash-badge.journal { background: var(--blue-dim); color: var(--blue); }
+.trash-badge.goal { background: var(--green-dim); color: var(--green); }
+.trash-badge.principle { background: var(--gold-dim); color: var(--gold); }
+.trash-date { font-family: var(--font-mono); font-size: 0.57rem; color: var(--text4); }
+.trash-banner {
+  background: var(--trash-dim);
+  border: 1px solid rgba(139,108,181,0.2);
+  border-radius: var(--radius);
+  padding: 12px 18px;
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 20px 24px 16px;
-  border-bottom: 1px solid var(--border);
-}
-.modal-header h3 {
-  font-family: var(--font-serif);
-  font-size: 1.15rem;
-  font-weight: 600;
-  color: var(--text);
-}
-.modal-body { padding: 20px 24px; }
-.modal-footer {
-  display: flex;
-  gap: 8px;
-  justify-content: flex-end;
-  padding: 14px 24px 20px;
-  border-top: 1px solid var(--border);
-}
-
-/* ─────────── METER ─────────── */
-.meter-wrap { margin: 10px 0; }
-.meter-label {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.66rem;
-  color: var(--text3);
-  font-family: var(--font-mono);
-  margin-bottom: 6px;
-}
-.meter { height: 2px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
-.meter-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold2)); border-radius: 2px; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); }
-.meter-fill.green { background: var(--green); }
-
-/* ─────────── CHECKLIST ─────────── */
-.checklist-item {
-  display: flex;
-  align-items: flex-start;
   gap: 12px;
-  padding: 9px 0;
-  border-bottom: 1px solid var(--border);
-  cursor: pointer;
-  transition: var(--transition);
+  font-family: var(--font-mono);
+  font-size: 0.70rem;
+  color: var(--trash);
 }
+.trash-banner-icon { font-size: 1rem; }
+
+/* ─── MODAL ─── */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.82); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px); }
+.modal-overlay.open { display: flex; }
+.modal { background: var(--bg2); border: 1px solid var(--border2); border-radius: var(--radius-lg); width: 100%; max-width: 540px; max-height: 90vh; overflow-y: auto; box-shadow: 0 28px 72px rgba(0,0,0,0.7); }
+.modal-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px 16px; border-bottom: 1px solid var(--border); }
+.modal-header h3 { font-family: var(--font-serif); font-size: 1.15rem; font-weight: 600; color: var(--text); }
+.modal-body { padding: 20px 24px; }
+.modal-footer { display: flex; gap: 8px; justify-content: flex-end; padding: 14px 24px 20px; border-top: 1px solid var(--border); }
+
+/* ─── CONFIRM DIALOG ─── */
+.confirm-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(6px); }
+.confirm-overlay.open { display: flex; }
+.confirm-box { background: var(--bg2); border: 1px solid var(--border2); border-radius: var(--radius-lg); padding: 28px 28px 22px; max-width: 380px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
+.confirm-icon { font-size: 1.5rem; margin-bottom: 12px; text-align: center; }
+.confirm-title { font-family: var(--font-serif); font-size: 1.15rem; color: var(--text); text-align: center; margin-bottom: 6px; }
+.confirm-msg { font-size: 0.80rem; color: var(--text2); text-align: center; line-height: 1.6; margin-bottom: 20px; }
+.confirm-actions { display: flex; gap: 8px; justify-content: center; }
+
+/* ─── METER ─── */
+.meter-wrap { margin: 10px 0; }
+.meter-label { display: flex; justify-content: space-between; font-size: 0.65rem; color: var(--text3); font-family: var(--font-mono); margin-bottom: 6px; }
+.meter { height: 3px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
+.meter-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold2)); border-radius: 2px; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); }
+.meter-fill.green { background: linear-gradient(90deg, var(--green), #7dc99a); }
+
+/* ─── CHECKLIST ─── */
+.checklist-item { display: flex; align-items: flex-start; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--border); cursor: pointer; transition: var(--transition); }
 .checklist-item:last-child { border-bottom: none; }
-.check-box {
-  width: 16px; height: 16px;
-  border: 1.5px solid var(--border2);
-  border-radius: 3px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.6rem;
-  color: transparent;
-  flex-shrink: 0;
-  margin-top: 2px;
-  transition: var(--transition);
-}
-.checklist-item.checked .check-box {
-  background: var(--gold-dim);
-  border-color: var(--gold);
-  color: var(--gold);
-}
-.check-text { font-size: 0.8rem; color: var(--text2); line-height: 1.5; }
+.check-box { width: 17px; height: 17px; border: 1.5px solid var(--border2); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.60rem; color: transparent; flex-shrink: 0; margin-top: 2px; transition: var(--transition); }
+.checklist-item.checked .check-box { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); }
+.check-text { font-size: 0.80rem; color: var(--text2); line-height: 1.5; }
 .checklist-item.checked .check-text { color: var(--text3); text-decoration: line-through; }
 
-/* ─────────── DIVIDER ─────────── */
+/* ─── DIVIDER ─── */
 hr.divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
-.divider-label {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 20px 0;
-}
-.divider-label span {
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--text3);
-  white-space: nowrap;
-}
-.divider-label::before, .divider-label::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--border);
-}
+.divider-label { display: flex; align-items: center; gap: 12px; margin: 20px 0; }
+.divider-label span { font-family: var(--font-mono); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text3); white-space: nowrap; }
+.divider-label::before, .divider-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-/* ─────────── TOAST ─────────── */
+/* ─── TOAST ─── */
 .toast {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
+  bottom: 24px; right: 24px;
   background: var(--card2);
   border: 1px solid var(--border2);
   color: var(--text);
-  padding: 10px 16px;
+  padding: 11px 18px;
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.70rem;
   letter-spacing: 0.02em;
   border-radius: var(--radius);
   z-index: 9999;
   opacity: 0;
-  transform: translateY(8px);
+  transform: translateY(10px);
   transition: all 0.22s ease;
   pointer-events: none;
-  max-width: 280px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  max-width: 300px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
 }
 .toast.show { opacity: 1; transform: translateY(0); }
-.toast.success { border-color: rgba(90,158,110,0.4); }
-.toast.error { border-color: rgba(196,92,76,0.4); }
+.toast.success { border-color: rgba(90,158,110,0.45); color: var(--green); }
+.toast.error { border-color: rgba(196,92,76,0.45); color: var(--red); }
+.toast.info { border-color: rgba(139,108,181,0.4); color: var(--trash); }
 
-/* ─────────── EMPTY STATE ─────────── */
-.empty-state {
-  text-align: center;
-  padding: 52px 24px;
-  color: var(--text3);
-}
-.empty-icon { font-size: 1.5rem; margin-bottom: 14px; opacity: 0.3; }
-.empty-state p { font-size: 0.81rem; line-height: 1.65; }
-.empty-hint { font-family: var(--font-mono); font-size: 0.65rem; color: var(--text4); margin-top: 8px; }
+/* ─── EMPTY STATE ─── */
+.empty-state { text-align: center; padding: 56px 24px; color: var(--text3); }
+.empty-icon { font-size: 1.8rem; margin-bottom: 14px; opacity: 0.25; }
+.empty-state p { font-size: 0.82rem; line-height: 1.65; }
+.empty-hint { font-family: var(--font-mono); font-size: 0.64rem; color: var(--text4); margin-top: 8px; }
 
-/* ─────────── HIGHLIGHT ─────────── */
+/* ─── HIGHLIGHT ─── */
 mark { background: var(--gold-dim); color: var(--gold); border-radius: 2px; padding: 0 2px; }
 
-/* ─────────── RESPONSIVE ─────────── */
-@media (max-width: 768px) {
-  :root { --sidebar: 200px; }
-  .page { padding: 24px 20px 60px; }
-  .grid-2, .grid-3, .grid-4, .stat-grid, .grid-4 { grid-template-columns: 1fr; }
-  .field-row { grid-template-columns: 1fr; }
-  .pros-cons { grid-template-columns: 1fr; }
-}
+/* ─── SECTION HEADER ─── */
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.section-title { font-family: var(--font-mono); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text3); }
 
-/* ─────────── DASHBOARD SPECIAL ─────────── */
+/* ─── DASHBOARD SPECIAL ─── */
 .dash-quote-card {
   background: linear-gradient(135deg, var(--card), var(--bg3));
   border: 1px solid var(--border);
@@ -1046,99 +754,29 @@ mark { background: var(--gold-dim); color: var(--gold); border-radius: 2px; padd
   overflow: hidden;
   margin-bottom: 12px;
 }
-.dash-quote-card::before {
-  content: '\201C';
-  position: absolute;
-  top: -10px; right: 20px;
-  font-family: var(--font-serif);
-  font-size: 6rem;
-  color: var(--gold);
-  opacity: 0.06;
-  line-height: 1;
-}
-.dash-quote-text {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 1.15rem;
-  color: var(--text);
-  line-height: 1.65;
-  position: relative;
-}
-.dash-quick-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 14px;
-}
-.quick-action-btn {
-  display: flex;
-  flex-direction: column;
-  padding: 14px 16px;
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  cursor: pointer;
-  transition: var(--transition);
-  text-align: left;
-}
-.quick-action-btn:hover { border-color: var(--border2); background: var(--bg4); }
-.qa-label { font-family: var(--font-mono); font-size: 0.62rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
-.qa-title { font-size: 0.82rem; color: var(--text); font-weight: 500; }
-.qa-sub { font-size: 0.7rem; color: var(--text3); margin-top: 3px; }
+.dash-quote-card::before { content: '\201C'; position: absolute; top: -10px; right: 20px; font-family: var(--font-serif); font-size: 6rem; color: var(--gold); opacity: 0.06; line-height: 1; }
+.dash-quote-text { font-family: var(--font-serif); font-style: italic; font-size: 1.15rem; color: var(--text); line-height: 1.65; position: relative; }
+.dash-quick-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.quick-action-btn { display: flex; flex-direction: column; padding: 14px 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; transition: var(--transition); text-align: left; }
+.quick-action-btn:hover { border-color: var(--border2); background: var(--bg4); transform: translateY(-1px); }
+.qa-label { font-family: var(--font-mono); font-size: 0.60rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
+.qa-title { font-size: 0.84rem; color: var(--text); font-weight: 500; }
+.qa-sub { font-size: 0.70rem; color: var(--text3); margin-top: 3px; }
 
-/* ─────────── TIPS GUIDE ─────────── */
-.guide-steps {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-top: 14px;
-}
-.guide-step {
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 12px 14px;
-}
-.guide-step-num {
-  font-family: var(--font-mono);
-  font-size: 0.58rem;
-  color: var(--gold);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 5px;
-  opacity: 0.8;
-}
+/* ─── GUIDE STEPS ─── */
+.guide-steps { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+.guide-step { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; }
+.guide-step-num { font-family: var(--font-mono); font-size: 0.58rem; color: var(--gold); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 5px; opacity: 0.8; }
 .guide-step-text { font-size: 0.77rem; color: var(--text2); line-height: 1.5; }
 
-/* ─────────── SECTION DIVIDER ─────────── */
-.section-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 14px;
-}
-.section-title {
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--text3);
-}
-
-/* ─────────── PRINCIPLE SECTION ─────────── */
-.principle-section { margin-bottom: 28px; }
-.principle-section-title {
-  font-family: var(--font-mono);
-  font-size: 0.66rem;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--gold);
-  margin-bottom: 14px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--gold-dim);
-  display: flex;
-  align-items: center;
-  gap: 8px;
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  :root { --sidebar: 200px; }
+  .page { padding: 24px 20px 60px; }
+  .grid-2, .grid-3, .grid-4, .stat-grid { grid-template-columns: 1fr; }
+  .field-row { grid-template-columns: 1fr; }
+  .pros-cons { grid-template-columns: 1fr; }
+  .guide-steps { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -1150,7 +788,7 @@ mark { background: var(--gold-dim); color: var(--gold); border-radius: 2px; padd
     <div class="brand-icon">◆</div>
     <div class="brand-title">Principles</div>
     <div class="brand-sub">Ray Dalio Companion</div>
-    <div class="brand-badge">v2.0</div>
+    <div class="brand-badge">v2.1 — Improved</div>
   </div>
 
   <nav class="nav">
@@ -1207,6 +845,14 @@ mark { background: var(--gold-dim); color: var(--gold); border-radius: 2px; padd
         <span class="nav-badge" id="badge-bm">0</span>
       </div>
     </div>
+
+    <div class="nav-group">
+      <div class="nav-group-label">Sistem</div>
+      <div class="nav-item trash-nav" onclick="goTo('trash')">
+        <span class="nav-icon">🗑</span> Tempat Sampah
+        <span class="nav-badge" id="badge-trash">0</span>
+      </div>
+    </div>
   </nav>
 
   <div class="sidebar-footer">
@@ -1224,7 +870,7 @@ mark { background: var(--gold-dim); color: var(--gold); border-radius: 2px; padd
         <span class="l">Goals</span>
       </div>
     </div>
-    <div class="footer-copy">© 2025 Principles App</div>
+    <div class="footer-copy">© 2025 Principles App v2.1</div>
   </div>
 </aside>
 
@@ -1236,7 +882,7 @@ mark { background: var(--gold-dim); color: var(--gold); border-radius: 2px; padd
   <div class="page-header">
     <div class="page-eyebrow"><div class="page-eyebrow-dot"></div> Command Center</div>
     <h2 id="dash-greeting">Selamat Pagi</h2>
-    <p class="subtitle" id="dash-date" style="font-family:var(--font-mono); font-size:0.7rem; color:var(--text3); margin-top:4px;"></p>
+    <p class="subtitle" id="dash-date" style="font-family:var(--font-mono); font-size:0.70rem; color:var(--text3); margin-top:4px;"></p>
   </div>
 
   <div class="stat-grid">
@@ -1306,14 +952,12 @@ mark { background: var(--gold-dim); color: var(--gold); border-radius: 2px; padd
     <h2>Riwayat Lengkap</h2>
     <p class="subtitle">Semua entri jurnal, goal, prinsip, dan keputusan yang pernah kamu buat.</p>
   </div>
-
   <div class="filter-tabs" id="history-filters">
     <button class="filter-tab active" onclick="filterHistory('all', this)">Semua <span class="filter-count" id="hf-all">0</span></button>
     <button class="filter-tab" onclick="filterHistory('journal', this)">Jurnal <span class="filter-count" id="hf-journal">0</span></button>
     <button class="filter-tab" onclick="filterHistory('goal', this)">Goals <span class="filter-count" id="hf-goal">0</span></button>
     <button class="filter-tab" onclick="filterHistory('principle', this)">Prinsip <span class="filter-count" id="hf-principle">0</span></button>
   </div>
-
   <div class="search-wrap">
     <span class="search-icon">⌕</span>
     <input type="text" id="history-search" placeholder="Cari semua aktivitas..." oninput="renderHistory()">
@@ -1326,16 +970,14 @@ mark { background: var(--gold-dim); color: var(--gold); border-radius: 2px; padd
   <div class="page-header">
     <div class="page-eyebrow"><div class="page-eyebrow-dot"></div> Reference</div>
     <h2>All Principles</h2>
-    <p class="subtitle">Browse Life & Work Principles by Ray Dalio. Klik untuk memperluas. Tandai favorit.</p>
+    <p class="subtitle">Browse Life & Work Principles by Ray Dalio. Klik untuk memperluas. Tandai favorit dengan ◇.</p>
   </div>
-
   <div class="filter-tabs">
     <button class="filter-tab active" onclick="filterPrinciples('all', this)">All</button>
     <button class="filter-tab" onclick="filterPrinciples('life', this)">Life</button>
     <button class="filter-tab" onclick="filterPrinciples('work', this)">Work</button>
     <button class="filter-tab" onclick="filterPrinciples('bookmarked', this)">Bookmarked</button>
   </div>
-
   <div class="search-wrap">
     <span class="search-icon">⌕</span>
     <input type="text" id="search-principles" placeholder="Search principles..." oninput="searchPrinciples()">
@@ -1355,25 +997,12 @@ mark { background: var(--gold-dim); color: var(--gold); border-radius: 2px; padd
     <div class="card-label"><div class="card-label-dot"></div> Cara Menggunakan Jurnal Ini</div>
     <p style="font-size:0.81rem; color:var(--text2); line-height:1.7; margin-bottom:12px">
       Formula Dalio: <strong style="color:var(--gold)">Rasa Sakit + Refleksi = Kemajuan</strong>.
-      Tuliskan setiap pengalaman buruk atau hambatan — lalu gali akar masalahnya dengan jujur.
     </p>
     <div class="guide-steps">
-      <div class="guide-step">
-        <div class="guide-step-num">Langkah 1</div>
-        <div class="guide-step-text">✎ Tulis masalah atau rasa sakit hari ini</div>
-      </div>
-      <div class="guide-step">
-        <div class="guide-step-num">Langkah 2</div>
-        <div class="guide-step-text">⊡ Gali akar penyebabnya (tanya "Kenapa?" 3×)</div>
-      </div>
-      <div class="guide-step">
-        <div class="guide-step-num">Langkah 3</div>
-        <div class="guide-step-text">◆ Pelajaran yang bisa diambil</div>
-      </div>
-      <div class="guide-step">
-        <div class="guide-step-num">Langkah 4</div>
-        <div class="guide-step-text">→ Tentukan langkah konkret berikutnya</div>
-      </div>
+      <div class="guide-step"><div class="guide-step-num">Langkah 1</div><div class="guide-step-text">✎ Tulis masalah atau rasa sakit hari ini</div></div>
+      <div class="guide-step"><div class="guide-step-num">Langkah 2</div><div class="guide-step-text">⊡ Gali akar penyebabnya (tanya "Kenapa?" 3×)</div></div>
+      <div class="guide-step"><div class="guide-step-num">Langkah 3</div><div class="guide-step-text">◆ Pelajaran yang bisa diambil</div></div>
+      <div class="guide-step"><div class="guide-step-num">Langkah 4</div><div class="guide-step-text">→ Tentukan langkah konkret berikutnya</div></div>
     </div>
   </div>
 
@@ -1384,7 +1013,7 @@ mark { background: var(--gold-dim); color: var(--gold); border-radius: 2px; padd
     </div>
     <input type="hidden" id="journal-edit-id">
     <div class="field">
-      <label>Apa masalah atau rasa sakit yang kamu hadapi hari ini?</label>
+      <label>Apa masalah atau rasa sakit yang kamu hadapi hari ini? *</label>
       <input type="text" id="entry-pain" placeholder="Jujurlah sepenuhnya. Tidak ada yang menghakimi kamu di sini." />
       <div class="field-hint">Contoh: "Saya marah ke teman karena dia tidak menepati janji"</div>
     </div>
@@ -1441,7 +1070,7 @@ mark { background: var(--gold-dim); color: var(--gold); border-radius: 2px; padd
     </div>
     <input type="hidden" id="goal-edit-id">
     <div class="field">
-      <label>Goal Title</label>
+      <label>Goal Title *</label>
       <input type="text" id="goal-title" placeholder="What do you want to achieve?" />
     </div>
     <div class="field-row">
@@ -1476,7 +1105,7 @@ mark { background: var(--gold-dim); color: var(--gold); border-radius: 2px; padd
   <div class="card card-accent-gold" style="margin-bottom:18px">
     <div style="display:flex; justify-content:space-between; align-items:center; cursor:pointer" onclick="toggleDecGuide()">
       <div class="card-label"><div class="card-label-dot"></div> Panduan Cara Menggunakan Decision Maker</div>
-      <span id="dec-guide-toggle" style="font-family:var(--font-mono); font-size:0.7rem; color:var(--gold)">▼ Tampilkan</span>
+      <span id="dec-guide-toggle" style="font-family:var(--font-mono); font-size:0.70rem; color:var(--gold)">▼ Tampilkan</span>
     </div>
     <div id="dec-guide-body" style="display:none; margin-top:14px">
       <p style="font-size:0.81rem; color:var(--text2); line-height:1.7; margin-bottom:14px">
@@ -1484,27 +1113,10 @@ mark { background: var(--gold-dim); color: var(--gold); border-radius: 2px; padd
         menggunakan metode <strong style="color:var(--gold)">Expected Value (EV)</strong>.
       </p>
       <div class="guide-steps">
-        <div class="guide-step">
-          <div class="guide-step-num">Langkah 1</div>
-          <div class="guide-step-text">Tulis keputusan yang harus dibuat dengan jelas dan spesifik.</div>
-        </div>
-        <div class="guide-step">
-          <div class="guide-step-num">Langkah 2</div>
-          <div class="guide-step-text">Tambahkan minimal 2 opsi dengan pro dan kontra masing-masing.</div>
-        </div>
-        <div class="guide-step">
-          <div class="guide-step-num">Langkah 3</div>
-          <div class="guide-step-text">Atur probabilitas sukses (0–100%) dan dampak (1–10).</div>
-        </div>
-        <div class="guide-step">
-          <div class="guide-step-num">Langkah 4</div>
-          <div class="guide-step-text"><strong style="color:var(--gold)">EV = Probabilitas × Dampak.</strong> Opsi EV tertinggi adalah rekomendasi matematis.</div>
-        </div>
-      </div>
-      <div style="background:var(--gold-dim2); padding:10px 14px; border-radius:var(--radius-sm); margin-top:10px; border-left:2px solid rgba(201,168,76,0.3)">
-        <p style="font-size:0.76rem; color:var(--text2); line-height:1.6">
-          ✦ Prinsip Dalio: "Keputusan terbaik bukan yang tidak punya kerugian, tapi yang pro-nya lebih besar dari kontranya."
-        </p>
+        <div class="guide-step"><div class="guide-step-num">Langkah 1</div><div class="guide-step-text">Tulis keputusan yang harus dibuat dengan jelas dan spesifik.</div></div>
+        <div class="guide-step"><div class="guide-step-num">Langkah 2</div><div class="guide-step-text">Tambahkan minimal 2 opsi dengan pro dan kontra masing-masing.</div></div>
+        <div class="guide-step"><div class="guide-step-num">Langkah 3</div><div class="guide-step-text">Atur probabilitas sukses (0–100%) dan dampak (1–10).</div></div>
+        <div class="guide-step"><div class="guide-step-num">Langkah 4</div><div class="guide-step-text"><strong style="color:var(--gold)">EV = Probabilitas × Dampak.</strong> Opsi EV tertinggi adalah rekomendasi matematis.</div></div>
       </div>
     </div>
   </div>
@@ -1512,7 +1124,7 @@ mark { background: var(--gold-dim); color: var(--gold); border-radius: 2px; padd
   <div class="card">
     <div class="card-label"><div class="card-label-dot"></div> Keputusan yang Harus Dibuat</div>
     <div class="field" style="margin-top:10px">
-      <label>Apa keputusannya?</label>
+      <label>Apa keputusannya? *</label>
       <input type="text" id="dec-title" placeholder="Contoh: Apakah saya harus resign dari pekerjaan ini sekarang?" />
     </div>
     <div class="field">
@@ -1558,23 +1170,17 @@ mark { background: var(--gold-dim); color: var(--gold); border-radius: 2px; padd
     <h2>Daily Habits</h2>
     <p class="subtitle">Practice these habits daily to internalize Dalio's principles.</p>
   </div>
-
   <div style="display:flex; gap:12px; align-items:center; margin-bottom:18px; flex-wrap:wrap">
-    <span id="habits-date" style="font-family:var(--font-mono); font-size:0.7rem; color:var(--gold)"></span>
+    <span id="habits-date" style="font-family:var(--font-mono); font-size:0.70rem; color:var(--gold)"></span>
     <div style="flex:1"></div>
     <button class="btn btn-sm" onclick="resetHabits()">Reset Today</button>
   </div>
-
   <div id="habits-list"></div>
-
   <hr class="divider" style="margin-top:20px">
   <div class="card" style="margin-top:16px">
     <div class="card-label"><div class="card-label-dot"></div> Today's Score</div>
     <div class="meter-wrap">
-      <div class="meter-label">
-        <span>Radically Open-Minded</span>
-        <span id="habits-score">0%</span>
-      </div>
+      <div class="meter-label"><span>Radically Open-Minded</span><span id="habits-score">0%</span></div>
       <div class="meter"><div class="meter-fill" id="habits-fill" style="width:0%"></div></div>
     </div>
     <p id="habits-message" style="font-size:0.76rem; color:var(--text3); margin-top:10px; font-style:italic;"></p>
@@ -1596,7 +1202,7 @@ mark { background: var(--gold-dim); color: var(--gold); border-radius: 2px; padd
     </div>
     <input type="hidden" id="mp-edit-id">
     <div class="field">
-      <label>Pernyataan Prinsip</label>
+      <label>Pernyataan Prinsip *</label>
       <input type="text" id="mp-title" placeholder="Tulis dengan jelas dan berani." />
     </div>
     <div class="field">
@@ -1652,23 +1258,17 @@ mark { background: var(--gold-dim); color: var(--gold); border-radius: 2px; padd
     <h2>Kebiasaan Harian</h2>
     <p class="subtitle">Latih kebiasaan-kebiasaan ini setiap hari untuk menginternalisasi prinsip-prinsip Dalio secara mendalam.</p>
   </div>
-
   <div style="display:flex; gap:12px; align-items:center; margin-bottom:18px; flex-wrap:wrap">
-    <span id="habits-id-date" style="font-family:var(--font-mono); font-size:0.7rem; color:var(--gold)"></span>
+    <span id="habits-id-date" style="font-family:var(--font-mono); font-size:0.70rem; color:var(--gold)"></span>
     <div style="flex:1"></div>
     <button class="btn btn-sm" onclick="resetHabitsId()">Reset Hari Ini</button>
   </div>
-
   <div id="habits-id-list"></div>
-
   <hr class="divider" style="margin-top:20px">
   <div class="card" style="margin-top:16px">
     <div class="card-label"><div class="card-label-dot"></div> Skor Hari Ini</div>
     <div class="meter-wrap">
-      <div class="meter-label">
-        <span>Keterbukaan Pikiran Radikal</span>
-        <span id="habits-id-score">0%</span>
-      </div>
+      <div class="meter-label"><span>Keterbukaan Pikiran Radikal</span><span id="habits-id-score">0%</span></div>
       <div class="meter"><div class="meter-fill" id="habits-id-fill" style="width:0%"></div></div>
     </div>
     <p id="habits-id-message" style="font-size:0.76rem; color:var(--text3); margin-top:10px; font-style:italic;"></p>
@@ -1680,21 +1280,43 @@ mark { background: var(--gold-dim); color: var(--gold); border-radius: 2px; padd
   <div class="page-header">
     <div class="page-eyebrow"><div class="page-eyebrow-dot"></div> Referensi</div>
     <h2>Semua Prinsip</h2>
-    <p class="subtitle">Jelajahi Prinsip Kehidupan & Kerja dalam Bahasa Indonesia.</p>
+    <p class="subtitle">Jelajahi Prinsip Kehidupan & Kerja dalam Bahasa Indonesia. Klik untuk memperluas.</p>
   </div>
-
   <div class="filter-tabs">
     <button class="filter-tab active" onclick="filterPrinciplesId('all', this)">Semua</button>
     <button class="filter-tab" onclick="filterPrinciplesId('life', this)">Kehidupan</button>
     <button class="filter-tab" onclick="filterPrinciplesId('work', this)">Pekerjaan</button>
     <button class="filter-tab" onclick="filterPrinciplesId('bookmarked', this)">Ditandai</button>
   </div>
-
   <div class="search-wrap">
     <span class="search-icon">⌕</span>
     <input type="text" id="search-principles-id" placeholder="Cari prinsip..." oninput="searchPrinciplesId()">
   </div>
   <div id="principles-id-list"></div>
+</div>
+
+<!-- ══════ TEMPAT SAMPAH ══════ -->
+<div class="page" id="page-trash">
+  <div class="page-header">
+    <div class="page-eyebrow"><div class="page-eyebrow-dot"></div> Tempat Sampah</div>
+    <h2>Tempat Sampah</h2>
+    <p class="subtitle">Item yang dihapus disimpan di sini. Kamu bisa memulihkan atau menghapus secara permanen.</p>
+  </div>
+
+  <div class="trash-banner">
+    <span class="trash-banner-icon">🗑</span>
+    <span>Item di tempat sampah dapat dipulihkan kapan saja. Klik "Hapus Permanen" untuk menghapus selamanya.</span>
+    <button class="btn btn-sm" style="margin-left:auto; border-color:rgba(139,108,181,0.3); color:var(--trash)" onclick="emptyTrash()">Kosongkan Semua</button>
+  </div>
+
+  <div class="filter-tabs" id="trash-filters">
+    <button class="filter-tab active" onclick="filterTrash('all', this)">Semua <span class="filter-count" id="tf-all">0</span></button>
+    <button class="filter-tab" onclick="filterTrash('journal', this)">Jurnal <span class="filter-count" id="tf-journal">0</span></button>
+    <button class="filter-tab" onclick="filterTrash('goal', this)">Goals <span class="filter-count" id="tf-goal">0</span></button>
+    <button class="filter-tab" onclick="filterTrash('principle', this)">Prinsip <span class="filter-count" id="tf-principle">0</span></button>
+  </div>
+
+  <div id="trash-list"></div>
 </div>
 
 </main>
@@ -1774,6 +1396,19 @@ mark { background: var(--gold-dim); color: var(--gold); border-radius: 2px; padd
   </div>
 </div>
 
+<!-- ══════ CONFIRM DIALOG ══════ -->
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-box">
+    <div class="confirm-icon" id="confirm-icon">🗑</div>
+    <div class="confirm-title" id="confirm-title">Hapus Item</div>
+    <div class="confirm-msg" id="confirm-msg">Apakah kamu yakin?</div>
+    <div class="confirm-actions">
+      <button class="btn" onclick="closeConfirm()">Batal</button>
+      <button class="btn btn-danger" id="confirm-ok-btn" onclick="confirmOk()">Ya, Hapus</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
@@ -1795,11 +1430,11 @@ const LIFE_PRINCIPLES = [
     {letter:'1.10',text:'Look at the machine from the higher level.',detail:'Think of yourself as a machine operating within a machine. Distinguish between you as designer and you as worker.'},
   ]},
   { id:'2', num:'2', type:'life', title:'Use the 5-Step Process to Get What You Want', subs:[
-    {letter:'2.1',text:'Have clear goals.',detail:'Prioritize. While you can have virtually anything you want, you can\'t have everything. Never rule out a goal because you think it\'s unattainable.'},
-    {letter:'2.2',text:'Identify and don\'t tolerate problems.',detail:'View painful problems as potential improvements screaming at you. Be specific.'},
+    {letter:'2.1',text:'Have clear goals.',detail:'Prioritize. While you can have virtually anything you want, you can\'t have everything.'},
+    {letter:'2.2',text:'Identify and don\'t tolerate problems.',detail:'View painful problems as potential improvements screaming at you.'},
     {letter:'2.3',text:'Diagnose problems to get at their root causes.',detail:'Focus on "what is" before "what to do about it." Distinguish proximate from root causes.'},
-    {letter:'2.4',text:'Design a plan.',detail:'Think about your problem as a set of outcomes produced by a machine. Write your plan down for everyone to see.'},
-    {letter:'2.5',text:'Push through to completion.',detail:'Great planners who don\'t execute go nowhere. Good work habits are vastly underrated. Establish clear metrics.'},
+    {letter:'2.4',text:'Design a plan.',detail:'Think about your problem as a set of outcomes produced by a machine. Write your plan down.'},
+    {letter:'2.5',text:'Push through to completion.',detail:'Great planners who don\'t execute go nowhere. Good work habits are vastly underrated.'},
     {letter:'2.6',text:'Remember that weaknesses don\'t matter if you find solutions.',detail:'Look at the patterns of your mistakes and identify at which step you typically fail.'},
     {letter:'2.7',text:'Understand your own and others\' mental maps and humility.',detail:'Know your limits and leverage others\' strengths.'},
   ]},
@@ -1830,7 +1465,6 @@ const LIFE_PRINCIPLES = [
     {letter:'5.10',text:'Believability-weight your decision making.',detail:'Weight opinions by the track record of the person giving them, not by their enthusiasm.'},
   ]},
 ];
-
 const WORK_PRINCIPLES = [
   { id:'w1', num:'1', type:'work', title:'Trust in Radical Truth and Radical Transparency', subs:[
     {letter:'1.1',text:'Realize you have nothing to fear from knowing the truth.',detail:'Truth — even painful — is always better than comfortable illusion for producing good outcomes.'},
@@ -1866,12 +1500,9 @@ const WORK_PRINCIPLES = [
     {letter:'6.4',text:'Once a decision is made, everyone should get behind it.',detail:'Even if you disagree. See things from the higher level.'},
   ]},
 ];
-
 const ALL_PRINCIPLES = [...LIFE_PRINCIPLES, ...WORK_PRINCIPLES];
 
-// ════════════════════════════════════════════
-// DATA — PRINSIP (ID)
-// ════════════════════════════════════════════
+// ─── PRINSIP ID ───
 const LIFE_PRINCIPLES_ID = [
   { id:'id1', num:'1', type:'life', title:'Terimalah Kenyataan dan Hadapi dengan Berani', subs:[
     {letter:'1.1',text:'Jadilah seorang hiper-realis.',detail:'Mimpi + Kenyataan + Tekad = Kehidupan yang Sukses.'},
@@ -1879,7 +1510,7 @@ const LIFE_PRINCIPLES_ID = [
     {letter:'1.3',text:'Jadilah sangat terbuka pikirannya dan sangat transparan.',detail:'Keterbukaan pikiran radikal dan transparansi sangat berharga untuk pembelajaran cepat.'},
     {letter:'1.4',text:'Belajarlah dari alam tentang cara kerja kenyataan.',detail:'Evolusi adalah kekuatan terbesar di alam semesta.'},
     {letter:'1.5',text:'Berkembang adalah pencapaian terbesar kehidupan dan hadiahnya.',detail:'Beradaptasi melalui percobaan dan kesalahan yang cepat.'},
-    {letter:'1.6',text:'Pahami pelajaran praktis alam.',detail:'Untuk mendapatkan kekuatan, seseorang harus mendorong batas-batasnya. Ini adalah hukum fundamental.'},
+    {letter:'1.6',text:'Pahami pelajaran praktis alam.',detail:'Untuk mendapatkan kekuatan, seseorang harus mendorong batas-batasnya.'},
     {letter:'1.7',text:'Rasa Sakit + Refleksi = Kemajuan.',detail:'Pergi menuju rasa sakit daripada menghindarinya. Rangkul cinta yang keras.'},
     {letter:'1.8',text:'Timbang konsekuensi tingkat kedua dan ketiga.',detail:'Hindari pilihan yang terasa enak jangka pendek tapi punya konsekuensi jangka panjang yang buruk.'},
     {letter:'1.9',text:'Miliki hasilmu sendiri.',detail:'Ambil tanggung jawab pribadi. Menyalahkan orang lain mencegah pembelajaran.'},
@@ -1898,7 +1529,7 @@ const LIFE_PRINCIPLES_ID = [
     {letter:'3.1',text:'Kenali dua hambatanmu.',detail:'Hambatan ego-mu dan hambatan titik buta-mu.'},
     {letter:'3.2',text:'Praktikkan keterbukaan pikiran radikal.',detail:'Jangan khawatir terlihat baik — khawatirlah tentang mencapai tujuanmu.'},
     {letter:'3.3',text:'Hargai seni ketidaksetujuan yang bijaksana.',detail:'Tujuannya bukan untuk menang tapi untuk menemukan kebenaran.'},
-    {letter:'3.4',text:'Triangulasi pandanganmu dengan orang-orang yang dapat dipercaya yang tidak setuju.',detail:'Rencanakan untuk skenario terburuk agar membuatnya sebaik mungkin.'},
+    {letter:'3.4',text:'Triangulasi pandanganmu dengan orang-orang yang dapat dipercaya yang tidak setuju.',detail:'Rencanakan untuk skenario terburuk.'},
     {letter:'3.5',text:'Kenali tanda-tanda pikiran tertutup vs. terbuka.',detail:'Tertutup: lebih tertarik untuk benar. Terbuka: lebih tertarik menemukan kebenaran.'},
     {letter:'3.6',text:'Pahami bagaimana kamu bisa menjadi sangat terbuka pikirannya.',detail:'Gunakan rasa sakit sebagai panduan. Meditasi. Berbasis bukti.'},
   ]},
@@ -1906,27 +1537,22 @@ const LIFE_PRINCIPLES_ID = [
     {letter:'4.1',text:'Pahami kekuatan mengetahui bagaimana kamu dan orang lain dikabelkan.',detail:'Kita dilahirkan dengan atribut yang bisa membantu atau menyakiti kita.'},
     {letter:'4.2',text:'Kerja bermakna dan hubungan bermakna adalah kebutuhan yang terprogram secara genetis.',detail:'Selaraskan pekerjaanmu dengan sifat dasarmu.'},
     {letter:'4.3',text:'Pahami pertempuran otak besar — perasaan vs. pemikiran.',detail:'Rekonsiliasi perasaan dan pikiranmu. Latih dirimu yang tingkat rendah.'},
-    {letter:'4.4',text:'Temukan seperti apa kamu dan orang lain itu.',detail:'Introvert/ekstrovert. Intuisi/penginderaan. Berpikir/merasakan. Ketahui tipe-mu.'},
-    {letter:'4.5',text:'Mendapatkan orang yang tepat di peran yang tepat adalah kunci sukses.',detail:'Kelola dirimu dan orkestrasikan orang lain untuk mendapatkan apa yang kamu inginkan.'},
+    {letter:'4.4',text:'Temukan seperti apa kamu dan orang lain itu.',detail:'Introvert/ekstrovert. Intuisi/penginderaan. Berpikir/merasakan.'},
+    {letter:'4.5',text:'Mendapatkan orang yang tepat di peran yang tepat adalah kunci sukses.',detail:'Kelola dirimu dan orkestrasikan orang lain.'},
   ]},
   { id:'id5', num:'5', type:'life', title:'Belajarlah Membuat Keputusan Secara Efektif', subs:[
     {letter:'5.1',text:'Kenali bahwa ancaman terbesar untuk keputusan baik adalah emosi yang merugikan.',detail:'Pengambilan keputusan adalah proses dua langkah: pertama belajar, kemudian memutuskan.'},
     {letter:'5.2',text:'Sintesis situasi yang ada.',detail:'Yang baru dinilai terlalu tinggi dibandingkan yang hebat. Gunakan Aturan 80/20.'},
-    {letter:'5.3',text:'Sintesis situasi melalui waktu.',detail:'Ingat baik laju perubahan maupun level. Jadilah perfeksionis yang tidak sempurna.'},
-    {letter:'5.5',text:'Logika, alasan, dan akal sehat adalah alat terbaikmu.',detail:'Jangan biarkan emosi mendorong keputusan.'},
     {letter:'5.6',text:'Buat keputusanmu sebagai kalkulasi expected value.',detail:'EV = Probabilitas × Dampak.'},
-    {letter:'5.7',text:'Prioritaskan dengan menimbang nilai informasi terhadap biaya tidak memutuskan.',detail:'Jangan salah mengartikan kemungkinan sebagai probabilitas.'},
     {letter:'5.8',text:'Sederhanakan!',detail:'Jika kamu tidak bisa menjelaskannya dengan sederhana, kamu tidak memahaminya.'},
-    {letter:'5.9',text:'Gunakan prinsip.',detail:'Klasifikasikan situasi ke dalam tipe-tipe dan terapkan prinsip yang tepat.'},
     {letter:'5.10',text:'Timbang-kepercayaan pengambilan keputusanmu.',detail:'Timbang pendapat berdasarkan rekam jejak, bukan antusiasme.'},
   ]},
 ];
-
 const WORK_PRINCIPLES_ID = [
   { id:'idw1', num:'1', type:'work', title:'Percaya pada Kebenaran Radikal dan Transparansi Radikal', subs:[
     {letter:'1.1',text:'Sadari bahwa kamu tidak perlu takut mengetahui kebenaran.',detail:'Kebenaran selalu lebih baik daripada ilusi yang nyaman.'},
     {letter:'1.2',text:'Miliki integritas dan tuntut dari orang lain.',detail:'Jangan pernah mengatakan sesuatu tentang seseorang yang tidak akan kamu katakan langsung.'},
-    {letter:'1.3',text:'Ciptakan lingkungan di mana semua orang bisa bersuara.',detail:'"Bersuara, akui, atau pergi." Jadilah sangat terbuka.'},
+    {letter:'1.3',text:'Ciptakan lingkungan di mana semua orang bisa bersuara.',detail:'"Bersuara, akui, atau pergi."'},
     {letter:'1.4',text:'Jadilah transparan secara radikal.',detail:'Gunakan transparansi untuk menegakkan keadilan.'},
   ]},
   { id:'idw2', num:'2', type:'work', title:'Kembangkan Kerja Bermakna dan Hubungan Bermakna', subs:[
@@ -1937,27 +1563,23 @@ const WORK_PRINCIPLES_ID = [
   { id:'idw3', num:'3', type:'work', title:'Ciptakan Budaya di mana Kesalahan OK, Tidak Belajar Tidak OK', subs:[
     {letter:'3.1',text:'Kenali bahwa kesalahan adalah bagian alami dari evolusi.',detail:'Gagal dengan baik. Cintai mereka sebagai kesempatan belajar.'},
     {letter:'3.2',text:'Jangan khawatir terlihat baik — khawatirlah tentang mencapai tujuanmu.',detail:'Atasi kesalahan dan kredit.'},
-    {letter:'3.3',text:'Amati pola kesalahan untuk melihat apakah berasal dari kelemahan.',detail:'Pola mengungkap karakter.'},
     {letter:'3.4',text:'Ingat untuk merefleksikan ketika kamu mengalami rasa sakit.',detail:'Jadilah reflektif diri.'},
   ]},
   { id:'idw4', num:'4', type:'work', title:'Tetap Sinkron', subs:[
     {letter:'4.1',text:'Konflik sangat penting untuk hubungan yang hebat.',detail:'Investasikan banyak waktu untuk sinkronisasi.'},
     {letter:'4.2',text:'Ketahui cara sinkronisasi dan tidak setuju dengan baik.',detail:'Permukakan area kemungkinan tidak-sinkron.'},
-    {letter:'4.4',text:'Jika pertemuanmu untuk dijalankan, kelola percakapan.',detail:'Jadilah jelas siapa yang mengarahkan. Tegakkan logika.'},
-    {letter:'4.5',text:'Kolaborasi hebat terasa seperti bermain jazz.',detail:'1+1=3. Tiga hingga lima lebih dari dua puluh.'},
+    {letter:'4.5',text:'Kolaborasi hebat terasa seperti bermain jazz.',detail:'1+1=3.'},
   ]},
   { id:'idw5', num:'5', type:'work', title:'Timbang-Kepercayaan Pengambilan Keputusanmu', subs:[
-    {letter:'5.1',text:'Pahami manfaat ide setiap orang.',detail:'Jika kamu tidak bisa berhasil melakukan sesuatu, jangan pikir kamu bisa memberitahu orang lain bagaimana seharusnya dilakukan.'},
     {letter:'5.2',text:'Temukan orang yang paling dapat dipercaya yang tidak setuju dan pahami alasannya.',detail:'Pendapat yang dapat dipercaya berasal dari orang yang telah berhasil melakukannya minimal 3 kali.'},
     {letter:'5.5',text:'Ketidaksetujuan harus dilakukan dengan efisien.',detail:'Ketahui kapan harus berhenti berdebat dan melanjutkan.'},
   ]},
   { id:'idw6', num:'6', type:'work', title:'Kenali Cara Mengatasi Ketidaksetujuan', subs:[
-    {letter:'6.1',text:'Prinsip tidak bisa diabaikan dengan kesepakatan bersama.',detail:'Standar perilaku yang sama berlaku untuk semua orang. Aturan ya aturan.'},
+    {letter:'6.1',text:'Prinsip tidak bisa diabaikan dengan kesepakatan bersama.',detail:'Standar perilaku yang sama berlaku untuk semua orang.'},
     {letter:'6.3',text:'Jangan biarkan konflik penting tidak terselesaikan.',detail:'Jangan mandek — eskalasi atau vote!'},
-    {letter:'6.4',text:'Setelah keputusan dibuat, semua orang harus mendukungnya.',detail:'Bahkan jika kamu tidak setuju. Lihat dari level yang lebih tinggi.'},
+    {letter:'6.4',text:'Setelah keputusan dibuat, semua orang harus mendukungnya.',detail:'Bahkan jika kamu tidak setuju.'},
   ]},
 ];
-
 const ALL_PRINCIPLES_ID = [...LIFE_PRINCIPLES_ID, ...WORK_PRINCIPLES_ID];
 
 const HABITS = [
@@ -1993,13 +1615,11 @@ const DAILY_QUOTES = [
   {text:"If you are open-minded enough and determined, you can get virtually anything you want.",source:"Life Principle 1.10h"},
   {text:"Don't worry about looking good — worry about achieving your goals.",source:"Work Principle 3.2"},
   {text:"Fail well. Don't feel bad about your mistakes or those of others. Love them!",source:"Work Principle 3.1"},
-  {text:"The most constant struggle is between feeling and thinking. Reconcile them.",source:"Life Principle 4.3b"},
   {text:"Simplify! If you can't explain it simply, you don't understand it well enough.",source:"Life Principle 5.8"},
   {text:"Great planners who don't execute their plans go nowhere.",source:"Life Principle 2.5a"},
   {text:"Every story has another side. Remember that.",source:"Work Principle 4.2c"},
   {text:"To be principled means to consistently operate with principles that can be clearly explained.",source:"Introduction"},
   {text:"Almost nothing can stop you from succeeding if you have flexibility and self-accountability.",source:"Life Principle 2.1g"},
-  {text:"Knowing how to deal well with your setbacks is as important as knowing how to move forward.",source:"Life Principle 2.1h"},
 ];
 
 const DECISION_CHECKLIST_ITEMS = [
@@ -2032,24 +1652,27 @@ let currentPrincipleFilterId = 'all';
 let currentGoalFilter = 'active';
 let currentMpFilter = 'all';
 let currentHistoryFilter = 'all';
+let currentTrashFilter = 'all';
 let habitState = {};
 let habitStateId = {};
 let decisionOptions = [];
 let bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
 let editingModalId = null;
+let confirmCallback = null;
 
 // ════════════════════════════════════════════
 // INDEXEDDB
 // ════════════════════════════════════════════
 function openDB() {
   return new Promise((res, rej) => {
-    const req = indexedDB.open('PrinciplesAppV2', 2);
+    const req = indexedDB.open('PrinciplesAppV3', 3);
     req.onupgradeneeded = e => {
       const d = e.target.result;
       if (!d.objectStoreNames.contains('journal')) d.createObjectStore('journal', {keyPath:'id', autoIncrement:true});
       if (!d.objectStoreNames.contains('goals')) d.createObjectStore('goals', {keyPath:'id', autoIncrement:true});
       if (!d.objectStoreNames.contains('myprinciples')) d.createObjectStore('myprinciples', {keyPath:'id', autoIncrement:true});
       if (!d.objectStoreNames.contains('decisions')) d.createObjectStore('decisions', {keyPath:'id', autoIncrement:true});
+      if (!d.objectStoreNames.contains('trash')) d.createObjectStore('trash', {keyPath:'id', autoIncrement:true});
       if (!d.objectStoreNames.contains('settings')) d.createObjectStore('settings', {keyPath:'key'});
     };
     req.onsuccess = e => { db = e.target.result; res(db); };
@@ -2061,6 +1684,110 @@ const dbGetAll = s => new Promise((r,j)=>{const t=db.transaction(s,'readonly');c
 const dbAdd = (s,v) => new Promise((r,j)=>{const t=db.transaction(s,'readwrite');const q=t.objectStore(s).add(v);q.onsuccess=()=>r(q.result);q.onerror=()=>j(q.error);});
 const dbPut = (s,v) => new Promise((r,j)=>{const t=db.transaction(s,'readwrite');const q=t.objectStore(s).put(v);q.onsuccess=()=>r(q.result);q.onerror=()=>j(q.error);});
 const dbDelete = (s,k) => new Promise((r,j)=>{const t=db.transaction(s,'readwrite');const q=t.objectStore(s).delete(k);q.onsuccess=()=>r();q.onerror=()=>j(q.error);});
+
+// ════════════════════════════════════════════
+// TRASH SYSTEM — Soft Delete
+// ════════════════════════════════════════════
+async function moveToTrash(store, id, displayTitle, displaySubtitle) {
+  const item = await dbGet(store, id);
+  if (!item) return;
+  await dbAdd('trash', {
+    originalStore: store,
+    originalId: id,
+    originalData: item,
+    displayTitle,
+    displaySubtitle,
+    deletedAt: new Date().toISOString(),
+  });
+  await dbDelete(store, id);
+  updateTrashBadge();
+}
+
+async function restoreFromTrash(trashId) {
+  const item = await dbGet('trash', trashId);
+  if (!item) return;
+  const restored = {...item.originalData};
+  delete restored.id;
+  await dbAdd(item.originalStore, restored);
+  await dbDelete('trash', trashId);
+  showToast('✦ Dipulihkan.', 'success');
+  updateTrashBadge();
+  renderTrash();
+  updateDashboard();
+}
+
+async function permanentDelete(trashId) {
+  showConfirm('⚠️', 'Hapus Permanen', 'Item ini akan dihapus selamanya dan tidak bisa dipulihkan.', 'Hapus Permanen', async () => {
+    await dbDelete('trash', trashId);
+    showToast('Item dihapus permanen.', 'error');
+    updateTrashBadge();
+    renderTrash();
+  });
+}
+
+async function emptyTrash() {
+  const items = await dbGetAll('trash');
+  if (!items.length) { showToast('Tempat sampah sudah kosong.'); return; }
+  showConfirm('🗑', 'Kosongkan Tempat Sampah', `${items.length} item akan dihapus selamanya dan tidak bisa dipulihkan.`, 'Kosongkan Semua', async () => {
+    for (const item of items) await dbDelete('trash', item.id);
+    showToast('Tempat sampah dikosongkan.', 'error');
+    updateTrashBadge();
+    renderTrash();
+  });
+}
+
+async function updateTrashBadge() {
+  const items = await dbGetAll('trash');
+  const el = document.getElementById('badge-trash');
+  if (el) el.textContent = items.length;
+}
+
+async function renderTrash() {
+  const all = await dbGetAll('trash');
+  const container = document.getElementById('trash-list');
+
+  const counts = {all: all.length, journal:0, goal:0, principle:0};
+  all.forEach(i => { if (i.originalStore==='journal') counts.journal++; else if (i.originalStore==='goals') counts.goal++; else if (i.originalStore==='myprinciples') counts.principle++; });
+  ['all','journal','goal','principle'].forEach(k => { const el=document.getElementById('tf-'+k); if(el) el.textContent=counts[k]; });
+
+  let filtered = [...all].reverse();
+  if (currentTrashFilter !== 'all') {
+    const storeMap = {journal:'journal', goal:'goals', principle:'myprinciples'};
+    filtered = filtered.filter(i => i.originalStore === storeMap[currentTrashFilter]);
+  }
+
+  if (!filtered.length) {
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">🗑</div><p>${currentTrashFilter==='all'?'Tempat sampah kosong. Item yang dihapus akan muncul di sini.':'Tidak ada item di kategori ini.'}</p></div>`;
+    return;
+  }
+
+  const storeLabel = {journal:'Jurnal', goals:'Goal', myprinciples:'Prinsip'};
+  const storeBadge = {journal:'journal', goals:'goal', myprinciples:'principle'};
+  container.innerHTML = filtered.map(item => `
+    <div class="trash-item">
+      <div class="trash-icon-col">🗑</div>
+      <div class="trash-body">
+        <div class="trash-title">${esc(item.displayTitle || '(tanpa judul)')}</div>
+        ${item.displaySubtitle ? `<div class="trash-subtitle">${esc(item.displaySubtitle)}</div>` : ''}
+        <div class="trash-meta">
+          <span class="trash-badge ${storeBadge[item.originalStore]||''}">${storeLabel[item.originalStore]||item.originalStore}</span>
+          <span class="trash-date">Dihapus ${fmtDate(item.deletedAt)}</span>
+        </div>
+      </div>
+      <div class="action-group">
+        <button class="action-btn restore" onclick="restoreFromTrash(${item.id})" title="Pulihkan">↩</button>
+        <button class="action-btn perm-delete" onclick="permanentDelete(${item.id})" title="Hapus Permanen">✕</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterTrash(type, btn) {
+  currentTrashFilter = type;
+  document.querySelectorAll('#trash-filters .filter-tab').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderTrash();
+}
 
 // ════════════════════════════════════════════
 // NAVIGATION
@@ -2085,6 +1812,7 @@ function goTo(page) {
     myprinciples: renderMyPrinciples,
     bookmarks: renderBookmarks,
     history: renderHistory,
+    trash: renderTrash,
   };
   if (pageActions[page]) pageActions[page]();
 }
@@ -2101,6 +1829,17 @@ function showToast(msg, type = '') {
 }
 function openModal(id) { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function showConfirm(icon, title, msg, okLabel, callback) {
+  document.getElementById('confirm-icon').textContent = icon;
+  document.getElementById('confirm-title').textContent = title;
+  document.getElementById('confirm-msg').textContent = msg;
+  document.getElementById('confirm-ok-btn').textContent = okLabel;
+  confirmCallback = callback;
+  document.getElementById('confirm-overlay').classList.add('open');
+}
+function closeConfirm() { document.getElementById('confirm-overlay').classList.remove('open'); confirmCallback = null; }
+function confirmOk() { closeConfirm(); if (confirmCallback) confirmCallback(); }
 
 // ════════════════════════════════════════════
 // DASHBOARD
@@ -2136,6 +1875,7 @@ async function updateDashboard() {
   document.getElementById('badge-mp').textContent = myp.length;
   document.getElementById('badge-bm').textContent = bookmarks.length;
   document.getElementById('badge-history').textContent = entries.length + goals.length + myp.length;
+  updateTrashBadge();
 
   const combined = [
     ...entries.slice(-3).map(e => ({type:'journal', title:e.pain, date:e.date})),
@@ -2165,7 +1905,7 @@ async function saveQuickReflect() {
 }
 
 // ════════════════════════════════════════════
-// PRINCIPLES
+// PRINCIPLES (EN)
 // ════════════════════════════════════════════
 function renderPrinciples() {
   const container = document.getElementById('principles-list');
@@ -2177,69 +1917,40 @@ function renderPrinciples() {
     return true;
   });
   if (search) list = list.filter(p => p.title.toLowerCase().includes(search) || p.subs.some(s => s.text.toLowerCase().includes(search) || s.detail.toLowerCase().includes(search)));
-
   const lifeList = list.filter(p => p.type === 'life');
   const workList = list.filter(p => p.type === 'work');
   let html = '';
-  if (lifeList.length) {
-    html += `<div class="principle-section"><div class="principle-section-title">◆ Life Principles <span style="opacity:0.5">(${lifeList.length})</span></div>`;
-    html += lifeList.map(p => renderPrincipleItem(p, search)).join('');
-    html += '</div>';
-  }
-  if (workList.length) {
-    html += `<div class="principle-section"><div class="principle-section-title">◆ Work Principles <span style="opacity:0.5">(${workList.length})</span></div>`;
-    html += workList.map(p => renderPrincipleItem(p, search)).join('');
-    html += '</div>';
-  }
+  if (lifeList.length) { html += `<div class="principle-section"><div class="principle-section-title">◆ Life Principles <span style="opacity:0.5">(${lifeList.length})</span></div>` + lifeList.map(p => renderPrincipleItem(p, search)).join('') + '</div>'; }
+  if (workList.length) { html += `<div class="principle-section"><div class="principle-section-title">◆ Work Principles <span style="opacity:0.5">(${workList.length})</span></div>` + workList.map(p => renderPrincipleItem(p, search)).join('') + '</div>'; }
   if (!html) html = `<div class="empty-state"><div class="empty-icon">◇</div><p>No principles match your search.</p></div>`;
   container.innerHTML = html;
 }
 
 function renderPrincipleItem(p, search = '') {
   const isBookmarked = bookmarks.includes(p.id);
-  const highlight = t => search ? t.replace(new RegExp(search, 'gi'), m => `<mark>${m}</mark>`) : t;
+  const highlight = t => search ? t.replace(new RegExp(search.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'gi'), m => `<mark>${m}</mark>`) : t;
   return `
     <div class="principle-item" id="pi-${p.id}" onclick="togglePrinciple('${p.id}')">
       <div class="pi-header">
         <span class="pi-num">${p.num}.</span>
         <span class="pi-title">${highlight(p.title)}</span>
-        <span class="pi-bookmark ${isBookmarked?'bookmarked':''}" onclick="event.stopPropagation(); toggleBookmark('${p.id}')">${isBookmarked ? '◆' : '◇'}</span>
+        <span class="pi-bookmark ${isBookmarked?'bookmarked':''}" onclick="event.stopPropagation(); toggleBookmark('${p.id}')" title="${isBookmarked?'Hapus bookmark':'Tambah bookmark'}">${isBookmarked ? '◆' : '◇'}</span>
         <span class="pi-toggle" id="pit-${p.id}">▼</span>
       </div>
       <div class="pi-body" id="pib-${p.id}">
-        ${p.subs.map(s => `
-          <div class="pi-sub">
-            <span class="pi-sub-letter">${s.letter}</span>
-            <div><div class="pi-sub-text">${highlight(s.text)}</div><div class="pi-sub-detail">${highlight(s.detail)}</div></div>
-          </div>
-        `).join('')}
+        ${p.subs.map(s => `<div class="pi-sub"><span class="pi-sub-letter">${s.letter}</span><div><div class="pi-sub-text">${highlight(s.text)}</div><div class="pi-sub-detail">${highlight(s.detail)}</div></div></div>`).join('')}
       </div>
-    </div>
-  `;
+    </div>`;
 }
 
-function togglePrinciple(id) {
-  const body = document.getElementById('pib-' + id);
-  const toggle = document.getElementById('pit-' + id);
-  const item = document.getElementById('pi-' + id);
-  const isOpen = body.classList.contains('show');
-  body.classList.toggle('show', !isOpen);
-  toggle.style.transform = isOpen ? '' : 'rotate(180deg)';
-  item.classList.toggle('expanded', !isOpen);
-}
-
-function filterPrinciples(type, btn) {
-  currentPrincipleFilter = type;
-  document.querySelectorAll('#page-principles .filter-tab').forEach(b => b.classList.remove('active'));
-  if (btn) btn.classList.add('active');
-  renderPrinciples();
-}
+function togglePrinciple(id) { const body=document.getElementById('pib-'+id); const toggle=document.getElementById('pit-'+id); const item=document.getElementById('pi-'+id); const isOpen=body.classList.contains('show'); body.classList.toggle('show',!isOpen); toggle.style.transform=isOpen?'':'rotate(180deg)'; item.classList.toggle('expanded',!isOpen); }
+function filterPrinciples(type, btn) { currentPrincipleFilter=type; document.querySelectorAll('#page-principles .filter-tab').forEach(b=>b.classList.remove('active')); if(btn) btn.classList.add('active'); renderPrinciples(); }
 function searchPrinciples() { renderPrinciples(); }
 
 function toggleBookmark(id) {
   const idx = bookmarks.indexOf(id);
   if (idx === -1) { bookmarks.push(id); showToast('◆ Bookmarked.', 'success'); }
-  else { bookmarks.splice(idx, 1); showToast('Bookmark removed.'); }
+  else { bookmarks.splice(idx, 1); showToast('Bookmark dihapus.'); }
   localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
   document.getElementById('badge-bm').textContent = bookmarks.length;
   renderPrinciples();
@@ -2282,25 +1993,27 @@ async function renderJournal() {
   let filtered = [...entries].reverse();
   if (activeTag) filtered = filtered.filter(e => (e.tags||[]).includes(activeTag));
   if (search) filtered = filtered.filter(e => (e.pain||'').toLowerCase().includes(search) || (e.reflection||'').toLowerCase().includes(search) || (e.root||'').toLowerCase().includes(search));
-  if (!filtered.length) {
-    container.innerHTML = `<div class="empty-state"><div class="empty-icon">✎</div><p>Belum ada catatan. Mulai tulis refleksimu yang pertama di atas.</p><div class="empty-hint">Rasa sakit + Refleksi = Kemajuan</div></div>`;
-    return;
-  }
+  if (!filtered.length) { container.innerHTML = `<div class="empty-state"><div class="empty-icon">✎</div><p>Belum ada catatan. Mulai tulis refleksimu yang pertama di atas.</p><div class="empty-hint">Rasa sakit + Refleksi = Kemajuan</div></div>`; return; }
   container.innerHTML = filtered.map(e => renderJournalCard(e)).join('');
 }
 
 function renderJournalCard(e) {
   const hasExtra = e.root || e.reflection || e.progress;
+  const moodColor = e.mood >= 8 ? 'var(--red)' : e.mood >= 5 ? 'var(--amber)' : 'var(--green)';
   return `
     <div class="journal-entry" id="je-${e.id}">
       <div class="je-header">
         <div class="je-meta">
-          <div class="je-date">${fmtDate(e.date)} ${e.mood ? `· Intensitas: ${e.mood}/10` : ''}</div>
+          <div class="je-date">
+            ${fmtDate(e.date)}
+            ${e.mood ? `<span style="margin-left:8px; padding:1px 7px; border-radius:10px; background:var(--bg3); border:1px solid var(--border2); font-family:var(--font-mono); font-size:0.57rem; color:${moodColor}">Intensitas ${e.mood}/10</span>` : ''}
+            ${e.edited ? `<span style="margin-left:6px; font-size:0.55rem; color:var(--text4); font-family:var(--font-mono)">diedit</span>` : ''}
+          </div>
           <div class="je-pain">${esc(e.pain)}</div>
         </div>
-        <div class="je-actions">
-          <button class="btn btn-ghost btn-sm btn-icon" onclick="openEditJournal(${e.id})" title="Edit">✎</button>
-          <button class="btn btn-danger btn-sm btn-icon" onclick="deleteJournal(${e.id})" title="Hapus">✕</button>
+        <div class="action-group">
+          <button class="action-btn edit" onclick="openEditJournal(${e.id})" title="Edit catatan">✎</button>
+          <button class="action-btn delete" onclick="deleteJournal(${e.id})" title="Pindah ke sampah">🗑</button>
         </div>
       </div>
       ${hasExtra ? `
@@ -2308,31 +2021,20 @@ function renderJournalCard(e) {
           <span id="je-expand-icon-${e.id}">▼</span> Lihat detail
         </div>
         <div class="je-expandable" id="je-exp-${e.id}">
-          ${e.root ? `<div class="je-root" style="margin-top:8px"><strong style="font-size:0.64rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text3);font-family:var(--font-mono)">Akar Masalah</strong><br>${esc(e.root)}</div>` : ''}
-          ${e.reflection ? `<div class="je-reflection"><strong style="font-size:0.64rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text3);font-family:var(--font-mono)">Refleksi & Pelajaran</strong><br>${esc(e.reflection)}</div>` : ''}
+          ${e.root ? `<div style="margin-top:10px"><div class="je-section-label">Akar Masalah</div><div class="je-root">${esc(e.root)}</div></div>` : ''}
+          ${e.reflection ? `<div style="margin-top:8px"><div class="je-section-label">Refleksi & Pelajaran</div><div class="je-reflection">${esc(e.reflection)}</div></div>` : ''}
           ${e.progress ? `<div class="je-progress">${esc(e.progress)}</div>` : ''}
         </div>
       ` : ''}
       ${e.tags && e.tags.length ? `<div class="je-tags">${e.tags.map(t=>`<span class="je-tag" onclick="setJournalTagFilter('${t}', null)">${t}</span>`).join('')}</div>` : ''}
-    </div>
-  `;
+    </div>`;
 }
 
-function toggleJeExpand(id) {
-  const exp = document.getElementById('je-exp-' + id);
-  const icon = document.getElementById('je-expand-icon-' + id);
-  const open = exp.classList.toggle('open');
-  icon.textContent = open ? '▲' : '▼';
-}
-
-function setJournalTagFilter(tag, btn) {
-  document.getElementById('journal-tag-filters').dataset.active = tag;
-  renderJournal();
-}
+function toggleJeExpand(id) { const exp=document.getElementById('je-exp-'+id); const icon=document.getElementById('je-expand-icon-'+id); const open=exp.classList.toggle('open'); icon.textContent=open?'▲':'▼'; }
+function setJournalTagFilter(tag, btn) { document.getElementById('journal-tag-filters').dataset.active=tag; renderJournal(); }
 
 async function openEditJournal(id) {
-  const e = await dbGet('journal', id);
-  if (!e) return;
+  const e = await dbGet('journal', id); if (!e) return;
   document.getElementById('journal-edit-id').value = id;
   document.getElementById('entry-pain').value = e.pain || '';
   document.getElementById('entry-root').value = e.root || '';
@@ -2341,7 +2043,7 @@ async function openEditJournal(id) {
   document.getElementById('entry-tags').value = (e.tags||[]).join(', ');
   document.getElementById('entry-mood').value = e.mood || '';
   document.getElementById('journal-cancel-btn').style.display = '';
-  document.getElementById('journal-form-title').innerHTML = '<div class="card-label-dot"></div> Edit Catatan';
+  document.getElementById('journal-form-title').innerHTML = '<div class="card-label-dot"></div> ✎ Edit Catatan';
   document.getElementById('journal-form-card').scrollIntoView({behavior:'smooth'});
 }
 
@@ -2354,8 +2056,7 @@ function cancelJournalEdit() {
 
 async function updateJournalEntry() {
   if (!editingModalId) return;
-  const e = await dbGet('journal', editingModalId);
-  if (!e) return;
+  const e = await dbGet('journal', editingModalId); if (!e) return;
   e.pain = document.getElementById('modal-pain').value.trim();
   e.root = document.getElementById('modal-root').value.trim();
   e.reflection = document.getElementById('modal-reflect').value.trim();
@@ -2370,9 +2071,10 @@ async function updateJournalEntry() {
 }
 
 async function deleteJournal(id) {
-  if (!confirm('Hapus catatan ini?')) return;
-  await dbDelete('journal', id);
-  renderJournal(); updateDashboard(); showToast('Catatan dihapus.');
+  const e = await dbGet('journal', id);
+  await moveToTrash('journal', id, e.pain, e.reflection ? e.reflection.slice(0,60) : '');
+  showToast('Dipindahkan ke Tempat Sampah.', 'info');
+  renderJournal(); updateDashboard();
 }
 
 // ════════════════════════════════════════════
@@ -2394,10 +2096,7 @@ async function renderGoals() {
   let filtered = goals;
   if (currentGoalFilter === 'active') filtered = goals.filter(g => !g.completed);
   if (currentGoalFilter === 'done') filtered = goals.filter(g => g.completed);
-  if (!filtered.length) {
-    container.innerHTML = `<div class="empty-state"><div class="empty-icon">◎</div><p>No ${currentGoalFilter === 'done' ? 'completed' : 'active'} goals.</p></div>`;
-    return;
-  }
+  if (!filtered.length) { container.innerHTML = `<div class="empty-state"><div class="empty-icon">◎</div><p>No ${currentGoalFilter === 'done' ? 'completed' : 'active'} goals.</p></div>`; return; }
   container.innerHTML = filtered.reverse().map(g => renderGoalCard(g)).join('');
 }
 
@@ -2413,9 +2112,9 @@ function renderGoalCard(g) {
           <div class="goal-title">${esc(g.title)}</div>
           <div class="goal-sub">${done}/${g.steps.length} steps · ${pct}% complete ${g.deadline?'· Due '+fmtDateShort(g.deadline):''}</div>
         </div>
-        <div style="display:flex; gap:5px">
-          <button class="btn btn-ghost btn-sm btn-icon" onclick="event.stopPropagation(); openEditGoal(${g.id})">✎</button>
-          <button class="btn btn-danger btn-sm btn-icon" onclick="event.stopPropagation(); deleteGoal(${g.id})">✕</button>
+        <div class="action-group" onclick="event.stopPropagation()">
+          <button class="action-btn edit" onclick="openEditGoal(${g.id})" title="Edit goal">✎</button>
+          <button class="action-btn delete" onclick="deleteGoal(${g.id})" title="Pindah ke sampah">🗑</button>
         </div>
       </div>
       <div class="goal-progress-bar"><div class="goal-progress-fill" style="width:${pct}%"></div></div>
@@ -2433,17 +2132,16 @@ function renderGoalCard(g) {
             </div>
           </div>
         `).join('')}
-        ${g.completed ? '' : `<button class="btn btn-sm" style="margin-top:8px" onclick="completeGoal(${g.id})">Mark as Completed ✓</button>`}
+        ${g.completed ? '' : `<button class="btn btn-sm btn-success" style="margin-top:8px" onclick="completeGoal(${g.id})">Mark as Completed ✓</button>`}
       </div>
-    </div>
-  `;
+    </div>`;
 }
 
 function toggleGoal(id) { document.getElementById('gb-' + id).classList.toggle('open'); }
 async function toggleStep(goalId, stepIdx) { const g = await dbGet('goals', goalId); g.steps[stepIdx].done = !g.steps[stepIdx].done; await dbPut('goals', g); renderGoals(); }
 async function updateStepNotes(goalId, stepIdx, notes) { const g = await dbGet('goals', goalId); g.steps[stepIdx].notes = notes; await dbPut('goals', g); }
 async function completeGoal(id) { const g = await dbGet('goals', id); g.completed = true; g.completedDate = new Date().toISOString(); await dbPut('goals', g); showToast('✦ Goal completed!', 'success'); renderGoals(); updateDashboard(); }
-async function deleteGoal(id) { if (!confirm('Delete this goal?')) return; await dbDelete('goals', id); renderGoals(); updateDashboard(); showToast('Goal deleted.'); }
+async function deleteGoal(id) { const g = await dbGet('goals', id); await moveToTrash('goals', id, g.title, `${g.steps.filter(s=>s.done).length}/${g.steps.length} steps`); showToast('Dipindahkan ke Tempat Sampah.', 'info'); renderGoals(); updateDashboard(); }
 async function openEditGoal(id) { const g = await dbGet('goals', id); editingModalId = id; document.getElementById('modal-goal-title').value = g.title||''; document.getElementById('modal-goal-why').value = g.why||''; document.getElementById('modal-goal-deadline').value = g.deadline||''; openModal('modal-goal'); }
 async function updateGoal() { if (!editingModalId) return; const g = await dbGet('goals', editingModalId); g.title = document.getElementById('modal-goal-title').value.trim(); g.why = document.getElementById('modal-goal-why').value.trim(); g.deadline = document.getElementById('modal-goal-deadline').value||null; await dbPut('goals', g); closeModal('modal-goal'); showToast('✦ Goal updated.', 'success'); renderGoals(); }
 function cancelGoalEdit() {}
@@ -2452,14 +2150,7 @@ function filterGoals(type, btn) { currentGoalFilter = type; document.querySelect
 // ════════════════════════════════════════════
 // DECISION MAKER
 // ════════════════════════════════════════════
-function toggleDecGuide() {
-  const body = document.getElementById('dec-guide-body');
-  const toggle = document.getElementById('dec-guide-toggle');
-  const isOpen = body.style.display !== 'none';
-  body.style.display = isOpen ? 'none' : 'block';
-  toggle.textContent = isOpen ? '▼ Tampilkan' : '▲ Sembunyikan';
-}
-
+function toggleDecGuide() { const body=document.getElementById('dec-guide-body'); const toggle=document.getElementById('dec-guide-toggle'); const isOpen=body.style.display!=='none'; body.style.display=isOpen?'none':'block'; toggle.textContent=isOpen?'▼ Tampilkan':'▲ Sembunyikan'; }
 function renderDecisions() { renderDecisionOptions(); renderDecisionChecklist(); }
 
 function renderDecisionOptions() {
@@ -2471,19 +2162,10 @@ function renderDecisionOptions() {
         <div class="card-label"><div class="card-label-dot"></div> Opsi ${i+1}</div>
         <button class="btn btn-danger btn-sm" onclick="removeOption(${i})">✕ Hapus</button>
       </div>
-      <div class="field">
-        <label>Nama Opsi</label>
-        <input type="text" value="${esc(opt.name||'')}" oninput="decisionOptions[${i}].name=this.value; updateEV()" placeholder="Contoh: Masuk posisi sekarang" />
-      </div>
+      <div class="field"><label>Nama Opsi</label><input type="text" value="${esc(opt.name||'')}" oninput="decisionOptions[${i}].name=this.value; updateEV()" placeholder="Contoh: Masuk posisi sekarang" /></div>
       <div class="pros-cons" style="margin-top:10px">
-        <div class="pc-list pros">
-          <div class="pc-title">✦ Pro (Keuntungan)</div>
-          <textarea onchange="decisionOptions[${i}].pros=this.value" placeholder="Satu per baris..." style="min-height:65px; font-size:0.76rem">${esc(opt.pros||'')}</textarea>
-        </div>
-        <div class="pc-list cons">
-          <div class="pc-title">✕ Kontra (Kerugian)</div>
-          <textarea onchange="decisionOptions[${i}].cons=this.value" placeholder="Satu per baris..." style="min-height:65px; font-size:0.76rem">${esc(opt.cons||'')}</textarea>
-        </div>
+        <div class="pc-list pros"><div class="pc-title">✦ Pro (Keuntungan)</div><textarea onchange="decisionOptions[${i}].pros=this.value" placeholder="Satu per baris..." style="min-height:65px; font-size:0.76rem">${esc(opt.pros||'')}</textarea></div>
+        <div class="pc-list cons"><div class="pc-title">✕ Kontra (Kerugian)</div><textarea onchange="decisionOptions[${i}].cons=this.value" placeholder="Satu per baris..." style="min-height:65px; font-size:0.76rem">${esc(opt.cons||'')}</textarea></div>
       </div>
       <div class="field" style="margin-top:12px">
         <label>Probabilitas Sukses: <span id="probval-${i}" style="color:var(--gold)">${opt.prob||50}%</span></label>
@@ -2493,8 +2175,7 @@ function renderDecisionOptions() {
         <label>Dampak jika Berhasil: <span id="impactval-${i}" style="color:var(--gold)">${opt.impact||5}</span>/10</label>
         <input type="range" min="1" max="10" value="${opt.impact||5}" oninput="decisionOptions[${i}].impact=+this.value; document.getElementById('impactval-${i}').textContent=this.value; updateEV()" />
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
   updateEV();
 }
 
@@ -2510,19 +2191,13 @@ function updateEV() {
       <span class="ev-name" style="color:${i===0?'var(--text)':'var(--text2)'}">${esc(s.name)}</span>
       <div class="ev-bar-wrap"><div class="ev-bar" style="width:${maxEV?((s.ev/maxEV)*100)+'%':'0%'}"></div></div>
       <span class="ev-value">${s.ev.toFixed(2)}</span>
-    </div>
-  `).join('') + `<p style="font-size:0.68rem; color:var(--text3); margin-top:10px; font-family:var(--font-mono)">EV = probabilitas × dampak. Gunakan sebagai panduan, bukan keputusan final.</p>`;
+    </div>`).join('') + `<p style="font-size:0.68rem; color:var(--text3); margin-top:10px; font-family:var(--font-mono)">EV = probabilitas × dampak. Gunakan sebagai panduan, bukan keputusan final.</p>`;
 }
 
 function addOption() { decisionOptions.push({name:'', pros:'', cons:'', prob:50, impact:5}); renderDecisionOptions(); }
 function removeOption(i) { decisionOptions.splice(i,1); renderDecisionOptions(); }
 function clearDecision() { decisionOptions = []; document.getElementById('dec-title').value = ''; document.getElementById('dec-context').value = ''; renderDecisions(); }
-async function saveDecision() {
-  const title = document.getElementById('dec-title').value.trim();
-  if (!title) { showToast('Tuliskan dulu keputusannya.', 'error'); return; }
-  await dbAdd('decisions', {title, context: document.getElementById('dec-context').value.trim(), options: decisionOptions, date: new Date().toISOString()});
-  showToast('✦ Keputusan tersimpan.', 'success');
-}
+async function saveDecision() { const title = document.getElementById('dec-title').value.trim(); if (!title) { showToast('Tuliskan dulu keputusannya.', 'error'); return; } await dbAdd('decisions', {title, context: document.getElementById('dec-context').value.trim(), options: decisionOptions, date: new Date().toISOString()}); showToast('✦ Keputusan tersimpan.', 'success'); }
 
 function renderDecisionChecklist() {
   const container = document.getElementById('dec-checklist');
@@ -2530,25 +2205,11 @@ function renderDecisionChecklist() {
     <div class="checklist-item" id="dci-${i}" onclick="toggleDecCheck(${i})">
       <div class="check-box" id="dcbox-${i}"></div>
       <span class="check-text">${item}</span>
-    </div>
-  `).join('');
+    </div>`).join('');
   updateDecProgress();
 }
-
-function toggleDecCheck(i) {
-  document.getElementById('dci-'+i).classList.toggle('checked');
-  document.getElementById('dcbox-'+i).textContent = document.getElementById('dci-'+i).classList.contains('checked') ? '✓' : '';
-  updateDecProgress();
-}
-
-function updateDecProgress() {
-  const checked = document.querySelectorAll('#dec-checklist .checklist-item.checked').length;
-  const total = DECISION_CHECKLIST_ITEMS.length;
-  const pct = Math.round((checked/total)*100);
-  document.getElementById('dec-progress-pct').textContent = pct + '%';
-  document.getElementById('dec-progress-fill').style.width = pct + '%';
-  if (checked === total) showToast('✦ Checklist selesai. Saatnya memutuskan.', 'success');
-}
+function toggleDecCheck(i) { document.getElementById('dci-'+i).classList.toggle('checked'); document.getElementById('dcbox-'+i).textContent = document.getElementById('dci-'+i).classList.contains('checked') ? '✓' : ''; updateDecProgress(); }
+function updateDecProgress() { const checked=document.querySelectorAll('#dec-checklist .checklist-item.checked').length; const total=DECISION_CHECKLIST_ITEMS.length; const pct=Math.round((checked/total)*100); document.getElementById('dec-progress-pct').textContent=pct+'%'; document.getElementById('dec-progress-fill').style.width=pct+'%'; if(checked===total) showToast('✦ Checklist selesai. Saatnya memutuskan.','success'); }
 
 // ════════════════════════════════════════════
 // HABITS (EN)
@@ -2563,20 +2224,11 @@ function renderHabits() {
         <div class="habit-text">${h.text}</div>
         <div class="habit-detail">${h.detail}</div>
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
   updateHabitsScore();
 }
-
 function toggleHabit(id) { habitState[id] = !habitState[id]; document.getElementById('hcard-'+id).classList.toggle('done', habitState[id]); document.getElementById('hbox-'+id).textContent = habitState[id] ? '✓' : ''; updateHabitsScore(); }
-function updateHabitsScore() {
-  const done = Object.values(habitState).filter(Boolean).length;
-  const pct = Math.round((done/HABITS.length)*100);
-  document.getElementById('habits-score').textContent = pct + '%';
-  document.getElementById('habits-fill').style.width = pct + '%';
-  const msgs = ['Start somewhere. One honest action today.','Getting there. Every step matters.','Building the habit of radical honesty.','Strong day. Principles are being internalized.','Exceptional. This is what Bridgewater was built on.','✦ Perfect score. A fully principled day.'];
-  document.getElementById('habits-message').textContent = msgs[Math.min(Math.floor((pct/100)*msgs.length), msgs.length-1)];
-}
+function updateHabitsScore() { const done=Object.values(habitState).filter(Boolean).length; const pct=Math.round((done/HABITS.length)*100); document.getElementById('habits-score').textContent=pct+'%'; document.getElementById('habits-fill').style.width=pct+'%'; const msgs=['Start somewhere. One honest action today.','Getting there. Every step matters.','Building the habit of radical honesty.','Strong day. Principles are being internalized.','Exceptional. This is what Bridgewater was built on.','✦ Perfect score. A fully principled day.']; document.getElementById('habits-message').textContent=msgs[Math.min(Math.floor((pct/100)*msgs.length),msgs.length-1)]; }
 function resetHabits() { habitState = {}; renderHabits(); }
 
 // ════════════════════════════════════════════
@@ -2592,20 +2244,11 @@ function renderHabitsId() {
         <div class="habit-text">${h.text}</div>
         <div class="habit-detail">${h.detail}</div>
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
   updateHabitsIdScore();
 }
-
 function toggleHabitId(id) { habitStateId[id] = !habitStateId[id]; document.getElementById('ihcard-'+id).classList.toggle('done', habitStateId[id]); document.getElementById('ihbox-'+id).textContent = habitStateId[id] ? '✓' : ''; updateHabitsIdScore(); }
-function updateHabitsIdScore() {
-  const done = Object.values(habitStateId).filter(Boolean).length;
-  const pct = Math.round((done/HABITS_ID.length)*100);
-  document.getElementById('habits-id-score').textContent = pct + '%';
-  document.getElementById('habits-id-fill').style.width = pct + '%';
-  const msgs = ['Mulailah dari mana saja. Satu tindakan jujur hari ini.','Terus maju. Setiap langkah berarti.','Membangun kebiasaan kejujuran radikal.','Hari yang kuat. Prinsip-prinsip sedang terinternalisasi.','Luar biasa. Inilah yang dibangun Bridgewater.','✦ Skor sempurna. Hari yang benar-benar berprinsipal.'];
-  document.getElementById('habits-id-message').textContent = msgs[Math.min(Math.floor((pct/100)*msgs.length), msgs.length-1)];
-}
+function updateHabitsIdScore() { const done=Object.values(habitStateId).filter(Boolean).length; const pct=Math.round((done/HABITS_ID.length)*100); document.getElementById('habits-id-score').textContent=pct+'%'; document.getElementById('habits-id-fill').style.width=pct+'%'; const msgs=['Mulailah dari mana saja. Satu tindakan jujur hari ini.','Terus maju. Setiap langkah berarti.','Membangun kebiasaan kejujuran radikal.','Hari yang kuat. Prinsip-prinsip sedang terinternalisasi.','Luar biasa. Inilah yang dibangun Bridgewater.','✦ Skor sempurna. Hari yang benar-benar berprinsipal.']; document.getElementById('habits-id-message').textContent=msgs[Math.min(Math.floor((pct/100)*msgs.length),msgs.length-1)]; }
 function resetHabitsId() { habitStateId = {}; renderHabitsId(); }
 
 // ════════════════════════════════════════════
@@ -2632,7 +2275,7 @@ function renderPrinciplesId() {
 
 function renderPrincipleItemId(p, search = '') {
   const isBookmarked = bookmarks.includes(p.id);
-  const highlight = t => search ? t.replace(new RegExp(search, 'gi'), m => `<mark>${m}</mark>`) : t;
+  const highlight = t => search ? t.replace(new RegExp(search.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'gi'), m => `<mark>${m}</mark>`) : t;
   return `
     <div class="principle-item" id="piid-${p.id}" onclick="togglePrincipleId('${p.id}')">
       <div class="pi-header">
@@ -2644,24 +2287,23 @@ function renderPrincipleItemId(p, search = '') {
       <div class="pi-body" id="pibid-${p.id}">
         ${p.subs.map(s => `<div class="pi-sub"><span class="pi-sub-letter">${s.letter}</span><div><div class="pi-sub-text">${highlight(s.text)}</div><div class="pi-sub-detail">${highlight(s.detail)}</div></div></div>`).join('')}
       </div>
-    </div>
-  `;
+    </div>`;
 }
 
 function togglePrincipleId(id) { const body=document.getElementById('pibid-'+id); const toggle=document.getElementById('pitid-'+id); const item=document.getElementById('piid-'+id); const isOpen=body.classList.contains('show'); body.classList.toggle('show',!isOpen); toggle.style.transform=isOpen?'':'rotate(180deg)'; item.classList.toggle('expanded',!isOpen); }
 function filterPrinciplesId(type, btn) { currentPrincipleFilterId=type; document.querySelectorAll('#page-principles-id .filter-tab').forEach(b=>b.classList.remove('active')); if(btn) btn.classList.add('active'); renderPrinciplesId(); }
 function searchPrinciplesId() { renderPrinciplesId(); }
-function toggleBookmarkId(id) { const idx=bookmarks.indexOf(id); if(idx===-1){bookmarks.push(id);showToast('◆ Bookmarked.','success');}else{bookmarks.splice(idx,1);showToast('Bookmark removed.');} localStorage.setItem('bookmarks',JSON.stringify(bookmarks)); document.getElementById('badge-bm').textContent=bookmarks.length; renderPrinciplesId(); if(document.getElementById('page-bookmarks').classList.contains('active')) renderBookmarks(); }
+function toggleBookmarkId(id) { const idx=bookmarks.indexOf(id); if(idx===-1){bookmarks.push(id);showToast('◆ Bookmarked.','success');}else{bookmarks.splice(idx,1);showToast('Bookmark dihapus.');} localStorage.setItem('bookmarks',JSON.stringify(bookmarks)); document.getElementById('badge-bm').textContent=bookmarks.length; renderPrinciplesId(); if(document.getElementById('page-bookmarks').classList.contains('active')) renderBookmarks(); }
 
 // ════════════════════════════════════════════
 // MY PRINCIPLES
 // ════════════════════════════════════════════
 async function saveMyPrinciple() {
   const title = document.getElementById('mp-title').value.trim();
-  if (!title) { showToast('Write your principle first.', 'error'); return; }
+  if (!title) { showToast('Tulis prinsipmu dulu.', 'error'); return; }
   await dbAdd('myprinciples', {title, desc: document.getElementById('mp-desc').value.trim(), cat: document.getElementById('mp-cat').value, confidence: parseInt(document.getElementById('mp-confidence').value)||null, created: new Date().toISOString()});
   ['mp-title','mp-desc','mp-confidence'].forEach(id => document.getElementById(id).value = '');
-  showToast('✦ Principle saved.', 'success');
+  showToast('✦ Prinsip tersimpan.', 'success');
   renderMyPrinciples(); updateDashboard();
 }
 
@@ -2672,6 +2314,7 @@ async function renderMyPrinciples() {
   if (currentMpFilter !== 'all') list = list.filter(p => p.cat === currentMpFilter);
   if (!list.length) { container.innerHTML = `<div class="empty-state"><div class="empty-icon">✦</div><p>Belum ada prinsip${currentMpFilter!=='all'?' di kategori ini':''}. Mulai tulis di atas.</p></div>`; return; }
   const catLabels = {life:'Life',work:'Work',relationships:'Relationships',finance:'Finance/Trading',health:'Health',mindset:'Mindset'};
+  const catColors = {life:'var(--blue)',work:'var(--gold)',relationships:'var(--green)',finance:'var(--amber)',health:'var(--green)',mindset:'var(--trash)'};
   container.innerHTML = list.map(p => `
     <div class="my-principle">
       <div class="mp-bullet">✦</div>
@@ -2680,23 +2323,22 @@ async function renderMyPrinciples() {
         ${p.desc ? `<div class="mp-desc">${esc(p.desc)}</div>` : ''}
         <div class="mp-meta">
           <span class="mp-date">${fmtDate(p.created)}</span>
-          <span class="mp-badge">${catLabels[p.cat]||p.cat}</span>
+          <span class="mp-badge" style="border-color:rgba(255,255,255,0.08); color:${catColors[p.cat]||'var(--text3)'}">${catLabels[p.cat]||p.cat}</span>
           ${p.confidence ? `<span class="mp-badge" style="border-color:rgba(201,168,76,0.3); color:var(--gold)">confidence ${p.confidence}/10</span>` : ''}
-          ${p.edited ? `<span class="mp-badge" style="color:var(--text3)">edited</span>` : ''}
+          ${p.edited ? `<span class="mp-badge" style="color:var(--text4)">edited</span>` : ''}
         </div>
       </div>
-      <div class="mp-actions">
-        <button class="btn btn-ghost btn-sm btn-icon" onclick="openEditMp(${p.id})">✎</button>
-        <button class="btn btn-danger btn-sm btn-icon" onclick="deleteMyPrinciple(${p.id})">✕</button>
+      <div class="action-group">
+        <button class="action-btn edit" onclick="openEditMp(${p.id})" title="Edit prinsip">✎</button>
+        <button class="action-btn delete" onclick="deleteMyPrinciple(${p.id})" title="Pindah ke sampah">🗑</button>
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
-function filterMp(cat, btn) { currentMpFilter=cat; document.querySelectorAll('#page-myprinciples .filter-tab').forEach(b=>b.classList.remove('active')); if(btn) btn.classList.add('active'); renderMyPrinciples(); }
+function filterMp(cat, btn) { currentMpFilter=cat; document.querySelectorAll('#mp-cat-filters .filter-tab').forEach(b=>b.classList.remove('active')); if(btn) btn.classList.add('active'); renderMyPrinciples(); }
 async function openEditMp(id) { const p=await dbGet('myprinciples',id); editingModalId=id; document.getElementById('modal-mp-title').value=p.title||''; document.getElementById('modal-mp-desc').value=p.desc||''; document.getElementById('modal-mp-cat').value=p.cat||'life'; document.getElementById('modal-mp-confidence').value=p.confidence||''; openModal('modal-mp'); }
-async function updateMyPrinciple() { if(!editingModalId) return; const p=await dbGet('myprinciples',editingModalId); p.title=document.getElementById('modal-mp-title').value.trim(); p.desc=document.getElementById('modal-mp-desc').value.trim(); p.cat=document.getElementById('modal-mp-cat').value; p.confidence=parseInt(document.getElementById('modal-mp-confidence').value)||null; p.edited=new Date().toISOString(); await dbPut('myprinciples',p); closeModal('modal-mp'); showToast('✦ Principle updated.','success'); renderMyPrinciples(); updateDashboard(); }
-async function deleteMyPrinciple(id) { if(!confirm('Delete this principle?')) return; await dbDelete('myprinciples',id); renderMyPrinciples(); updateDashboard(); showToast('Principle deleted.'); }
+async function updateMyPrinciple() { if(!editingModalId) return; const p=await dbGet('myprinciples',editingModalId); p.title=document.getElementById('modal-mp-title').value.trim(); p.desc=document.getElementById('modal-mp-desc').value.trim(); p.cat=document.getElementById('modal-mp-cat').value; p.confidence=parseInt(document.getElementById('modal-mp-confidence').value)||null; p.edited=new Date().toISOString(); await dbPut('myprinciples',p); closeModal('modal-mp'); showToast('✦ Prinsip diperbarui.','success'); renderMyPrinciples(); updateDashboard(); }
+async function deleteMyPrinciple(id) { const p=await dbGet('myprinciples',id); await moveToTrash('myprinciples', id, p.title, p.cat||''); showToast('Dipindahkan ke Tempat Sampah.','info'); renderMyPrinciples(); updateDashboard(); }
 function cancelMpEdit() {}
 
 // ════════════════════════════════════════════
@@ -2706,21 +2348,10 @@ function renderBookmarks() {
   const container = document.getElementById('bookmarks-list');
   const bmEN = ALL_PRINCIPLES.filter(p => bookmarks.includes(p.id));
   const bmID = ALL_PRINCIPLES_ID.filter(p => bookmarks.includes(p.id));
-  if (!bmEN.length && !bmID.length) {
-    container.innerHTML = `<div class="empty-state"><div class="empty-icon">◇</div><p>No bookmarks yet. Go to <strong>All Principles</strong> (EN or ID) and bookmark favorites with ◇.</p></div>`;
-    return;
-  }
+  if (!bmEN.length && !bmID.length) { container.innerHTML = `<div class="empty-state"><div class="empty-icon">◇</div><p>No bookmarks yet. Go to <strong>All Principles</strong> (EN or ID) and bookmark favorites with ◇.</p></div>`; return; }
   let html = '';
-  if (bmEN.length) {
-    html += `<div class="principle-section"><div class="principle-section-title">◆ English Principles <span style="opacity:0.5">(${bmEN.length})</span></div>`;
-    html += bmEN.map(p => renderPrincipleItem(p)).join('');
-    html += '</div>';
-  }
-  if (bmID.length) {
-    html += `<div class="principle-section"><div class="principle-section-title">◆ Prinsip Bahasa Indonesia <span style="opacity:0.5">(${bmID.length})</span></div>`;
-    html += bmID.map(p => renderPrincipleItemId(p)).join('');
-    html += '</div>';
-  }
+  if (bmEN.length) { html += `<div class="principle-section"><div class="principle-section-title">◆ English Principles <span style="opacity:0.5">(${bmEN.length})</span></div>` + bmEN.map(p => renderPrincipleItem(p)).join('') + '</div>'; }
+  if (bmID.length) { html += `<div class="principle-section"><div class="principle-section-title">◆ Prinsip Bahasa Indonesia <span style="opacity:0.5">(${bmID.length})</span></div>` + bmID.map(p => renderPrincipleItemId(p)).join('') + '</div>'; }
   container.innerHTML = html;
 }
 
@@ -2752,7 +2383,7 @@ async function renderHistory() {
 
   container.innerHTML = Object.entries(byDate).map(([date, items]) => `
     <div style="margin-bottom:20px">
-      <div style="font-family:var(--font-mono); font-size:0.62rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--text3); margin-bottom:8px; padding-bottom:6px; border-bottom:1px solid var(--border)">${date}</div>
+      <div style="font-family:var(--font-mono); font-size:0.61rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--text3); margin-bottom:8px; padding-bottom:6px; border-bottom:1px solid var(--border)">${date}</div>
       ${items.map(item => `
         <div class="history-item">
           <div class="hi-dot ${item.type}"></div>
@@ -2761,12 +2392,9 @@ async function renderHistory() {
             <div class="hi-meta">${item.subtitle||''}</div>
           </div>
           <span class="hi-type-badge ${item.type}">${item.type}${item.completed?' · done':''}</span>
-        </div>
-      `).join('')}
-    </div>
-  `).join('');
+        </div>`).join('')}
+    </div>`).join('');
 }
-
 function filterHistory(type, btn) { currentHistoryFilter=type; document.querySelectorAll('#history-filters .filter-tab').forEach(b=>b.classList.remove('active')); if(btn) btn.classList.add('active'); renderHistory(); }
 
 // ════════════════════════════════════════════
@@ -2781,7 +2409,11 @@ function fmtDateShort(d) { if(!d) return ''; return new Date(d).toLocaleDateStri
 // KEYBOARD
 // ════════════════════════════════════════════
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+    const co = document.getElementById('confirm-overlay');
+    if (co.classList.contains('open')) closeConfirm();
+  }
 });
 
 // ════════════════════════════════════════════
